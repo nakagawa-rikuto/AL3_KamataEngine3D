@@ -1,8 +1,8 @@
 #include "GameScene.h"
-#include "ImGuiManager.h"
-#include "TextureManager.h"
-#include "PrimitiveDrawer.h"
 #include "AxisIndicator.h"
+#include "ImGuiManager.h"
+#include "PrimitiveDrawer.h"
+#include "TextureManager.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -10,7 +10,7 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {
 	delete sprite_;
 	delete model_;
-	delete debugCamera_;
+	// delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -40,10 +40,10 @@ void GameScene::Initialize() {
 	/// *****************************************************************
 	/// ワールド・ビュープロジェクション
 	/// *****************************************************************
-	//  ワールドトランスフォーム
+	//  ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 
-	//  ビュープロジェクション
+	//  ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
 	/// *****************************************************************
@@ -73,7 +73,7 @@ void GameScene::Initialize() {
 	/// *****************************************************************
 	/// デバッグカメラの生成と解放
 	/// *****************************************************************
-	//　デバッグカメラの生成
+	// 　デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
 	/// *****************************************************************
@@ -119,21 +119,16 @@ void GameScene::Update() {
 	/// *****************************************************************
 	/// ウィンドウ作成
 	/// *****************************************************************
-
-#ifdef DEBUG
 	ImGui::Begin("Debug1");
 	ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);
-	ImGui::End();
-#endif // DEBUG
 
 	/// *****************************************************************
 	/// 入力ボックス、スライダー
 	/// *****************************************************************
-	ImGui::Begin("Debug1");
 	// float入力ボックス
-	ImGui::InputFloat3("InputFloat3", inputFloat3);
+	ImGui::InputFloat3("InputFloat3", inputFloat3_);
 	// floatスライダー
-	ImGui::SliderFloat3("SliderFloat3", inputFloat3, 0.0f, 1.0f);
+	ImGui::SliderFloat3("SliderFloat3", inputFloat3_, 0.0f, 1.0f);
 	ImGui::End();
 
 	/// *****************************************************************
@@ -145,7 +140,7 @@ void GameScene::Update() {
 	/// *****************************************************************
 	/// デバッグカメラの生成と解放
 	/// *****************************************************************
-	//　デバッグカメラの更新
+	// 　デバッグカメラの更新
 	debugCamera_->Update();
 }
 
@@ -161,6 +156,11 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+	 
+	/// *****************************************************************
+	/// スプライトの描画
+	/// *****************************************************************
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -177,20 +177,15 @@ void GameScene::Draw() {
 	/// </summary>
 
 	/// *****************************************************************
-	/// モデルの描画
+	/// モデルを連動させる
 	/// *****************************************************************
-	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 
 	/// *****************************************************************
 	/// ライン描画の使用
 	/// *****************************************************************
-	//　ラインを描画する
+	// 　ラインを描画する
 	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, 10, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
-
-	/// *****************************************************************
-	/// モデルを連動させる
-	/// *****************************************************************
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -203,12 +198,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
-	/// *****************************************************************
-	/// スプライトの描画
-	/// *****************************************************************
-	sprite_->Draw();
-
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
