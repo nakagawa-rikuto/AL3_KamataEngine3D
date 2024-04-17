@@ -2,6 +2,7 @@
 #include "ImGuiManager.h"
 #include "TextureManager.h"
 #include "PrimitiveDrawer.h"
+#include "AxisIndicator.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -74,6 +75,15 @@ void GameScene::Initialize() {
 	/// *****************************************************************
 	//　デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
+
+	/// *****************************************************************
+	/// 軸方向表示の使用
+	/// *****************************************************************
+	//  軸方向表示の表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
+
+	//  軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 }
 
 void GameScene::Update() {
@@ -104,7 +114,7 @@ void GameScene::Update() {
 	/// デバッグテキストの表示
 	/// *****************************************************************
 	// 　デバッグテキストの表示
-	// ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);
+	ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);
 
 	/// *****************************************************************
 	/// ウィンドウ作成
@@ -198,6 +208,7 @@ void GameScene::Draw() {
 	/// スプライトの描画
 	/// *****************************************************************
 	sprite_->Draw();
+
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
