@@ -31,7 +31,7 @@ private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
-	//
+	//ビュープロジェクション
 	ViewProjection* viewProjection_ = nullptr;
 
 	// モデル
