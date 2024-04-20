@@ -5,7 +5,7 @@
 #include <d3d12.h>
 #include <type_traits>
 #include <wrl.h>
-
+#include "MyMath.h"
 // 定数バッファ用データ構造体
 struct ConstBufferDataWorldTransform {
 	Matrix4x4 matWorld; // ローカル → ワールド変換行列
@@ -52,7 +52,18 @@ public:
 	/// <returns>定数バッファ</returns>
 	const Microsoft::WRL::ComPtr<ID3D12Resource>& GetConstBuffer() const { return constBuffer_; }
 
+	/// *************************************
+	/// ワールド行列更新関数
+	/// *************************************
+	/// <summary>
+	/// 行列を計算・転送する
+	/// </summary>
+	void UpdateMatrix();
+
 private:
+
+	// Affine
+	MyMath math_;
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffer_;
 	// マッピング済みアドレス

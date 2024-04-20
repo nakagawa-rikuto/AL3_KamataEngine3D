@@ -7,7 +7,9 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "DebugCamera.h"
 #include <vector>
+#include "MyMath.h"
 
 /// <summary>
 /// ゲームシーン
@@ -45,13 +47,36 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
+	// テクスチャハンドル
+	uint32_t textureHandle_ = 0;
+
+	//VeiwProjection
+	ViewProjection viewProjection_;
+
 	// 3Dモデルデータ
 	Model* model_ = nullptr;
 
+	// Affine
+	MyMath math_;
+
 	/// *************************************
-	/// 可変個配列(std::vector)
+	/// デバッグカメラの切り替え
 	/// *************************************
-	std::vector<WorldTransform*> worldTransformBlocks_;
+
+	// デバッグカメラ有効
+	bool isDebugCameraActive_ = false;
+
+	/// *************************************
+	/// デバッグカメラの生清と解放
+	/// *************************************
+
+	// デバッグカメラ
+	DebugCamera* debugCamera_ = nullptr;
+
+	/// *************************************
+	/// 二次元std::vector
+	/// *************************************
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
 	/// <summary>
 	/// ゲームシーン用
