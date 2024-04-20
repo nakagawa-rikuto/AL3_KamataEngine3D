@@ -53,12 +53,10 @@ void GameScene::Initialize() {
 	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
 
-			// 奇数行の偶数列、偶数行の奇数列はスキップ
 			/* 2で割ってその答えが1だったら奇数
 			                   0だったら偶数*/
-			if ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1)) {
+			if ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1))
 				continue;
-			}
 
 			// 1列の要素数を設定(横方向のブロック数)
 			worldTransformBlocks_[i].resize(kNumBlockHorizontal);
