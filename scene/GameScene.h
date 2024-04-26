@@ -10,6 +10,7 @@
 #include "DebugCamera.h"
 #include <vector>
 #include "MyMath.h"
+#include "skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -47,11 +48,16 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
+	skydome* skydome_ = nullptr;
+
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 
 	//VeiwProjection
 	ViewProjection viewProjection_;
+
+	// 3Dモデル
+	Model* modelSkydome_ = nullptr;
 
 	// 3Dモデルデータ
 	Model* model_ = nullptr;
