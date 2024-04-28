@@ -8,6 +8,8 @@ GameScene::~GameScene() {
 	delete model_;
 	delete debugCamera_;
 	delete modelSkydome_;
+	delete player_;
+	delete skydome_;
 
 	/// *************************************
 	/// 解放
