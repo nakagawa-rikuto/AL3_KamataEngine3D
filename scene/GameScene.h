@@ -11,6 +11,7 @@
 #include <vector>
 #include "MyMath.h"
 #include "skydome.h"
+#include "Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -49,6 +50,8 @@ private: // メンバ変数
 	Audio* audio_ = nullptr;
 
 	skydome* skydome_ = nullptr;
+
+	Player* player_ = nullptr;
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;

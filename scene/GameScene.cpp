@@ -77,14 +77,20 @@ void GameScene::Initialize() {
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
-	// 　初期化
+	/// *************************************
+	/// Initialeze
+	/// *************************************
 	skydome_ = new skydome();
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
+
+	player_ = new Player();
+	player_->Initialeze(model_, textureHandle_, &viewProjection_);
 }
 
 void GameScene::Update() {
 
 	skydome_->Update();
+	player_->Update();
 
 	/// *************************************
 	/// 更新
@@ -166,6 +172,8 @@ void GameScene::Draw() {
 	/// 描画
 	/// *************************************
 	skydome_->Draw();
+	player_->Draw();
+
 
 	/// 
 	// ブロックの描画
