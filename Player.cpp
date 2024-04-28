@@ -1,6 +1,6 @@
 #include "Player.h"
 
-void Player::Initialeze(Model* model, uint32_t texturehandle, ViewProjection* viewProjection) {
+void Player::Initialeze(Model* model, uint32_t texturehandle, ViewProjection* viewProjection, const Vector3& pos) {
 
 	// NULLポインタチェック
 	assert(model);
@@ -11,6 +11,7 @@ void Player::Initialeze(Model* model, uint32_t texturehandle, ViewProjection* vi
 
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
+	worldTransform_.translation_ = pos;
 
 	// 引数の内容をメンバ変数に記録
 	viewProjection_ = viewProjection;
@@ -18,9 +19,8 @@ void Player::Initialeze(Model* model, uint32_t texturehandle, ViewProjection* vi
 
 void Player::Update() {
 
-	// 行列を定数バッファに転送
-	// TransferMatrixはワールド行列を転送する関数
-	worldTransform_.TransferMatrix();
+	// 行列を更新して定数バッファに転送
+	worldTransform_.UpdateMatrix();
 }
 
 void Player::Draw() {

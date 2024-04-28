@@ -9,7 +9,6 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include <vector>
-#include "MyMath.h"
 #include "skydome.h"
 #include "Player.h"
 
@@ -55,6 +54,7 @@ private: // メンバ変数
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
+	uint32_t playerTextureHandle_ = 0;
 
 	//VeiwProjection
 	ViewProjection viewProjection_;
@@ -64,9 +64,6 @@ private: // メンバ変数
 
 	// 3Dモデルデータ
 	Model* model_ = nullptr;
-
-	// Affine
-	MyMath math_;
 
 	/// *************************************
 	/// デバッグカメラの切り替え

@@ -30,6 +30,7 @@ void GameScene::Initialize() {
 
 	// テクスチャの読み込み
 	textureHandle_ = TextureManager::Load("./Resources/cube/cube.jpg");
+	playerTextureHandle_ = TextureManager::Load("./Resources/mario.png");
 
 	// 3Dモデルの生成
 	model_ = Model::Create();
@@ -86,7 +87,7 @@ void GameScene::Initialize() {
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
 	player_ = new Player();
-	player_->Initialeze(model_, textureHandle_, &viewProjection_);
+	player_->Initialeze(model_, playerTextureHandle_, &viewProjection_, {0, 2, 0});
 }
 
 void GameScene::Update() {
@@ -103,12 +104,7 @@ void GameScene::Update() {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
 				continue;
-			worldTransformBlock->matWorld_ = math_.MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-
-			// 定数バッファに転送する
-			worldTransformBlock->TransferMatrix();
-
-			// worldTransformBlock_->UpdateMatrix();
+			worldTransformBlock->UpdateMatrix();
 		}
 	}
 
@@ -176,8 +172,6 @@ void GameScene::Draw() {
 	skydome_->Draw();
 	player_->Draw();
 
-
-	/// 
 	// ブロックの描画
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {

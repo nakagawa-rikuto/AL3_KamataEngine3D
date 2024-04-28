@@ -63,7 +63,7 @@ public:
 private:
 
 	// Affine
-	MyMath math_;
+	//MyMath math_;
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffer_;
 	// マッピング済みアドレス

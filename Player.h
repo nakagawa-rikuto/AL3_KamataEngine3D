@@ -15,7 +15,7 @@ public:
 	/// <param name="model"></param>
 	/// <param name="texturehandle"></param>
 	/// <param name="viewProjection"></param>
-	void Initialeze(Model* model, uint32_t texturehandle, ViewProjection* viewProjection);
+	void Initialeze(Model* model, uint32_t texturehandle, ViewProjection* viewProjection, const Vector3& pos);
 
 	/// <summary>
 	/// 更新
@@ -28,6 +28,7 @@ public:
 	void Draw();
 
 private:
+
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
