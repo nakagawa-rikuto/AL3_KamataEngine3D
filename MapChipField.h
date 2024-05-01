@@ -2,6 +2,7 @@
 #include "stdint.h"
 #include "Vector3.h"
 #include <vector>
+#include <string>
 
 /// <summary>
 /// マップチップ種別の定義

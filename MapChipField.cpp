@@ -85,6 +85,7 @@ MapChipType MapChipField::GetMapVhipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 		return MapChipType::kBlank;
 	}
 
+	//	ブレークポイントがここを通るとき例外スルーが起きるため改善
 	return mapChipData_.data_[yIndex][xIndex];
 }
 
