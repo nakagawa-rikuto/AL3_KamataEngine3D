@@ -10,6 +10,7 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete player_;
 	delete skydome_;
+	delete mapChipField_;
 
 	/// *************************************
 	/// 解放
@@ -23,6 +24,10 @@ GameScene::~GameScene() {
 }
 
 void GameScene::Initialize() {
+
+	/// *************************************
+	/// 初期化
+	/// *************************************
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -38,41 +43,9 @@ void GameScene::Initialize() {
 
 	// viewProjectionの初期化
 	viewProjection_.Initialize();
-
-	/// *************************************
-	/// 初期化
-	/// *************************************
-	//  要素数
-	const uint32_t kNumBlockVirtical = 10;
-	const uint32_t kNumBlockHorizontal = 20;
-
-	//  ブロック１個分の横幅
-	const float kBlockWidth = 2.0f;
-	const float kBlockHeight = 2.0f;
-
-	// 要素数を変更する
-	// 列数を設定(縦方向のブロック数)
-	worldTransformBlocks_.resize(kNumBlockVirtical);
-
-	// ブロックの生成
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
-		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-
-			/* 2で割ってその答えが1だったら奇数
-			                   0だったら偶数*/
-			if ((i % 2 == 1 && j % 2 == 0) || (i % 2 == 0 && j % 2 == 1))
-				continue;
-
-			// 1列の要素数を設定(横方向のブロック数)
-			worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-
-			worldTransformBlocks_[i][j] = new WorldTransform();
-			worldTransformBlocks_[i][j]->Initialize();
-
-			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
-		}
-	}
+	
+	// 表示ブロックの生成
+	GenerateBlocks();
 
 	/// *************************************
 	/// デバッグカメラの生清と解放
@@ -88,16 +61,19 @@ void GameScene::Initialize() {
 
 	player_ = new Player();
 	player_->Initialeze(model_, playerTextureHandle_, &viewProjection_, {0, 2, 0});
+
+	mapChipField_ = new MapChipField();
+	mapChipField_->LoadMapChipCsv("./Resources/ALMap.csv");
 }
 
 void GameScene::Update() {
 
-	skydome_->Update();
-	player_->Update();
-
 	/// *************************************
 	/// 更新
 	/// *************************************
+
+	skydome_->Update();
+	player_->Update();
 
 	//  ブロックの更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -197,4 +173,32 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::GenerateBlocks() {
+	//  要素数
+	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+
+	// 要素数を変更する
+	// 列数を設定(縦方向のブロック数)
+	worldTransformBlocks_.resize(numBlockVirtical);
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+
+		// 1列の要素数を設定(横方向のブロック数)
+		worldTransformBlocks_[i].resize(numBlockHorizontal);
+	}
+
+	// ブロックの生成
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+			if (MapChipType::kBlock == mapChipField_->GetMapVhipTypeByIndex(j, i)) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransformBlocks_[i][j]->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+
+			}
+		}
+	}
 }
