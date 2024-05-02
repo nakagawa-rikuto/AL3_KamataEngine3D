@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <numbers>
 
 void Player::Initialeze(Model* model, uint32_t texturehandle, ViewProjection* viewProjection, const Vector3& pos) {
 
@@ -15,9 +16,25 @@ void Player::Initialeze(Model* model, uint32_t texturehandle, ViewProjection* vi
 
 	// 引数の内容をメンバ変数に記録
 	viewProjection_ = viewProjection;
+
+	/// ***********************
+	/// 初期回転
+	/// ***********************
+	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 }
 
 void Player::Update() {
+
+	/// *********************
+	/// 速度
+	/// *********************
+	// 移動入力
+
+	// 移動
+	worldTransform_.translation_ += velocity_;
+
+	// 行列計算
+	worldTransform_.UpdateMatrix();
 
 	// 行列を更新して定数バッファに転送
 	worldTransform_.UpdateMatrix();

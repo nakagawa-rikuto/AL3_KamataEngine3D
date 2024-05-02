@@ -29,6 +29,9 @@ public:
 
 private:
 
+	// 速度
+	Vector3 velocity_ = {};
+
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
