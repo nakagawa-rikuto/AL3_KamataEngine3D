@@ -2,6 +2,34 @@
 #include "TextureManager.h"
 #include <cassert>
 
+void GameScene::GenerateBlocks() {
+	//  要素数
+	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+
+	// 要素数を変更する
+	// 列数を設定(縦方向のブロック数)
+	worldTransformBlocks_.resize(numBlockVirtical);
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+
+		// 1列の要素数を設定(横方向のブロック数)
+		worldTransformBlocks_[i].resize(numBlockHorizontal);
+	}
+
+	// ブロックの生成
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+			if (mapChipField_->GetMapChipTypeByIndex(i, j) == MapChipType::kBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[j][i] = worldTransform;
+				worldTransformBlocks_[j][i]->translation_ = mapChipField_->GetMapChipPositionByIndex(i, j);
+			}
+		}
+	}
+}
+
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -33,6 +61,10 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	/// *************************************
+	/// 読み込み・生成
+	/// *************************************
+
 	// テクスチャの読み込み
 	textureHandle_ = TextureManager::Load("./Resources/cube/cube.jpg");
 	playerTextureHandle_ = TextureManager::Load("./Resources/mario.png");
@@ -41,9 +73,22 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 
+	/// *************************************
+	/// Initialeze
+	/// *************************************
+	
 	// viewProjectionの初期化
 	viewProjection_.Initialize();
-	
+
+	skydome_ = new skydome();
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
+
+	player_ = new Player();
+	player_->Initialeze(model_, playerTextureHandle_, &viewProjection_, {2, 2, 0});
+
+	mapChipField_ = new MapChipField();
+	mapChipField_->LoadMapChipCsv("./Resources/ALMap.csv");
+
 	// 表示ブロックの生成
 	GenerateBlocks();
 
@@ -52,18 +97,6 @@ void GameScene::Initialize() {
 	/// *************************************
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
-
-	/// *************************************
-	/// Initialeze
-	/// *************************************
-	skydome_ = new skydome();
-	skydome_->Initialize(modelSkydome_, &viewProjection_);
-
-	player_ = new Player();
-	player_->Initialeze(model_, playerTextureHandle_, &viewProjection_, {0, 2, 0});
-
-	mapChipField_ = new MapChipField();
-	mapChipField_->LoadMapChipCsv("./Resources/ALMap.csv");
 }
 
 void GameScene::Update() {
@@ -175,30 +208,3 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-void GameScene::GenerateBlocks() {
-	//  要素数
-	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
-	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
-
-	// 要素数を変更する
-	// 列数を設定(縦方向のブロック数)
-	worldTransformBlocks_.resize(numBlockVirtical);
-	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
-
-		// 1列の要素数を設定(横方向のブロック数)
-		worldTransformBlocks_[i].resize(numBlockHorizontal);
-	}
-
-	// ブロックの生成
-	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
-		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
-			if (MapChipType::kBlock == mapChipField_->GetMapVhipTypeByIndex(j, i)) {
-				WorldTransform* worldTransform = new WorldTransform();
-				worldTransformBlocks_[i][j]->Initialize();
-				worldTransformBlocks_[i][j] = worldTransform;
-				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
-
-			}
-		}
-	}
-}

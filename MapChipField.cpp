@@ -1,9 +1,9 @@
 #include "MapChipField.h"
-#include <map>
-#include <string>
-#include <fstream>
-#include <sstream>
 #include <assert.h>
+#include <fstream>
+#include <map>
+#include <sstream>
+
 
 /// <summary>
 /// 無名名前空間
@@ -19,10 +19,10 @@ std::map<std::string, MapChipType> mapChipTable = {
     {"0", MapChipType::kBlank},
     {"1", MapChipType::kBlock},
 };
-}
+} // namespace
 
 void MapChipField::ResetMapChipData() {
-    // マップチップデータのリセット
+	// マップチップデータのリセット
 	mapChipData_.data_.clear();
 	mapChipData_.data_.resize(kNumBlockVirtical_);
 	for (std::vector<MapChipType>& mapChipDataLine : mapChipData_.data_) {
@@ -57,7 +57,7 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath) {
 	/// 解析と記録
 	/// ***********************
 	// CSVからマップチップデータを読み込む
-	for (uint32_t i = 0; i < kNumBlockVirtical_; i++) {
+	for (uint32_t i = 0; i < kNumBlockVirtical_; ++i) {
 
 		std::string line;
 		std::getline(mapChipCsv, line);
@@ -77,7 +77,9 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath) {
 	}
 }
 
-MapChipType MapChipField::GetMapVhipTypeByIndex(uint32_t xIndex, uint32_t yIndex) { 
+MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex) {
+
+	/* 範囲外を指定されたら空白を返す */
 	if (xIndex < 0 || kNumBlockHorizontal_ - 1 < xIndex) {
 		return MapChipType::kBlank;
 	}
@@ -85,7 +87,6 @@ MapChipType MapChipField::GetMapVhipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 		return MapChipType::kBlank;
 	}
 
-	//	ブレークポイントがここを通るとき例外スルーが起きるため改善
 	return mapChipData_.data_[yIndex][xIndex];
 }
 

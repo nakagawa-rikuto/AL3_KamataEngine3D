@@ -57,7 +57,7 @@ private: // メンバ変数
 	skydome* skydome_ = nullptr;
 	Player* player_ = nullptr;
 	// マップチップフィールド
-	MapChipField* mapChipField_;
+	MapChipField* mapChipField_ = nullptr;
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
