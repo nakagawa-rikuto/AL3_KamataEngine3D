@@ -53,21 +53,22 @@ private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+	 
+	skydome* skydome_ = nullptr; // SkyDome
+	Player* player_ = nullptr; // Player
+	MapChipField* mapChipField_ = nullptr; // マップチップフィールド
 
-	skydome* skydome_ = nullptr;
-	Player* player_ = nullptr;
-	// マップチップフィールド
-	MapChipField* mapChipField_ = nullptr;
+	Vector3 playerPosition_;
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
-	uint32_t playerTextureHandle_ = 0;
 
 	//VeiwProjection
 	ViewProjection viewProjection_;
 
 	// 3Dモデル
 	Model* modelSkydome_ = nullptr;
+	Model* modelPlayer_ = nullptr;
 
 	// 3Dモデルデータ
 	Model* model_ = nullptr;

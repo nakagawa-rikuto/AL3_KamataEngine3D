@@ -67,11 +67,11 @@ void GameScene::Initialize() {
 
 	// テクスチャの読み込み
 	textureHandle_ = TextureManager::Load("./Resources/cube/cube.jpg");
-	playerTextureHandle_ = TextureManager::Load("./Resources/mario.png");
 
 	// 3Dモデルの生成
 	model_ = Model::Create();
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	modelPlayer_ = Model::CreateFromOBJ("Player", true);
 
 	/// *************************************
 	/// Initialeze
@@ -84,8 +84,8 @@ void GameScene::Initialize() {
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
 	player_ = new Player();
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	player_->Initialeze(model_, playerTextureHandle_, &viewProjection_, {2, 2, 0});
+	playerPosition_ = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	player_->Initialeze(modelPlayer_, &viewProjection_, playerPosition_);
 
 	mapChipField_ = new MapChipField();
 	mapChipField_->LoadMapChipCsv("./Resources/ALMap.csv");
