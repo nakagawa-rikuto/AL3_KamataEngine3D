@@ -85,3 +85,9 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 
 	return affineMatrix_;
 }
+
+// EaseOut関数
+float EaseOut(float t) { return 1.0f - (1.0f - t) * (1.0f - t); }
+
+// EaseIn関数
+float EaseIn(float t) { return t * t; }

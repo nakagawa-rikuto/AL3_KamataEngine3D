@@ -11,12 +11,6 @@
 class Player {
 public:
 
-	// 左右
-	enum class LRDirection {
-		kRight,
-		kLeft,
-	};
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -36,12 +30,21 @@ public:
 
 private:
 
+	// 左右
+	enum class LRDirection {
+		kRight,
+		kLeft,
+	};
+
 	// 速度
 	Vector3 velocity_ = {};
 
 	// 左右
 	LRDirection lrDirection_ = LRDirection::kRight;
 
+	/*///////////////////////////////////////////
+	                 角度補間
+	*////////////////////////////////////////////
 	// 旋回開始時の角度
 	float turnFirstRotationY_ = 0.0f;
 
@@ -49,8 +52,11 @@ private:
 	float turnTimer_ = 0.0f;
 
 	// 旋回時間<秒>
-	static inline const float kTimeTurn = 0.3f;
+	static inline const float kTimeTurn_ = 0.3f;
 
+	/*///////////////////////////////////////////
+	                 左右移動
+	*////////////////////////////////////////////
 	// 慣性移動
 	static inline const float KAcceleration_ = 0.02f;
 
@@ -60,17 +66,23 @@ private:
 	// 最大速度制限
 	static inline const float kLimitRunSpeed_ = 4.0f;
 
-	// 設置状態フラグ
+	/*///////////////////////////////////////////
+	                 ジャンプ
+	*////////////////////////////////////////////
+	// 接地状態フラグ
 	bool onGround_ = true;
 
 	// 重力加速度(下方向)
-	static inline const float kGravityAcceleration_ = 0.98f;
+	static inline const float kGravityAcceleration_ = 0.05f;
 
 	// 最大落下速度(下方向)
-	static inline const float kLimitFallSpeed_ = 2.0f;
+	static inline const float kLimitFallSpeed_ = 1.0f;
 
 	// ジャンプ初速(上方向)
-	static inline const float kJumpAcceleration_ = 0.9f;
+	static inline const float kJumpAcceleration_ = 1.0f;
+
+	// 
+	static inline const float kAttenuationLanding_ = 0.05f;
 
 	// ワールド変換データ
 	WorldTransform worldTransform_;
