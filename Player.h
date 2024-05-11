@@ -16,7 +16,7 @@ public:
 	/// </summary>
 	/// <param name="model"></param>
 	/// <param name="viewProjection"></param>
-	void Initialeze(Model* model, ViewProjection* viewProjection, const Vector3& pos);
+	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& pos);
 
 	/// <summary>
 	/// 更新
@@ -27,6 +27,14 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
+
+	/// <summary>
+	/// 速度加算
+	/// </summary>
+	/// <returns></returns>
+	const Vector3& GetVelocity() const { return velocity_; }
+
+	WorldTransform& GetWorldTransform() { return worldTransform_; }
 
 private:
 

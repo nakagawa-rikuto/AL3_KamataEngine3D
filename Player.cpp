@@ -4,7 +4,7 @@
 #include <algorithm>
 
 
-void Player::Initialeze(Model* model, ViewProjection* viewProjection, const Vector3& pos) {
+void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& pos) {
 
 	// NULLポインタチェック
 	assert(model);

@@ -30,3 +30,6 @@ float EaseOut(float t);
 
 // EaseIn関数
 float EaseIn(float t);
+
+// 線形補間関数 Leap
+Vector3 Leap(const Vector3& start, const Vector3& end, float t);

@@ -34,11 +34,13 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete model_;
-	delete debugCamera_;
-	delete modelSkydome_;
+	delete modelSkyDome_;
+	delete modelPlayer_;
 	delete player_;
-	delete skydome_;
+	delete skyDome_;
+	delete cameraController_;
 	delete mapChipField_;
+	delete debugCamera_;
 
 	/// *************************************
 	/// 解放
@@ -70,25 +72,35 @@ void GameScene::Initialize() {
 
 	// 3Dモデルの生成
 	model_ = Model::Create();
-	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	modelSkyDome_ = Model::CreateFromOBJ("skydome", true);
 	modelPlayer_ = Model::CreateFromOBJ("Player", true);
 
 	/// *************************************
-	/// Initialeze
+	/// Initialize
 	/// *************************************
 	
 	// viewProjectionの初期化
 	viewProjection_.Initialize();
 
-	skydome_ = new skydome();
-	skydome_->Initialize(modelSkydome_, &viewProjection_);
+	// SkyDome
+	skyDome_ = new skydome();
+	skyDome_->Initialize(modelSkyDome_, &viewProjection_);
 
+	// Player
 	player_ = new Player();
 	playerPosition_ = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	player_->Initialeze(modelPlayer_, &viewProjection_, playerPosition_);
-
+	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition_);
+	
+	// MapChipField
 	mapChipField_ = new MapChipField();
 	mapChipField_->LoadMapChipCsv("./Resources/ALMap.csv");
+
+	// CameraController
+	cameraController_ = new CameraController();
+	cameraController_->Initialize(&viewProjection_);
+	cameraController_->SetTarget(player_);
+	cameraController_->SetMovableArea(cameraLimitMove_);
+	cameraController_->Reset();
 
 	// 表示ブロックの生成
 	GenerateBlocks();
@@ -106,8 +118,9 @@ void GameScene::Update() {
 	/// 更新
 	/// *************************************
 
-	skydome_->Update();
+	skyDome_->Update();
 	player_->Update();
+	cameraController_->Update();
 
 	//  ブロックの更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -179,7 +192,7 @@ void GameScene::Draw() {
 	/// *************************************
 	/// 描画
 	/// *************************************
-	skydome_->Draw();
+	skyDome_->Draw();
 	player_->Draw();
 
 	// ブロックの描画

@@ -91,3 +91,22 @@ float EaseOut(float t) { return 1.0f - (1.0f - t) * (1.0f - t); }
 
 // EaseIn関数
 float EaseIn(float t) { return t * t; }
+
+// 線形補間関数
+Vector3 Leap(const Vector3& start, const Vector3& end, float t) {
+
+	// 補間パラメータが0ならばStartを返す
+	if (t <= 0) {
+		return start;
+	}
+
+	// 補間パラメータが1ならばEndを返す
+	else if (t >= 1) {
+		return end;
+	}
+
+	// startからEndまでの線形補間を計算して返す
+	else {
+		return Vector3(start.x + (end.x - start.x) * t, start.y + (end.y - start.y) * t, start.z + (end.z - start.z) * t);
+	}
+}

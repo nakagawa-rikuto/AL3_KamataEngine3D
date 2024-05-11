@@ -11,6 +11,7 @@
 #include <vector>
 #include "skydome.h"
 #include "Player.h"
+#include "CameraController.h"
 #include "MapChipField.h"
 
 /// <summary>
@@ -49,25 +50,32 @@ public: // メンバ関数
 	/// </summary>
 	void GenerateBlocks();
 
-private: // メンバ変数
+private: 
+	// メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	 
-	skydome* skydome_ = nullptr; // SkyDome
+	// クラス
+	skydome* skyDome_ = nullptr; // SkyDome
 	Player* player_ = nullptr; // Player
 	MapChipField* mapChipField_ = nullptr; // マップチップフィールド
+	CameraController* cameraController_ = nullptr; // CameraController
 
+	// Playerの座標
 	Vector3 playerPosition_;
+
+	// カメラの移動範囲
+	Vector4 cameraLimitMove_ = {0.0f, 100.0f, 0.0f, 100.0f};
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 
-	//VeiwProjection
+	//ViewProjection
 	ViewProjection viewProjection_;
 
 	// 3Dモデル
-	Model* modelSkydome_ = nullptr;
+	Model* modelSkyDome_ = nullptr;
 	Model* modelPlayer_ = nullptr;
 
 	// 3Dモデルデータ
@@ -88,11 +96,7 @@ private: // メンバ変数
 	DebugCamera* debugCamera_ = nullptr;
 
 	/// *************************************
-	/// 二次元std::vector
+	/// 二次元Std::vector
 	/// *************************************
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
-
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
 };
