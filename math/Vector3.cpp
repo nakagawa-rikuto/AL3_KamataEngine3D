@@ -2,12 +2,11 @@
 
 Vector3 Vector3::operator+=(Vector3& obj) { 
 	
-	Vector3 sc = {};
-	sc.x = this->x + obj.x;
-	sc.y = this->y + obj.y;
-	sc.z = this->z + obj.z;
+	this->x += obj.x;
+	this->y += obj.y;
+	this->z += obj.z;
 
-	return sc;
+	return Vector3{this->x, this->y, this->z};
 }
 
 Vector3 const Vector3::operator+(const Vector3& obj) const{ 

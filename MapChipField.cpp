@@ -93,3 +93,24 @@ MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) { 
 	return Vector3(kBlockWidth_ * xIndex, kBlockHeight_ * (kNumBlockVirtical_ - 1 - yIndex), 0); 
 }
+
+IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) { 
+	IndexSet indexSet = {}; 
+	indexSet.xIndex = static_cast<uint32_t>((position.x + kBlockWidth_ / 2.0f) / kBlockWidth_);
+	indexSet.yIndex = static_cast<uint32_t>(kNumBlockVirtical_ - 1 - ((position.y + kBlockHeight_ / 2.0f) / kBlockHeight_));
+	return indexSet;
+}
+
+Rect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex) {
+
+	// 指定ブロックの中心座標を取得
+	Vector3 center = GetMapChipPositionByIndex(xIndex, yIndex);
+
+	Rect rect;
+	rect.left = center.x - kBlockWidth_ / 2.0f;
+	rect.right = center.x + kBlockWidth_ / 2.0f;
+	rect.bottom = center.y - kBlockHeight_ / 2.0f;
+	rect.top = center.y + kBlockHeight_ / 2.0f;
+
+	return rect;
+}

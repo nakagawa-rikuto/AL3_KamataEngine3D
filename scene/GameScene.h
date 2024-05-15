@@ -19,6 +19,56 @@
 /// </summary>
 class GameScene {
 
+private:
+	// メンバ変数
+	DirectXCommon* dxCommon_ = nullptr;
+	Input* input_ = nullptr;
+	Audio* audio_ = nullptr;
+
+	// クラス
+	skydome* skyDome_ = nullptr;                   // SkyDome
+	Player* player_ = nullptr;                     // Player
+	MapChipField* mapChipField_ = nullptr;         // マップチップフィールド
+	CameraController* cameraController_ = nullptr; // CameraController
+
+	// Playerの座標
+	Vector3 playerPosition_;
+
+	// カメラの移動範囲
+	Vector4 cameraLimitMove_ = {0.0f, 100.0f, 0.0f, 100.0f};
+
+	// テクスチャハンドル
+	uint32_t textureHandle_ = 0;
+
+	// ViewProjection
+	ViewProjection viewProjection_;
+
+	// 3Dモデル
+	Model* modelSkyDome_ = nullptr;
+	Model* modelPlayer_ = nullptr;
+
+	// 3Dモデルデータ
+	Model* model_ = nullptr;
+
+	/// *************************************
+	/// デバッグカメラの切り替え
+	/// *************************************
+
+	// デバッグカメラ有効
+	bool isDebugCameraActive_ = false;
+
+	/// *************************************
+	/// デバッグカメラの生清と解放
+	/// *************************************
+
+	// デバッグカメラ
+	DebugCamera* debugCamera_ = nullptr;
+
+	/// *************************************
+	/// 二次元Std::vector
+	/// *************************************
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+
 public: // メンバ関数
 	/// <summary>
 	/// コンストクラタ
@@ -50,53 +100,5 @@ public: // メンバ関数
 	/// </summary>
 	void GenerateBlocks();
 
-private: 
-	// メンバ変数
-	DirectXCommon* dxCommon_ = nullptr;
-	Input* input_ = nullptr;
-	Audio* audio_ = nullptr;
-	 
-	// クラス
-	skydome* skyDome_ = nullptr; // SkyDome
-	Player* player_ = nullptr; // Player
-	MapChipField* mapChipField_ = nullptr; // マップチップフィールド
-	CameraController* cameraController_ = nullptr; // CameraController
 
-	// Playerの座標
-	Vector3 playerPosition_;
-
-	// カメラの移動範囲
-	Vector4 cameraLimitMove_ = {0.0f, 100.0f, 0.0f, 100.0f};
-
-	// テクスチャハンドル
-	uint32_t textureHandle_ = 0;
-
-	//ViewProjection
-	ViewProjection viewProjection_;
-
-	// 3Dモデル
-	Model* modelSkyDome_ = nullptr;
-	Model* modelPlayer_ = nullptr;
-
-	// 3Dモデルデータ
-	Model* model_ = nullptr;
-
-	/// *************************************
-	/// デバッグカメラの切り替え
-	/// *************************************
-
-	// デバッグカメラ有効
-	bool isDebugCameraActive_ = false;
-
-	/// *************************************
-	/// デバッグカメラの生清と解放
-	/// *************************************
-
-	// デバッグカメラ
-	DebugCamera* debugCamera_ = nullptr;
-
-	/// *************************************
-	/// 二次元Std::vector
-	/// *************************************
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 };

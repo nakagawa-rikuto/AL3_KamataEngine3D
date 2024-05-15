@@ -5,44 +5,54 @@
 #include "Input.h"
 #include "cassert"
 
+
+class MapChipField;
+
+// 左右
+enum class LRDirection {
+	kRight,
+	kLeft,
+};
+
+// 4つの角の座標計算
+enum Corner {
+	kRightBottom, // 右下
+	kLeftBottom,  // 左下
+	kRightTop,    // 右上
+	kLeftTop,     // 左上
+
+	kNumCorner // 要素数
+};
+
+// マップチップの当たり判定情報
+struct CollisionMapInfo {
+	bool kCeiling_ = false; // 天井衝突フラグ
+	bool kLanding_ = false; // 着地フラグ
+	bool kWall_ = false;    // 壁接触フラグ
+	Vector3 moveVolume_;    // 移動量
+};
+
 /// <summary>
 /// 自キャラ
 /// </summary>
 class Player {
-public:
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="model"></param>
-	/// <param name="viewProjection"></param>
-	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& pos);
-
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw();
-
-	/// <summary>
-	/// 速度加算
-	/// </summary>
-	/// <returns></returns>
-	const Vector3& GetVelocity() const { return velocity_; }
-
-	WorldTransform& GetWorldTransform() { return worldTransform_; }
-
 private:
 
-	// 左右
-	enum class LRDirection {
-		kRight,
-		kLeft,
-	};
+	/*//////////////////////////////////////////////////////////////////////
+	                           メンバ変数
+	*///////////////////////////////////////////////////////////////////////
+
+	// マップチップによるフィールド
+	MapChipField* mapChipField_ = nullptr;
+
+	// ワールド変換データ
+	WorldTransform worldTransform_;
+
+	// ビュープロジェクション
+	ViewProjection* viewProjection_ = nullptr;
+
+	// モデル
+	Model* model_ = nullptr;
 
 	// 速度
 	Vector3 velocity_ = {};
@@ -69,10 +79,10 @@ private:
 	static inline const float KAcceleration_ = 0.02f;
 
 	// 速度減衰
-	static inline const float kAttenuation_ = 0.1f;
+	static inline const float kAttenuation_ = 0.05f;
 
 	// 最大速度制限
-	static inline const float kLimitRunSpeed_ = 4.0f;
+	static inline const float kLimitRunSpeed_ = 0.5f;
 
 	/*///////////////////////////////////////////
 	                 ジャンプ
@@ -89,15 +99,104 @@ private:
 	// ジャンプ初速(上方向)
 	static inline const float kJumpAcceleration_ = 1.0f;
 
+	// 飛んでる時の横の減速率
+	static inline const float kAttenuationLanding_ = 0.5f;
+
+	/*///////////////////////////////////////////
+	             衝突判定と応答の全容
+	*////////////////////////////////////////////
+	// キャラクターの当たり判定サイズ
+	static inline const float kWidth_ = 0.8f;
+	static inline const float kHeight_ = 0.8f;
+
+	// 衝突判定を初期化
+	CollisionMapInfo collisionMapInfo_;
+	CollisionMapInfo preCollisionMapInfo_;
+
 	// 
-	static inline const float kAttenuationLanding_ = 0.05f;
+	static inline const float kBlank = 1.0f;
 
-	// ワールド変換データ
-	WorldTransform worldTransform_;
 
-	// ビュープロジェクション
-	ViewProjection* viewProjection_ = nullptr;
+public:
 
-	// モデル
-	Model* model_ = nullptr;
+	/// <summary>
+	/// 移動入力
+	/// </summary>
+	void InputMove();
+
+	/// <summary>
+	/// 旋回処理
+	/// </summary>
+	void Turning();
+
+	/// <summary>
+	/// マップ衝突判定
+	/// </summary>
+	/// <param name="info"></param>
+	void CollisionMap(CollisionMapInfo& info, CollisionMapInfo& preInfo);
+
+	/// <summary>
+	/// マップ衝突判定方向
+	/// </summary>
+	/// <param name="info"></param>
+	void CollisionDistanceTop(CollisionMapInfo& info, CollisionMapInfo& preInfo);
+	//void CollisionDistanceBottom(CollisionMapInfo& info);
+	//void CollisionDistanceRight(CollisionMapInfo& info);
+	//void CollisionDistanceLeft(CollisionMapInfo& info);
+
+	/// <summary>
+	/// 指定した角の座標計算
+	/// </summary>
+	/// <param name="center"></param>
+	/// <param name="corner"></param>
+	/// <returns></returns>
+	Vector3 CornerPosition(const Vector3& center, Corner corner);
+
+	/// <summary>
+	/// 判定結果を反映して移動させる
+	/// </summary>
+	/// <param name="info"></param>
+	void CollisionResultMove(CollisionMapInfo& info);
+
+	/// <summary>
+	/// 天井に接触している場合の処理
+	/// </summary>
+	/// <param name="info"></param>
+	void CollisionCeiling(const CollisionMapInfo& info, CollisionMapInfo& preInfo);
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="viewProjection"></param>
+	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& pos);
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
+
+	/// <summary>
+	/// 速度加算
+	/// </summary>
+	/// <returns></returns>
+	const Vector3& GetVelocity() const { return velocity_; }
+
+	/// <summary>
+	/// ゲッター
+	/// </summary>
+	/// <returns></returns>
+	WorldTransform& GetWorldTransform() { return worldTransform_; }
+
+	/// <summary>
+	/// セッター
+	/// </summary>
+	/// <param name="mapChipField"></param>
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
 };

@@ -10,49 +10,14 @@ class Player;
 /// カメラコントローラ
 /// </summary>
 class CameraController {
-public:
-
-	/// <summary>
-	/// リセット
-	/// </summary>
-	void Reset();
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize(ViewProjection* viewProjection);
-
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
-
-	/// <summary>
-	/// セッター
-	/// </summary>
-	/// <param name="target"></param>
-	void SetTarget(Player* target) { target_ = target; }
-
-	/// <summary>
-	/// セッター
-	/// </summary>
-	/// <param name="area"></param>
-	void SetMovableArea(Vector4 area) { 
-		movableArea_.left = area.x; 
-		movableArea_.right = area.y;
-		movableArea_.bottom = area.z;
-		movableArea_.top = area.w;
-	}
-
 
 private:
-
 	// 矩形
 	struct Rect {
-		float left = 0.0f;    // 左端
- 		float right = 1.0f;   // 右端
-		float bottom = 0.0f;  // 下端
-		float top = 1.0f;     // 上端
+		float left = 0.0f;   // 左端
+		float right = 1.0f;  // 右端
+		float bottom = 0.0f; // 下端
+		float top = 1.0f;    // 上端
 	};
 
 	// ビュープロジェクション
@@ -97,4 +62,41 @@ private:
 	*/ ////////////////////////////////////////
 	// 追従対象の各方向へのカメラ移動範囲
 	static inline const Rect targetMargin_ = {10.0f, -10.0f, 10.0f, -10.0f};
+
+public:
+
+	/// <summary>
+	/// リセット
+	/// </summary>
+	void Reset();
+
+	/// <summary>
+	/// セッター
+	/// </summary>
+	/// <param name="target"></param>
+	void SetTarget(Player* target) { target_ = target; }
+
+	/// <summary>
+	/// セッター
+	/// </summary>
+	/// <param name="area"></param>
+	void SetMovableArea(Vector4 area) {
+		movableArea_.left = area.x;
+		movableArea_.right = area.y;
+		movableArea_.bottom = area.z;
+		movableArea_.top = area.w;
+	}
+
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize(ViewProjection* viewProjection);
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
+
+	
 };

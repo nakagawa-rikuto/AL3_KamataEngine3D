@@ -4,6 +4,18 @@
 #include "ViewProjection.h"
 
 class skydome {
+
+private:
+	/// メンバ変数の初期化
+	// ワールド変換データ
+	WorldTransform worldTransform_;
+
+	// モデル
+	Model* model_ = nullptr;
+
+	// ビュープロジェクション
+	ViewProjection* viewProjection_;
+
 public:
 	/// <summary>
 	/// 初期化
@@ -19,16 +31,4 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
-
-private:
-
-	/// メンバ変数の初期化
-	// ワールド変換データ
-	WorldTransform worldTransform_;
-
-	// モデル
-	Model* model_ = nullptr;
-
-	// ビュープロジェクション
-	ViewProjection* viewProjection_;
 };

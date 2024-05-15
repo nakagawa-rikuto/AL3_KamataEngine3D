@@ -86,14 +86,15 @@ void GameScene::Initialize() {
 	skyDome_ = new skydome();
 	skyDome_->Initialize(modelSkyDome_, &viewProjection_);
 
+	// MapChipField
+	mapChipField_ = new MapChipField();
+	mapChipField_->LoadMapChipCsv("./Resources/ALMap.csv");
+
 	// Player
 	player_ = new Player();
 	playerPosition_ = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition_);
-	
-	// MapChipField
-	mapChipField_ = new MapChipField();
-	mapChipField_->LoadMapChipCsv("./Resources/ALMap.csv");
+	player_->SetMapChipField(mapChipField_);
 
 	// CameraController
 	cameraController_ = new CameraController();
