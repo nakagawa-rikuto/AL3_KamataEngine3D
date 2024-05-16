@@ -184,29 +184,30 @@ void Player::CollisionDistanceTop(CollisionMapInfo& info, CollisionMapInfo& preI
 	MapChipType mapChipType;
 
 	// 真上の当たり判定を行う
-	bool hit = false;
+	bool hitLeft = false;
+	bool hitRight = false;
 
 	// 左上点の判定
 	IndexSet indexSet;
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
-		hit = true;
+		hitLeft = true;
 	} else if (mapChipType == MapChipType::kBlank) {
-		hit = false;
+		hitLeft = false;
 	}
 
 	// 右上点の判定
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
-		hit = true;
+		hitRight = true;
 	} else if (mapChipType == MapChipType::kBlank) {
-		hit = false;
+		hitRight = false;
 	}
 
 	// ブロックにヒット
-	if (hit) {
+	if (hitLeft || hitRight) {
 		// めり込みを排除する方向に移動量を調整する
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop || kLeftTop]);
 		// めり込み先ブロックの範囲矩形
