@@ -60,6 +60,9 @@ private:
 	// 左右
 	LRDirection lrDirection_ = LRDirection::kRight;
 
+	// 微小な余白
+	static inline const float margin_ = 0.1f;
+
 	/*///////////////////////////////////////////
 	                 角度補間
 	*////////////////////////////////////////////
@@ -140,7 +143,7 @@ public:
 	/// </summary>
 	/// <param name="info"></param>
 	void CollisionDistanceTop(CollisionMapInfo& info, CollisionMapInfo& preInfo);
-	//void CollisionDistanceBottom(CollisionMapInfo& info);
+	void CollisionDistanceBottom(CollisionMapInfo& info, CollisionMapInfo& preInfo);
 	//void CollisionDistanceRight(CollisionMapInfo& info);
 	//void CollisionDistanceLeft(CollisionMapInfo& info);
 
@@ -163,6 +166,11 @@ public:
 	/// </summary>
 	/// <param name="info"></param>
 	void CollisionCeiling(const CollisionMapInfo& info, CollisionMapInfo& preInfo);
+
+	/// <summary>
+	/// 接地状態の切り替え処理
+	/// </summary>
+	void CollisionLanding(const CollisionMapInfo& info, CollisionMapInfo& preInfo);
 
 	/// <summary>
 	/// 初期化
