@@ -10,20 +10,24 @@ void GameScene::GenerateBlocks() {
 	// 要素数を変更する
 	// 列数を設定(縦方向のブロック数)
 	worldTransformBlocks_.resize(numBlockVirtical);
-	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+	//for (uint32_t i = 0; i < numBlockVirtical; ++i) {
 
-		// 1列の要素数を設定(横方向のブロック数)
-		worldTransformBlocks_[i].resize(numBlockHorizontal);
-	}
+	//	// 1列の要素数を設定(横方向のブロック数)
+	//	worldTransformBlocks_[i].resize(numBlockHorizontal);
+	//}
 
 	// ブロックの生成
 	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
 		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
-			if (mapChipField_->GetMapChipTypeByIndex(i, j) == MapChipType::kBlock) {
+
+			// 1列の要素数を設定(横方向のブロック数)
+			worldTransformBlocks_[i].resize(numBlockHorizontal);
+
+			if (mapChipField_->GetMapChipTypeByIndex(j,i) == MapChipType::kBlock) {
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
-				worldTransformBlocks_[j][i] = worldTransform;
-				worldTransformBlocks_[j][i]->translation_ = mapChipField_->GetMapChipPositionByIndex(i, j);
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
 			}
 		}
 	}
@@ -199,8 +203,10 @@ void GameScene::Draw() {
 	// ブロックの描画
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
+			if (!worldTransformBlock) {
 				continue;
+			}
+				
 			model_->Draw(*worldTransformBlock, viewProjection_);
 		}
 	}

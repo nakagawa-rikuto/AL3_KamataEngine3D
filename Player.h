@@ -4,6 +4,7 @@
 #include "WorldTransform.h"
 #include "Input.h"
 #include "cassert"
+#include "imgui.h"
 
 
 class MapChipField;
@@ -61,7 +62,7 @@ private:
 	LRDirection lrDirection_ = LRDirection::kRight;
 
 	// 微小な余白
-	static inline const float margin_ = 0.1f;
+	static inline const float margin_ = 0.4f;
 
 	/*///////////////////////////////////////////
 	                 角度補間
@@ -79,13 +80,16 @@ private:
 	                 左右移動
 	*////////////////////////////////////////////
 	// 慣性移動
-	static inline const float KAcceleration_ = 0.02f;
+	static inline const float KAcceleration_ = 0.01f;
 
 	// 速度減衰
-	static inline const float kAttenuation_ = 0.05f;
+	static inline const float kAttenuation_ = 0.2f;
 
 	// 最大速度制限
-	static inline const float kLimitRunSpeed_ = 0.5f;
+	static inline const float kLimitRunSpeed_ = 0.2f;
+
+	// 壁に触れた時の減衰
+	static inline const float kAttenuationWall_ = 0.7f;
 
 	/*///////////////////////////////////////////
 	                 ジャンプ
@@ -94,13 +98,13 @@ private:
 	bool onGround_ = true;
 
 	// 重力加速度(下方向)
-	static inline const float kGravityAcceleration_ = 0.05f;
+	static inline const float kGravityAcceleration_ = 0.02f;
 
 	// 最大落下速度(下方向)
-	static inline const float kLimitFallSpeed_ = 1.0f;
+	static inline const float kLimitFallSpeed_ = 0.4f;
 
 	// ジャンプ初速(上方向)
-	static inline const float kJumpAcceleration_ = 1.0f;
+	static inline const float kJumpAcceleration_ = 0.5f;
 
 	// 飛んでる時の横の減速率
 	static inline const float kAttenuationLanding_ = 0.5f;
@@ -109,8 +113,8 @@ private:
 	             衝突判定と応答の全容
 	*////////////////////////////////////////////
 	// キャラクターの当たり判定サイズ
-	static inline const float kWidth_ = 0.8f;
-	static inline const float kHeight_ = 0.8f;
+	static inline const float kWidth_ = 1.6f;
+	static inline const float kHeight_ = 1.6f;
 
 	// 衝突判定を初期化
 	CollisionMapInfo collisionMapInfo_;
@@ -121,6 +125,13 @@ private:
 
 
 public:
+
+	/// <summary>
+	/// ImGui
+	/// </summary>
+	/// <param name="info"></param>
+	/// <param name="preInfo"></param>
+	void ImGuiDebug(CollisionMapInfo& info, CollisionMapInfo& preInfo);
 
 	/// <summary>
 	/// 移動入力
@@ -144,8 +155,8 @@ public:
 	/// <param name="info"></param>
 	void CollisionDistanceTop(CollisionMapInfo& info, CollisionMapInfo& preInfo);
 	void CollisionDistanceBottom(CollisionMapInfo& info, CollisionMapInfo& preInfo);
-	//void CollisionDistanceRight(CollisionMapInfo& info);
-	//void CollisionDistanceLeft(CollisionMapInfo& info);
+	void CollisionDistanceRight(CollisionMapInfo& info, CollisionMapInfo& preInfo);
+	void CollisionDistanceLeft(CollisionMapInfo& info, CollisionMapInfo& preInfo);
 
 	/// <summary>
 	/// 指定した角の座標計算
@@ -166,6 +177,11 @@ public:
 	/// </summary>
 	/// <param name="info"></param>
 	void CollisionCeiling(const CollisionMapInfo& info, CollisionMapInfo& preInfo);
+
+	/// <summary>
+	/// 壁に触れている場合の処理
+	/// </summary>
+	void CollisionWalling(const CollisionMapInfo& info, CollisionMapInfo& preInfo);
 
 	/// <summary>
 	/// 接地状態の切り替え処理
