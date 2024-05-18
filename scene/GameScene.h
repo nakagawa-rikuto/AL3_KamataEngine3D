@@ -11,6 +11,7 @@
 #include <vector>
 #include "skydome.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "CameraController.h"
 #include "MapChipField.h"
 
@@ -28,11 +29,13 @@ private:
 	// クラス
 	skydome* skyDome_ = nullptr;                   // SkyDome
 	Player* player_ = nullptr;                     // Player
+	Enemy* enemy_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;         // マップチップフィールド
 	CameraController* cameraController_ = nullptr; // CameraController
 
 	// Playerの座標
 	Vector3 playerPosition_;
+	Vector3 enemyPosition_;
 
 	// カメラの移動範囲
 	Vector4 cameraLimitMove_ = {0.0f, 100.0f, 0.0f, 100.0f};
@@ -46,6 +49,7 @@ private:
 	// 3Dモデル
 	Model* modelSkyDome_ = nullptr;
 	Model* modelPlayer_ = nullptr;
+	Model* modelEnemy_ = nullptr;
 
 	// 3Dモデルデータ
 	Model* model_ = nullptr;

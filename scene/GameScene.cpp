@@ -41,6 +41,7 @@ GameScene::~GameScene() {
 	delete modelSkyDome_;
 	delete modelPlayer_;
 	delete player_;
+	delete enemy_;
 	delete skyDome_;
 	delete cameraController_;
 	delete mapChipField_;
@@ -78,6 +79,7 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 	modelSkyDome_ = Model::CreateFromOBJ("skydome", true);
 	modelPlayer_ = Model::CreateFromOBJ("Player", true);
+	modelEnemy_ = Model::CreateFromOBJ("Enemy", true);
 
 	/// *************************************
 	/// Initialize
@@ -99,6 +101,11 @@ void GameScene::Initialize() {
 	playerPosition_ = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition_);
 	player_->SetMapChipField(mapChipField_);
+
+	// Enemy
+	enemy_ = new Enemy();
+	enemyPosition_ = mapChipField_->GetMapChipPositionByIndex(10, 18);
+	enemy_->Initialize(modelEnemy_, &viewProjection_, enemyPosition_);
 
 	// CameraController
 	cameraController_ = new CameraController();
@@ -125,6 +132,7 @@ void GameScene::Update() {
 
 	skyDome_->Update();
 	player_->Update();
+	enemy_->Update();
 	cameraController_->Update();
 
 	//  ブロックの更新
@@ -199,6 +207,7 @@ void GameScene::Draw() {
 	/// *************************************
 	skyDome_->Draw();
 	player_->Draw();
+	enemy_->Draw();
 
 	// ブロックの描画
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

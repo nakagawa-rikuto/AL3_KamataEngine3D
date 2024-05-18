@@ -1,8 +1,13 @@
 #pragma once
+#define _USE_MATH_DEFINES
+#include "math.h"
 #include "Matrix4x4.h"
 #include "Vector3.h"
 #include <assert.h>
 #include <cmath>
+
+// π
+float pi();
 
 // 平行移動
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);

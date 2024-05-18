@@ -1,5 +1,8 @@
 #include "MyMath.h"
 
+float pi() { return static_cast<float>(M_PI); }
+
+
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 
 	Matrix4x4 translateMatrix = {
