@@ -142,8 +142,8 @@ void Player::Turning() {
 void Player::CollisionMap(CollisionMapInfo& info, CollisionMapInfo& preInfo) {
 	CollisionDistanceTop(info, preInfo);
 	CollisionDistanceBottom(info, preInfo);
-	CollisionDistanceRight(info, preInfo);
-	CollisionDistanceLeft(info, preInfo);
+	CollisionDistanceRight(info);
+	CollisionDistanceLeft(info);
 }
 
 // 当たり判定(上)
@@ -276,7 +276,7 @@ void Player::CollisionDistanceBottom(CollisionMapInfo& info, CollisionMapInfo& p
 }
 
 // 当たり判定(右)
-void Player::CollisionDistanceRight(CollisionMapInfo& info, CollisionMapInfo& preInfo) {
+void Player::CollisionDistanceRight(CollisionMapInfo& info) {
 
 	// 右移動中
 	if (velocity_.x <= 0) {
@@ -333,12 +333,11 @@ void Player::CollisionDistanceRight(CollisionMapInfo& info, CollisionMapInfo& pr
 	} else {
 
 		info.kWall_ = false;
-		preInfo.kWall_ = info.kWall_;
 	}
 }
 
 // 当たり判定(左)
-void Player::CollisionDistanceLeft(CollisionMapInfo& info, CollisionMapInfo& preInfo) {
+void Player::CollisionDistanceLeft(CollisionMapInfo& info) {
 
 	// 右移動中
 	if (velocity_.x >= 0) {
@@ -396,7 +395,6 @@ void Player::CollisionDistanceLeft(CollisionMapInfo& info, CollisionMapInfo& pre
 	} else {
 
 		info.kWall_ = false;
-		preInfo.kWall_ = info.kWall_;
 	}
 }
 
@@ -432,12 +430,11 @@ void Player::CollisionCeiling(const CollisionMapInfo& info, CollisionMapInfo& pr
 }
 
 // 壁に触れている場合の処理
-void Player::CollisionWalling(const CollisionMapInfo& info, CollisionMapInfo& preInfo) {
+void Player::CollisionWalling(const CollisionMapInfo& info) {
 
 	// 壁接触による減衰
 	if (info.kWall_) {
 
-		preInfo.kWall_ = info.kWall_;
 		DebugText::GetInstance()->ConsolePrintf("hit wall\n");
 		worldTransform_.translation_.x -= velocity_.x;
 		velocity_.x = 0.0f;
@@ -598,7 +595,7 @@ void Player::Update() {
 	/*///////////////////////////////////////////
 	             壁に接触している場合の処理
 	*////////////////////////////////////////////
-	CollisionWalling(collisionMapInfo_, preCollisionMapInfo_);
+	CollisionWalling(collisionMapInfo_);
 
 	/*///////////////////////////////////////////
 	                 旋回制御

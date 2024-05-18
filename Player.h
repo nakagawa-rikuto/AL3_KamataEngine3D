@@ -155,8 +155,8 @@ public:
 	/// <param name="info"></param>
 	void CollisionDistanceTop(CollisionMapInfo& info, CollisionMapInfo& preInfo);
 	void CollisionDistanceBottom(CollisionMapInfo& info, CollisionMapInfo& preInfo);
-	void CollisionDistanceRight(CollisionMapInfo& info, CollisionMapInfo& preInfo);
-	void CollisionDistanceLeft(CollisionMapInfo& info, CollisionMapInfo& preInfo);
+	void CollisionDistanceRight(CollisionMapInfo& info);
+	void CollisionDistanceLeft(CollisionMapInfo& info);
 
 	/// <summary>
 	/// 指定した角の座標計算
@@ -181,7 +181,7 @@ public:
 	/// <summary>
 	/// 壁に触れている場合の処理
 	/// </summary>
-	void CollisionWalling(const CollisionMapInfo& info, CollisionMapInfo& preInfo);
+	void CollisionWalling(const CollisionMapInfo& info);
 
 	/// <summary>
 	/// 接地状態の切り替え処理
