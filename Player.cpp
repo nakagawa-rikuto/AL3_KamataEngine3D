@@ -3,10 +3,11 @@
 
 Player::~Player() {
 
-	delete model_;
-	delete bullet_;
-}
+	for (PlayerBullet* bullet : bullets_) {
 
+		delete bullet;
+	}
+}
 
 void Player::Rotate() {
 
@@ -14,10 +15,10 @@ void Player::Rotate() {
 	const float kRotSpeed = 0.02f;
 
 	// 押した方向で移動ベクトルを変更
-	if (input_->PushKey(DIK_A)) {
+	if (Input::GetInstance()->PushKey(DIK_A)) {
 
 		worldTransform_.rotation_.y -= kRotSpeed;
-	} else if (input_->PushKey(DIK_D)) {
+	} else if (Input::GetInstance()->PushKey(DIK_D)) {
 
 		worldTransform_.rotation_.y += kRotSpeed;
 	}
@@ -25,14 +26,17 @@ void Player::Rotate() {
 
 void Player::Attack() {
 
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+
+		// 自キャラの座標をコピー
+		//DirectX::XMFLOAT3 position = worldTransform_.translation_;
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_);
 
-		// 弾を登録すr
-		bullet_ = newBullet;
+		// 弾を登録する
+		bullets_.push_back(newBullet);
 	}
 }
 
@@ -46,7 +50,6 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	textureHandle_ = textureHandle;
 
 	// シングルトンインスタンス
-	input_ = Input::GetInstance();
 	worldTransform_.Initialize();
 }
 
@@ -76,16 +79,16 @@ void Player::Update() {
 	        移動入力
 	*/ //////////////////////
 	// 押した方向で移動ベクトルを変更(左右)
-	if (input_->PushKey(DIK_LEFT)) {
+	if (Input::GetInstance()->PushKey(DIK_LEFT)) {
 		move.x -= kCharacterSpeed;
-	} else if (input_->PushKey(DIK_RIGHT)) {
+	} else if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 		move.x += kCharacterSpeed;
 	}
 
 	// おしたほうこうで移動ベクトルを変更(上下)
-	if (input_->PushKey(DIK_UP)) {
+	if (Input::GetInstance()->PushKey(DIK_UP)) {
 		move.y += kCharacterSpeed;
-	} else if (input_->PushKey(DIK_DOWN)) {
+	} else if (Input::GetInstance()->PushKey(DIK_DOWN)) {
 		move.y -= kCharacterSpeed;
 	}
 
@@ -111,9 +114,8 @@ void Player::Update() {
 	Attack();
 
 	// 弾の更新　
-	if (bullet_) {
-
-		bullet_->Update();
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Update();
 	}
 
 	// 行列計算
@@ -128,9 +130,10 @@ void Player::Draw(ViewProjection& viewProjection) {
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
-	if (bullet_) {
+	// 弾の描画
+	for (PlayerBullet* bullet : bullets_) {
 
-		bullet_->Draw(viewProjection);
+		bullet->Draw(viewProjection);
 	}
 }
 

@@ -5,14 +5,15 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "cassert"
-#include "MyMath.h"
-#include "imgui.h"
 
 #include <DebugText.h>
 #include <algorithm>
 #include <numbers>
+#include <list>
 
 #include "PlayerBullet.h"
+#include "MyMath.h"
+#include "imgui.h"
 
 /// <summary>
 /// 自キャラ
@@ -53,17 +54,14 @@ private:
 	/* ///////////////////////////////////////
 	                 メンバ変数
 	*/ ///////////////////////////////////////
-	// キーボード入力
-	Input* input_ = nullptr;
-
 	// 弾
-	PlayerBullet* bullet_ = nullptr;
-
-	// ワールド変換データ
-	WorldTransform worldTransform_;
+	std::list<PlayerBullet*> bullets_;
 
 	// モデル
 	Model* model_ = nullptr;
+
+	// ワールド変換データ
+	WorldTransform worldTransform_;
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;

@@ -18,6 +18,11 @@ class PlayerBullet {
 public:
 
 	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~PlayerBullet();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="model"></param>
