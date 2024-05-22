@@ -1,6 +1,21 @@
 #define NOMINMAX
 #include "Player.h"
 
+void Player::Rotate() {
+
+	// 回転速さ[ラジアン/ frame]
+	const float kRotSpeed = 0.02f;
+
+	// 押した方向で移動ベクトルを変更
+	if (input_->PushKey(DIK_A)) {
+
+		worldTransform_.rotation_.y -= kRotSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+
+		worldTransform_.rotation_.y += kRotSpeed;
+	}
+}
+
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 	// NULLポインターチェック
