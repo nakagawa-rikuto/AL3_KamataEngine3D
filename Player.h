@@ -5,6 +5,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "cassert"
+#include "MyMath.h"
 #include "imgui.h"
 
 /// <summary>
@@ -36,6 +37,9 @@ private:
 	/* ///////////////////////////////////////
 	                 メンバ変数
 	*/ ///////////////////////////////////////
+	// キーボード入力
+	Input* input_ = nullptr;
+
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
