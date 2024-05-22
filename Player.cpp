@@ -319,47 +319,23 @@ void Player::CollisionDistanceRight(CollisionMapInfo& info, CollisionMapInfo& pr
 		hitBottom = true;
 	}
 
-	if (info.kCeiling_ || info.kLanding_) {
+	// ブロックにヒット
+	if (hitTop || hitBottom) {
 
-		// ブロックにヒット
-		if (hitTop && hitBottom) {
+		// めり込みを排除する方向に移動量を接地する
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop || kRightBottom]);
 
-			// めり込みを排除する方向に移動量を接地する
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop || kRightBottom]);
+		// めり込み先ブロックの範囲矩形
+		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.moveVolume_.x = std::max(0.0f, (rect.left - positionsPre.x - 1.0f + margin_));
 
-			// めり込み先ブロックの範囲矩形
-			Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-			info.moveVolume_.x = std::max(0.0f, (rect.left - positionsPre.x - 1.0f + margin_));
-
-			// 壁に当たっていることを記録
-			info.kWall_ = true;
-		} else {
-
-			info.kWall_ = false;
-			preInfo.kWall_ = info.kWall_;
-		}
+		// 壁に当たっていることを記録
+		info.kWall_ = true;
 	} else {
 
-		// ブロックにヒット
-		if (hitTop || hitBottom) {
-
-			// めり込みを排除する方向に移動量を接地する
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop || kRightBottom]);
-
-			// めり込み先ブロックの範囲矩形
-			Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-			info.moveVolume_.x = std::max(0.0f, (rect.left - positionsPre.x - 1.0f + margin_));
-
-			// 壁に当たっていることを記録
-			info.kWall_ = true;
-		} else {
-
-			info.kWall_ = false;
-			preInfo.kWall_ = info.kWall_;
-		}
+		info.kWall_ = false;
+		preInfo.kWall_ = info.kWall_;
 	}
-
-	
 }
 
 // 当たり判定(左)
@@ -405,46 +381,22 @@ void Player::CollisionDistanceLeft(CollisionMapInfo& info, CollisionMapInfo& pre
 		hitBottom = true;
 	}
 
-	if (info.kCeiling_ || info.kLanding_) {
+	// ブロックにヒット
+	if (hitTop || hitBottom) {
 
-		// ブロックにヒット
-		if (hitTop && hitBottom) {
+		// めり込みを排除する方向に移動量を接地する
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop || kLeftBottom]);
 
-			// めり込みを排除する方向に移動量を接地する
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop || kLeftBottom]);
+		// めり込み先ブロックの範囲矩形
+		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.moveVolume_.x = std::min(0.0f, (rect.right - positionsPre.x + 1.0f + margin_));
 
-			// めり込み先ブロックの範囲矩形
-			Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-			info.moveVolume_.x = std::min(0.0f, (rect.right - positionsPre.x + 1.0f + margin_));
-			// info.moveVolume_.x = std::max(0.0f, (rect.left - positionsPre.x - 1.0f + margin_));
-
-			// 壁に当たっていることを記録
-			info.kWall_ = true;
-		} else {
-
-			info.kWall_ = false;
-			preInfo.kWall_ = info.kWall_;
-		}
+		// 壁に当たっていることを記録
+		info.kWall_ = true;
 	} else {
 
-		// ブロックにヒット
-		if (hitTop || hitBottom) {
-
-			// めり込みを排除する方向に移動量を接地する
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop || kLeftBottom]);
-
-			// めり込み先ブロックの範囲矩形
-			Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-			info.moveVolume_.x = std::min(0.0f, (rect.right - positionsPre.x + 1.0f + margin_));
-			// info.moveVolume_.x = std::max(0.0f, (rect.left - positionsPre.x - 1.0f + margin_));
-
-			// 壁に当たっていることを記録
-			info.kWall_ = true;
-		} else {
-
-			info.kWall_ = false;
-			preInfo.kWall_ = info.kWall_;
-		}
+		info.kWall_ = false;
+		preInfo.kWall_ = info.kWall_;
 	}
 }
 
@@ -473,7 +425,7 @@ void Player::CollisionCeiling(const CollisionMapInfo& info, CollisionMapInfo& pr
 
 	// 天井に当たった
 	if (info.kCeiling_ && !preInfo.kCeiling_) {
-		//DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+		// DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
 		preInfo.kCeiling_ = info.kCeiling_;
 		velocity_.y = 0.0f;
 	}
@@ -486,7 +438,8 @@ void Player::CollisionWalling(const CollisionMapInfo& info, CollisionMapInfo& pr
 	if (info.kWall_) {
 
 		preInfo.kWall_ = info.kWall_;
-		//DebugText::GetInstance()->ConsolePrintf("hit wall\n");
+		// DebugText::GetInstance()->ConsolePrintf("hit wall\n");
+		worldTransform_.translation_.x -= info.moveVolume_.x;
 		worldTransform_.translation_.x -= velocity_.x;
 		velocity_.x = 0.0f;
 	}
@@ -570,12 +523,13 @@ void Player::CollisionLanding(const CollisionMapInfo& info, CollisionMapInfo& pr
 
 			// 着地状態に切り替える(落下を止める)
 			onGround_ = true;
-			//DebugText::GetInstance()->ConsolePrintf("hit Landing\n");
+			// DebugText::GetInstance()->ConsolePrintf("hit Landing\n");
 
 			// 着地時にx速度を減衰
 			velocity_.x *= (1.0f - kAttenuationLanding_);
 
-			// worldTransform_.translation_.y -= velocity_.y;
+			velocity_.y -= info.moveVolume_.y;
+			worldTransform_.translation_.y -= velocity_.y;
 
 			// y速度をゼロにする
 			velocity_.y = 0.0f;
