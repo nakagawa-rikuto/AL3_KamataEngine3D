@@ -1,6 +1,13 @@
 #define NOMINMAX
 #include "Player.h"
 
+Player::~Player() {
+
+	delete model_;
+	delete bullet_;
+}
+
+
 void Player::Rotate() {
 
 	// 回転速さ[ラジアン/ frame]
@@ -13,6 +20,19 @@ void Player::Rotate() {
 	} else if (input_->PushKey(DIK_D)) {
 
 		worldTransform_.rotation_.y += kRotSpeed;
+	}
+}
+
+void Player::Attack() {
+
+	if (input_->TriggerKey(DIK_SPACE)) {
+
+		// 弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		// 弾を登録すr
+		bullet_ = newBullet;
 	}
 }
 
@@ -114,15 +134,3 @@ void Player::Draw(ViewProjection& viewProjection) {
 	}
 }
 
-void Player::Attack() {
-
-	if (input_->TriggerKey(DIK_SPACE)) {
-
-		// 弾を生成し、初期化
-		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_);
-
-		// 弾を登録すr
-		bullet_ = newBullet;
-	}
-}

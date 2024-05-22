@@ -43,6 +43,11 @@ public:
 	/// <param name="viewProjection"></param>
 	void Draw(ViewProjection& viewProjection);
 
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Player();
+
 private:
 
 	/* ///////////////////////////////////////
