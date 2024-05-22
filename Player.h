@@ -8,6 +8,10 @@
 #include "MyMath.h"
 #include "imgui.h"
 
+#include <DebugText.h>
+#include <algorithm>
+#include <numbers>
+
 /// <summary>
 /// 自キャラ
 /// </summary>

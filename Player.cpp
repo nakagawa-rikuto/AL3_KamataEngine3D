@@ -1,7 +1,4 @@
 #define NOMINMAX
-#include <DebugText.h>
-#include <algorithm>
-#include <numbers>
 #include "Player.h"
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {
@@ -20,12 +17,25 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 void Player::Update() {
 
+#ifdef _DEBUG
+
+	ImGui::Begin("Info");
+	ImGui::DragFloat3("worldTransform.rotation", &worldTransform_.rotation_.x, 0.01f);
+	ImGui::DragFloat3("worldTransform.scale", &worldTransform_.scale_.x, 0.01f);
+	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
+	ImGui::End();
+#endif // DEBUG
+
+
 	// キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
 
 	// キャラクターの移動速さ
 	const float kCharacterSpeed = 0.2f;
 
+	/* //////////////////////
+	        移動入力
+	*/ //////////////////////
 	// 押した方向で移動ベクトルを変更(左右)
 	if (input_->PushKey(DIK_LEFT)) {
 		move.x -= kCharacterSpeed;
@@ -40,11 +50,24 @@ void Player::Update() {
 		move.y -= kCharacterSpeed;
 	}
 
+	// 移動限界
+	const float kMoveLimitX = 20.0f;
+	const float kMoveLimitY = 20.0f;
+
+	// 範囲を超えない処理
+	// Clampは－(マイナス)の値を取れない
+	//worldTransform_.translation_.x = std::clamp(worldTransform_.translation_.x, kMoveLimitX, -kMoveLimitX);
+	//worldTransform_.translation_.y = std::clamp(worldTransform_.translation_.y, kMoveLimitY, -kMoveLimitY);
+	worldTransform_.translation_.x = std::max(worldTransform_.translation_.x, -kMoveLimitX);
+	worldTransform_.translation_.x = std::min(worldTransform_.translation_.x, kMoveLimitX);
+	worldTransform_.translation_.y = std::max(worldTransform_.translation_.y, -kMoveLimitY);
+	worldTransform_.translation_.y = std::min(worldTransform_.translation_.y, kMoveLimitY);
+
 	// 座標移動(ベクトルの加算)
 	worldTransform_.translation_ += move;
 
-	// アフィン変換行列の作成
-
+	// 行列計算
+	worldTransform_.UpdateMatrix();
 
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();

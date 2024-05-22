@@ -7,6 +7,8 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "DebugCamera.h"
+#include "AxisIndicator.h"
 
 #include "Player.h"
 
@@ -56,7 +58,9 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
-	
+	// デバッグカメラ切り替え変数
+	bool isDebugCameraActive_ = false;
+
 	// 3Dモデル
 	Model* model_ = nullptr;
 
@@ -65,6 +69,9 @@ private: // メンバ変数
 
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
+
+	// デバッグカメラ
+	DebugCamera* debugCamera_ = nullptr;
 
 	// テクスチャ
 	uint32_t textureHandle_ = 0; 

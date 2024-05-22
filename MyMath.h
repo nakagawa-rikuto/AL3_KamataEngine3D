@@ -1,61 +1,10 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <cmath>
-
-/// <summary>
-/// 2次元ベクトル
-/// </summary>
-struct Vector2 final {
-	float x;
-	float y;
-
-	Vector2 operator+=(Vector2& obj);
-	Vector2 const operator+(const Vector2& obj) const;
-	Vector2 operator-=(Vector2& obj);
-	Vector2 const operator-(const Vector2& obj) const;
-	Vector2 operator*=(float& obj);
-	Vector2 const operator*(const float& obj) const;
-};
-
-/// <summary>
-/// 3次元ベクトル
-/// </summary>
-struct Vector3 final {
-	float x;
-	float y;
-	float z;
-
-	Vector3 operator+=(Vector3& obj);
-	Vector3 const operator+(const Vector3& obj) const;
-	Vector3 operator-=(Vector3& obj);
-	Vector3 const operator-(const Vector3& obj) const;
-	Vector3 operator*=(float& obj);
-	Vector3 const operator*(const float& obj) const;
-};
-
-/// <summary>
-/// 4次元ベクトル
-/// </summary>
-struct Vector4 final {
-	float x;
-	float y;
-	float z;
-	float w;
-
-	Vector4 operator+=(Vector4& obj);
-	Vector4 const operator+(const Vector4& obj) const;
-	Vector4 operator-=(Vector4& obj);
-	Vector4 const operator-(const Vector4& obj) const;
-	Vector4 operator*=(float& obj);
-	Vector4 const operator*(const float& obj) const;
-};
-
-/// <summary>
-/// 4x4行列
-/// </summary>
-struct Matrix4x4 final {
-	float m[4][4];
-};
+#include "Matrix4x4.h"
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
 
 // π
 float pi();
