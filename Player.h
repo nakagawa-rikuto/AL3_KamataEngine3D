@@ -1,11 +1,10 @@
 #pragma once
+#include "Input.h"
 #include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "Input.h"
 #include "cassert"
 #include "imgui.h"
-
 
 class MapChipField;
 
@@ -38,7 +37,6 @@ struct CollisionMapInfo {
 /// </summary>
 class Player {
 private:
-
 	/*//////////////////////////////////////////////////////////////////////
 	                           メンバ変数
 	*///////////////////////////////////////////////////////////////////////
@@ -120,12 +118,10 @@ private:
 	CollisionMapInfo collisionMapInfo_;
 	CollisionMapInfo preCollisionMapInfo_;
 
-	// 
+	//
 	static inline const float kBlank = 1.0f;
 
-
 public:
-
 	/// <summary>
 	/// ImGui
 	/// </summary>
@@ -155,8 +151,8 @@ public:
 	/// <param name="info"></param>
 	void CollisionDistanceTop(CollisionMapInfo& info, CollisionMapInfo& preInfo);
 	void CollisionDistanceBottom(CollisionMapInfo& info, CollisionMapInfo& preInfo);
-	void CollisionDistanceRight(CollisionMapInfo& info);
-	void CollisionDistanceLeft(CollisionMapInfo& info);
+	void CollisionDistanceRight(CollisionMapInfo& info, CollisionMapInfo& preInfo);
+	void CollisionDistanceLeft(CollisionMapInfo& info, CollisionMapInfo& preInfo);
 
 	/// <summary>
 	/// 指定した角の座標計算
@@ -181,7 +177,7 @@ public:
 	/// <summary>
 	/// 壁に触れている場合の処理
 	/// </summary>
-	void CollisionWalling(const CollisionMapInfo& info);
+	void CollisionWalling(const CollisionMapInfo& info, CollisionMapInfo& preInfo);
 
 	/// <summary>
 	/// 接地状態の切り替え処理
@@ -222,5 +218,4 @@ public:
 	/// </summary>
 	/// <param name="mapChipField"></param>
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
-
 };
