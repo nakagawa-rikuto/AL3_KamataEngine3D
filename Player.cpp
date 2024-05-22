@@ -41,6 +41,10 @@ void Player::Update() {
 	ImGui::End();
 #endif // DEBUG
 
+	/* //////////////////////
+	        旋回処理
+	*/ //////////////////////
+	Rotate();
 
 	// キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
@@ -81,6 +85,17 @@ void Player::Update() {
 	// 座標移動(ベクトルの加算)
 	worldTransform_.translation_ += move;
 
+	/* //////////////////////
+	        攻撃処理
+	*/ //////////////////////
+	Attack();
+
+	// 弾の更新　
+	if (bullet_) {
+
+		bullet_->Update();
+	}
+
 	// 行列計算
 	worldTransform_.UpdateMatrix();
 
@@ -92,4 +107,22 @@ void Player::Draw(ViewProjection& viewProjection) {
 
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+
+	if (bullet_) {
+
+		bullet_->Draw(viewProjection);
+	}
+}
+
+void Player::Attack() {
+
+	if (input_->TriggerKey(DIK_SPACE)) {
+
+		// 弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		// 弾を登録すr
+		bullet_ = newBullet;
+	}
 }

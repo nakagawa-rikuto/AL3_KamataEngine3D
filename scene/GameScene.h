@@ -10,6 +10,8 @@
 #include "DebugCamera.h"
 #include "AxisIndicator.h"
 
+#include <cassert>
+
 #include "Player.h"
 
 /// <summary>

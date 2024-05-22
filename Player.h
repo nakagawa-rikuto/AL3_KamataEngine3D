@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <numbers>
 
+#include "PlayerBullet.h"
+
 /// <summary>
 /// 自キャラ
 /// </summary>
@@ -49,6 +51,9 @@ private:
 	// キーボード入力
 	Input* input_ = nullptr;
 
+	// 弾
+	PlayerBullet* bullet_ = nullptr;
+
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
@@ -57,4 +62,13 @@ private:
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+
+	/* ///////////////////////////////////////
+	                 メンバ関数
+	*/ ///////////////////////////////////////
+
+	/// <summary>
+	/// 攻撃処理
+	/// </summary>
+	void Attack();
 };

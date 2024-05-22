@@ -1,6 +1,5 @@
 #include "GameScene.h"
 #include "TextureManager.h"
-#include <cassert>
 
 GameScene::GameScene() {}
 
@@ -58,7 +57,7 @@ void GameScene::Update() {
 
 #ifdef _DEBUG
 
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->TriggerKey(DIK_C)) {
 		
 		isDebugCameraActive_ = true;
 	}
