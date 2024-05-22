@@ -40,6 +40,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete modelSkyDome_;
 	delete modelPlayer_;
+	delete modelEnemy_;
 	delete player_;
 	delete enemy_;
 	delete skyDome_;
