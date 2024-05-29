@@ -13,6 +13,7 @@
 #include <cassert>
 
 #include "Player.h"
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -57,6 +58,9 @@ private: // メンバ変数
 	// Player
 	Player* player_ = nullptr;
 
+	// Enemy
+	Enemy* enemy_ = nullptr;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
@@ -77,5 +81,6 @@ private: // メンバ変数
 
 	// テクスチャ
 	uint32_t textureHandle_ = 0; 
+	uint32_t enemyTextureHandle_ = 0;
 	
 };

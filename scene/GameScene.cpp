@@ -20,6 +20,7 @@ void GameScene::Initialize() {
 	*/ /////////////////////////
 	// テクスチャの読み込み
 	textureHandle_ = TextureManager::Load("./Resources/mario.png");
+	enemyTextureHandle_ = TextureManager::Load("./Resources/uvChecker.png");
 
 	/* //////////////////////////
 	      3Dモデルの読み込み
@@ -34,6 +35,9 @@ void GameScene::Initialize() {
 
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_);
+
+	enemy_ = new Enemy();
+	enemy_->Initialize(model_, enemyTextureHandle_);
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
@@ -54,6 +58,7 @@ void GameScene::Update() {
 	            更新
 	*/ /////////////////////////
 	player_->Update();
+	enemy_->Update();
 
 #ifdef _DEBUG
 
@@ -110,6 +115,7 @@ void GameScene::Draw() {
 	/// </summary>
 	
 	player_->Draw(viewProjection_);
+	enemy_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
