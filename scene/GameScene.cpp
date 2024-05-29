@@ -18,7 +18,7 @@ void GameScene::Initialize() {
 	/* //////////////////////////
 	      テクスチャの読み込み
 	*/ /////////////////////////
-	// テクスチャの読み込み
+	// テクスチャの読み込み.
 	textureHandle_ = TextureManager::Load("./Resources/mario.png");
 
 	/* //////////////////////////
