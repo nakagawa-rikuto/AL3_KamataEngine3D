@@ -31,9 +31,19 @@ public:
 	void Draw(ViewProjection& viewProjection);
 
 private:
+	// 行動フェーズ
+	enum class Phase {
+		APPROACH, // 接近する
+		LEACE,    // 離脱する
+	};
+
 	/*
 	   メンバ変数
 	*/
+
+	// フェーズ
+	Phase phase_;
+
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 
