@@ -31,9 +31,16 @@ void Player::Attack() {
 		// 自キャラの座標をコピー
 		//DirectX::XMFLOAT3 position = worldTransform_.translation_;
 
+		// 弾の速度
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
+		// 速度ベクトルを自機の向きに合わせて回転する
+		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_);
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 		// 弾を登録する
 		bullets_.push_back(newBullet);
@@ -63,6 +70,16 @@ void Player::Update() {
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::End();
 #endif // DEBUG
+
+	// ですフラグの立った弾を削除
+	// remove_if()はあくまでリストから要素を消すだけ
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 
 	/* //////////////////////
 	        旋回処理

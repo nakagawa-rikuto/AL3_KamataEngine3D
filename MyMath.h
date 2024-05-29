@@ -56,6 +56,9 @@ Matrix4x4 Inverse(const Matrix4x4& m);
 Vector3 Transform(Vector3 vector, Matrix4x4 matrix);
 #pragma endregion
 
+// ベクトル変換
+Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
+
 #pragma region /// 計算 ///
 // 内積の計算
 float Dot(const Vector3& v1, const Vector3& v2);
