@@ -63,6 +63,8 @@ void Enemy::LeasePhase() {
 	worldTransform_.translation_.z += 0.05f;
 }
 
+void Enemy::OnCollision() {}
+
 Vector3 Enemy::GetWorldPosition() {
 
 	// ワールド座標を入れる変数

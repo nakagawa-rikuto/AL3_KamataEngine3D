@@ -56,6 +56,11 @@ public:
 	void LeasePhase();
 
 	/// <summary>
+	/// 衝突判定
+	/// </summary>
+	void OnCollision();
+
+	/// <summary>
 	/// Setter
 	/// </summary>
 	/// <param name="player"></param>
@@ -66,6 +71,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetWorldPosition();
+
+	/// <summary>
+	/// 弾リストを取得
+	/// </summary>
+	/// <returns></returns>
+	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 
 	/// <summary>
 	/// 初期化

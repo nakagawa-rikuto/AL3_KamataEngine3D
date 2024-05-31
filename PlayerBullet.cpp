@@ -4,6 +4,23 @@
 
 PlayerBullet::~PlayerBullet() {}
 
+void PlayerBullet::OnCollision() {
+	isDead_ = true; 
+}
+
+Vector3 PlayerBullet::GetWorldPosition() {
+
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+
+	// ワールド行列の平行移動成分を取得(ワールド座標)
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+
+	return worldPos;
+}
+
 void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
 
 	// NULLポインタチェック

@@ -60,6 +60,8 @@ void Player::Attack() {
 	}
 }
 
+void Player::OnCollision() {}
+
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 	// NULLポインターチェック

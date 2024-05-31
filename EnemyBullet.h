@@ -23,6 +23,11 @@ public:
 	~EnemyBullet();
 
 	/// <summary>
+	/// 衝突判定
+	/// </summary>
+	void OnCollision();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="model"></param>
@@ -46,6 +51,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	bool IsDead() const { return isDead_; }
+
+	/// <summary>
+	/// getter
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
 
 private:
 	/* /////////////////////////
