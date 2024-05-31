@@ -6,12 +6,36 @@
 #include "WorldTransform.h"
 #include "cassert"
 
+#include <DebugText.h>
+#include <algorithm>
+#include <numbers>
+#include <list>
+
+#include "EnemyBullet.h"
+#include "MyMath.h"
+#include "imgui.h"
+
 /// <summary>
 /// 敵
 /// </summary>
 class Enemy {
 
 public:
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Enemy();
+
+	/// <summary>
+	/// 弾発射
+	/// </summary>
+	void Fire();
+
+	/// <summary>
+	/// 接近フェーズの初期化
+	/// </summary>
+	void PhaseInitialize();
 
 	/// <summary>
 	/// 初期化
@@ -40,6 +64,15 @@ private:
 	/*
 	   メンバ変数
 	*/
+
+	// Bullets
+	std::list<EnemyBullet*> bullets_;
+
+	// 発射間隔
+	static const int kFireInterval = 60;
+
+	// 発射タイマー
+	int32_t fireTimer = 0;
 
 	// フェーズ
 	Phase phase_;
