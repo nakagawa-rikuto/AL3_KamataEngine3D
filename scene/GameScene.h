@@ -14,6 +14,7 @@
 
 #include "Player.h"
 #include "Enemy.h"
+#include "SkyDome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -66,6 +67,9 @@ private: // メンバ変数
 	// Enemy
 	Enemy* enemy_ = nullptr;
 
+	// SkyDome
+	SkyDome* skyDome_ = nullptr;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
@@ -74,6 +78,7 @@ private: // メンバ変数
 
 	// 3Dモデル
 	Model* model_ = nullptr;
+	Model* skyDomeModel_ = nullptr;
 
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
