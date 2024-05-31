@@ -278,8 +278,11 @@ float Length(const Vector3& v1, const Vector3& v2) {
 // 正規化
 Vector3 Normalize(const Vector3& v) {
 
-	float length = Length(v);
-	Vector3 normalize = {v.x / length, v.y / length, v.z / length};
-
-	return normalize;
+	float length = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+	if (length == 0) {
+		// 長さがゼロの場合、ゼロベクトルを返す
+		return Vector3(0.0f, 0.0f, 0.0f);
+	} else {
+		return Vector3(v.x / length, v.y / length, v.z / length);
+	}
 }

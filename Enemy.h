@@ -15,6 +15,9 @@
 #include "MyMath.h"
 #include "imgui.h"
 
+// 自機クラスの前方宣言
+class Player;
+
 /// <summary>
 /// 敵
 /// </summary>
@@ -33,9 +36,36 @@ public:
 	void Fire();
 
 	/// <summary>
+	/// タイマーのカウント
+	/// </summary>
+	void CountTimer();
+
+	/// <summary>
 	/// 接近フェーズの初期化
 	/// </summary>
 	void PhaseInitialize();
+
+	/// <summary>
+	/// 接近フェーズ
+	/// </summary>
+	void ApproachPhase();
+
+	/// <summary>
+	/// 離脱フェーズ
+	/// </summary>
+	void LeasePhase();
+
+	/// <summary>
+	/// Setter
+	/// </summary>
+	/// <param name="player"></param>
+	void SetPlayer(Player* player) { player_ = player; }
+
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
 
 	/// <summary>
 	/// 初期化
@@ -64,6 +94,9 @@ private:
 	/*
 	   メンバ変数
 	*/
+
+	// Player
+	Player* player_ = nullptr;
 
 	// Bullets
 	std::list<EnemyBullet*> bullets_;

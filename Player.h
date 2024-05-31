@@ -27,6 +27,12 @@ public:
 	void Rotate();
 
 	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="model"></param>

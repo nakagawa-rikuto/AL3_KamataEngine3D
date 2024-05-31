@@ -27,7 +27,7 @@ void EnemyBullet::Update() {
 
 	worldTransform_.UpdateMatrix();
 
-	// 座標を移動させる(1フレーム分の移動量を足しこむ)
+	// 座標を移動させる
 	worldTransform_.translation_ += velocity_;
 
 	// 時間経過でデス

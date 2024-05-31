@@ -38,7 +38,8 @@ void GameScene::Initialize() {
 	player_->Initialize(model_, textureHandle_);
 
 	enemy_ = new Enemy();
-	enemy_->Initialize(model_, enemyTextureHandle_);
+	enemy_->Initialize(model_, textureHandle_);
+	enemy_->SetPlayer(player_);
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
