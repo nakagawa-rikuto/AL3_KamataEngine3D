@@ -6,6 +6,7 @@ GameScene::GameScene() {}
 GameScene::~GameScene() { 
 	delete model_; 
 	delete skyDomeModel_;
+	delete skyDome_;
 	delete player_;
 	delete enemy_;
 	delete debugCamera_;
