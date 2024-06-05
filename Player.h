@@ -33,6 +33,12 @@ public:
 	Vector3 GetWorldPosition();
 
 	/// <summary>
+	/// 親となるワールどトランスフォームをセット
+	/// </summary>
+	/// <param name="parent"></param>
+	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
+
+	/// <summary>
 	/// 弾リストの取得
 	/// </summary>
 	/// <returns></returns>
@@ -48,7 +54,7 @@ public:
 	/// </summary>
 	/// <param name="model"></param>
 	/// <param name="textureHandle"></param>
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 position);
 
 	/// <summary>
 	/// 更新

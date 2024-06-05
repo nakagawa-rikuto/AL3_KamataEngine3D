@@ -9,6 +9,7 @@ GameScene::~GameScene() {
 	delete skyDome_;
 	delete player_;
 	delete enemy_;
+	delete railCamera_;
 	delete debugCamera_;
 }
 
@@ -133,8 +134,14 @@ void GameScene::Initialize() {
 	*/ /////////////////////////
 	viewProjection_.Initialize();
 
+	// レールカメラ
+	railCamera_ = new RailCamera();
+	railCamera_->Initialize(railCameraPos_, railCameraRotation_);
+
 	player_ = new Player();
-	player_->Initialize(model_, textureHandle_);
+	Vector3 playerPosition(0.0f, 0.0f, 30.0f);
+	player_->SetParent(&railCamera_->GetWorldTransform());
+	player_->Initialize(model_, textureHandle_, playerPosition);
 
 	enemy_ = new Enemy();
 	enemy_->Initialize(model_, textureHandle_);
@@ -175,6 +182,11 @@ void GameScene::Update() {
 	}
 #endif // DEBUG
 
+	if (input_->TriggerKey(DIK_R)) {
+
+		isRailCameraActive_ = true;
+	}
+
 	/* /////////////
 	デバッグカメラの処理
 	*/ /////////////
@@ -185,6 +197,24 @@ void GameScene::Update() {
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		
+		// ビュープロジェクション行列の転送
+		viewProjection_.TransferMatrix();
+	} else {
+
+		// ビュープロジェクション行列の更新と転送
+		viewProjection_.UpdateMatrix();
+	}
+
+	/* ///////////////
+	   レールカメラの処理
+	*/ ///////////////
+	if (isRailCameraActive_) {
+
+		// レールカメラの更新
+		railCamera_->Update();
+		viewProjection_.matView = railCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
 	} else {

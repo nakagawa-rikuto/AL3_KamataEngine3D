@@ -15,6 +15,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "SkyDome.h"
+#include "RailCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -70,11 +71,19 @@ private: // メンバ変数
 	// SkyDome
 	SkyDome* skyDome_ = nullptr;
 
+	// レールカメラ
+	RailCamera* railCamera_ = nullptr;
+	Vector3 railCameraPos_ = {0.0f, 0.0f, -50.0f};
+	Vector3 railCameraRotation_ = {0.0f, 0.0f, 0.0f};
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
 	// デバッグカメラ切り替え変数
 	bool isDebugCameraActive_ = false;
+
+	// レールカメラ切り替え変数
+	bool isRailCameraActive_ = false;
 
 	// 3Dモデル
 	Model* model_ = nullptr;
