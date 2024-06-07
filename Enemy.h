@@ -18,6 +18,9 @@
 // 自機クラスの前方宣言
 class Player;
 
+// GameSceneの前方宣言
+class GameScene;
+
 /// <summary>
 /// 敵
 /// </summary>
@@ -25,21 +28,9 @@ class Enemy {
 
 public:
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~Enemy();
-
-	/// <summary>
-	/// 弾発射
-	/// </summary>
-	void Fire();
-
-	/// <summary>
-	/// タイマーのカウント
-	/// </summary>
-	void CountTimer();
-
+	/* ///////////////////////////////
+	              フェーズ
+	*/ ///////////////////////////////
 	/// <summary>
 	/// 接近フェーズの初期化
 	/// </summary>
@@ -55,17 +46,46 @@ public:
 	/// </summary>
 	void LeasePhase();
 
+	/* ///////////////////////////////
+	              弾
+	*/ ///////////////////////////////
+	
+	/// <summary>
+	/// カウントタイマー
+	/// </summary>
+	void CountTimer();
+
+	/// <summary>
+	/// 弾の発射
+	/// </summary>
+	void Fire();
+
+	/* ///////////////////////////////
+	               当たり判定
+	*/ ///////////////////////////////
 	/// <summary>
 	/// 衝突判定
 	/// </summary>
 	void OnCollision();
 
+	/* ///////////////////////////////
+	              Setter
+	*/ ///////////////////////////////
 	/// <summary>
-	/// Setter
+	/// Playerをセット
 	/// </summary>
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
 
+	/// <summary>
+	/// GameSceneをセット
+	/// </summary>
+	/// <param name="gameScene"></param>
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+
+	/* ///////////////////////////////
+	              Getter
+	*/ ///////////////////////////////
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
@@ -73,17 +93,11 @@ public:
 	Vector3 GetWorldPosition();
 
 	/// <summary>
-	/// 弾リストを取得
-	/// </summary>
-	/// <returns></returns>
-	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
-
-	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="model"></param>
 	/// <param name="textureHandle"></param>
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 position);
 
 	/// <summary>
 	/// 更新
@@ -109,12 +123,11 @@ private:
 	// Player
 	Player* player_ = nullptr;
 
-	// Bullets
-	std::list<EnemyBullet*> bullets_;
+	// GameScene
+	GameScene* gameScene_ = nullptr;
 
 	// 発射間隔
 	static const int kFireInterval = 60;
-
 	// 発射タイマー
 	int32_t fireTimer = 0;
 

@@ -15,11 +15,19 @@
 #include "MyMath.h"
 #include "imgui.h"
 
+// GameSceneの前方宣言
+class GameScene;
+
 /// <summary>
 /// 自キャラ
 /// </summary>
 class Player {
 public:
+
+	/// <summary>
+	/// 移動
+	/// </summary>
+	void Move();
 
 	/// <summary>
 	/// 旋回(回転)
@@ -39,10 +47,10 @@ public:
 	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 
 	/// <summary>
-	/// 弾リストの取得
+	/// GameSceneをセット
 	/// </summary>
-	/// <returns></returns>
-	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
+	/// <param name="gameScene"></param>
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 	/// <summary>
 	/// 衝突判定
@@ -67,18 +75,14 @@ public:
 	/// <param name="viewProjection"></param>
 	void Draw(ViewProjection& viewProjection);
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~Player();
-
 private:
 
 	/* ///////////////////////////////////////
 	                 メンバ変数
 	*/ ///////////////////////////////////////
-	// 弾
-	std::list<PlayerBullet*> bullets_;
+
+	// GameScene
+	GameScene* gameScene_ = nullptr;
 
 	// モデル
 	Model* model_ = nullptr;

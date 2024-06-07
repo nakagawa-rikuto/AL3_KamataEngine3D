@@ -1,12 +1,23 @@
 #include "Enemy.h"
 #include "Player.h"
+#include "GameScene.h"
 
-Enemy::~Enemy() {
+void Enemy::PhaseInitialize() {
 
-	for (EnemyBullet* bullet : bullets_) {
+	// 初期フェーズの設定
+	phase_ = Phase::APPROACH;
+}
 
-		delete bullet;
-	}
+void Enemy::ApproachPhase() {
+
+	// 移動(ベクトルの減算)
+	worldTransform_.translation_.x -= 0.05f;
+}
+
+void Enemy::LeasePhase() {
+
+	// 移動(ベクトルを加算)
+	worldTransform_.translation_.x += 0.05f;
 }
 
 void Enemy::Fire() {
@@ -20,7 +31,7 @@ void Enemy::Fire() {
 	Vector3 worldPlayerPos = player_->GetWorldPosition();
 
 	// 敵キャラのワールド座標を取得
-	Vector3 worldEnemyPos = Enemy::GetWorldPosition();
+	Vector3 worldEnemyPos = GetWorldPosition();
 
 	// 敵キャラから自キャラへの差分ベクトルを求める
 	Vector3 vecGep = worldPlayerPos - worldEnemyPos;
@@ -36,31 +47,23 @@ void Enemy::Fire() {
 	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 	// 弾を登録する
-	bullets_.push_back(newBullet);
+	gameScene_->AddEnemyBullet(newBullet);
 }
 
 void Enemy::CountTimer() {
 
 	// 発射タイマーカウントダウン
 	fireTimer--;
-}
 
-void Enemy::PhaseInitialize() {
+	// 指定時間に達した
+	if (fireTimer <= 0) {
 
-	// 初期フェーズの設定
-	phase_ = Phase::APPROACH;
-}
+		// 弾を発射
+		Fire();
 
-void Enemy::ApproachPhase() {
-
-	// 移動(ベクトルの減算)
-	worldTransform_.translation_.z -= 0.05f;
-}
-
-void Enemy::LeasePhase() {
-
-	// 移動(ベクトルを加算)
-	worldTransform_.translation_.z += 0.05f;
+		// 発射タイマーを初期化
+		fireTimer = kFireInterval;
+	}
 }
 
 void Enemy::OnCollision() {}
@@ -78,7 +81,7 @@ Vector3 Enemy::GetWorldPosition() {
 	return worldPos;
 }
 
-void Enemy::Initialize(Model* model, uint32_t textureHandle) {
+void Enemy::Initialize(Model* model, uint32_t textureHandle, Vector3 position) {
 
 	// NULLポインターチェック
 	assert(model);
@@ -89,7 +92,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 	// シングルトンインスタンス
 	worldTransform_.Initialize();
-	worldTransform_.translation_ = {4.0f, 1.0f, 5.0f};
+	worldTransform_.translation_ = position;
 
 	// フェーズの初期化
 	PhaseInitialize();
@@ -97,34 +100,28 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 void Enemy::Update() {
 
-	// ですフラグの立った弾を削除
-	// remove_if()はあくまでリストから要素を消すだけ
-	bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
-
-	CountTimer();
+	ImGui::Begin("EnemyInfo");
+	ImGui::DragFloat3("translation", &worldTransform_.translation_.x, 0.01f);
+	ImGui::End();
 
 	switch (phase_) {
 	case Enemy::Phase::APPROACH:
 
+		// 接近処理
 		ApproachPhase();
 
 		// 規定の位置に到達したら離脱に切り替え
-		if (worldTransform_.translation_.z < -10.0f) {
+		if (worldTransform_.translation_.x < -10.0f) {
 			phase_ = Phase::LEACE;
 		}
 		break;
 	case Enemy::Phase::LEACE:
 
+		// 後退処理
 		LeasePhase();
 
 		// 規定の距離に到達したら接近に切り替え
-		if (worldTransform_.translation_.z > 30.0f) {
+		if (worldTransform_.translation_.x > 30.0f) {
 			phase_ = Phase::APPROACH;
 		}
 		break;
@@ -132,36 +129,14 @@ void Enemy::Update() {
 		break;
 	}
 
-	// 指定時間に達した
-	if (fireTimer <= 0) {
-
-		// 弾を発射
-		Fire();
-
-		// 発射タイマーを初期化
-		fireTimer = kFireInterval;
-	}
-
-	// 弾の更新　
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Update();
-	}
-
-	// 行列計算
-	worldTransform_.UpdateMatrix();
+	CountTimer();
 
 	// 行列を定数バッファに転送
-	worldTransform_.TransferMatrix();
+	worldTransform_.UpdateMatrix();
 }
 
 void Enemy::Draw(ViewProjection& viewProjection) {
 
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-
-	// 弾の描画
-	for (EnemyBullet* bullet : bullets_) {
-
-		bullet->Draw(viewProjection);
-	}
 }

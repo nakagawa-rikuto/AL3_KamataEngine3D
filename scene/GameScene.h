@@ -11,11 +11,15 @@
 #include "AxisIndicator.h"
 
 #include <cassert>
+#include <sstream>
 
 #include "Player.h"
+#include "PlayerBullet.h"
 #include "Enemy.h"
+#include "EnemyBullet.h"
 #include "SkyDome.h"
 #include "RailCamera.h"
+#include "MyMath.h"
 
 /// <summary>
 /// ゲームシーン
@@ -23,6 +27,67 @@
 class GameScene {
 
 public: // メンバ関数
+
+	/* ///////////////////////////////////
+	         Player・PlayerBullet
+	*/ ///////////////////////////////////
+
+	/// <summary>
+	/// 自弾を追加する
+	/// </summary>
+	/// <param name="playerBullet"></param>
+	void AddPlayerBullet(PlayerBullet* playerBullet);
+
+	/// <summary>
+	/// 自弾の更新
+	/// </summary>
+	void PlayerBulletUpdate();
+
+	/// <summary>
+	/// 自弾の描画
+	/// </summary>
+	void PlayerBulletDraw(ViewProjection& viewProjection);
+
+	/* ///////////////////////////////////
+	           Enemy・EnemyBullet
+	*/ ///////////////////////////////////
+
+	/// <summary>
+	/// 敵弾を追加する
+	/// </summary>
+	/// <param name="enemyBullet"></param>
+	void AddEnemyBullet(EnemyBullet* enemyBullet);
+
+	/// <summary>
+	/// 敵弾の更新
+	/// </summary>
+	void EnemyBulletUpdate();
+
+	/// <summary>
+	/// 敵弾の描画
+	/// </summary>
+	/// <param name="viewProjection"></param>
+	void EnemyBulletDraw(ViewProjection& viewProjection);
+
+	/// <summary>
+	/// 敵発生処理
+	/// </summary>
+	void EnemyInitialize(Enemy* enemy, Vector3 position);
+
+	/// <summary>
+	/// 敵発生データの読み込み
+	/// </summary>
+	void LoadEnemyPopData();
+
+	/// <summary>
+	/// 敵発生コマンドの更新
+	/// </summary>
+	void UpdateEnemyPopCommands();
+
+	/* ///////////////////////////////////
+	              GameScene
+	*/ ///////////////////////////////////
+
 	/// <summary>
 	/// コンストクラタ
 	/// </summary>
@@ -32,6 +97,11 @@ public: // メンバ関数
 	/// デストラクタ
 	/// </summary>
 	~GameScene();
+
+	/// <summary>
+	/// 衝突判定と応答
+	/// </summary>
+	void CheckAllCollisions();
 
 	/// <summary>
 	/// 初期化
@@ -48,58 +118,83 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	/// <summary>
-	/// 衝突判定と応答
-	/// </summary>
-	void CheckAllCollisions();
-
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
-	/// <summary>
-	/// クラス
-	/// </summary>
-
-	// Player
+	/* ///////////////////////////////////
+	         Player・PlayerBullet
+	*/ ///////////////////////////////////
 	Player* player_ = nullptr;
 
-	// Enemy
-	Enemy* enemy_ = nullptr;
+	std::list<PlayerBullet*> playerBullets_;
 
-	// SkyDome
+	/* ///////////////////////////////////
+	           Enemy・EnemyBullet
+	*/ ///////////////////////////////////
+	std::list<Enemy*> enemy_;
+
+	// 敵発生コマンド
+	std::stringstream enemyPopCommands_;
+
+	// 敵の待機フラグ
+	bool isEnemyWait_ = false;
+
+	// 敵の待機タイマー
+	int32_t enemyWaitTimer_ = 0;
+
+	std::list<EnemyBullet*> enemyBullets_;
+
+	/* ///////////////////////////////////
+	                SkyDome
+	*/ ///////////////////////////////////
 	SkyDome* skyDome_ = nullptr;
 
-	// レールカメラ
+	/* ///////////////////////////////////
+	               RailCamera
+	*/ ///////////////////////////////////
 	RailCamera* railCamera_ = nullptr;
-	Vector3 railCameraPos_ = {0.0f, 0.0f, -50.0f};
-	Vector3 railCameraRotation_ = {0.0f, 0.0f, 0.0f};
 
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
-	// デバッグカメラ切り替え変数
-	bool isDebugCameraActive_ = false;
+	// Position
+	Vector3 railCameraPos_ = {0.0f, 0.0f, -50.0f};
+
+	// Rotation
+	Vector3 railCameraRotation_ = {0.0f, 0.0f, 0.0f};
 
 	// レールカメラ切り替え変数
 	bool isRailCameraActive_ = false;
 
-	// 3Dモデル
+	/* ///////////////////////////////////
+	              DebugCamera
+	*/ ///////////////////////////////////
+	DebugCamera* debugCamera_ = nullptr;
+
+	// デバッグカメラ切り替え変数
+	bool isDebugCameraActive_ = false;
+
+	/* ///////////////////////////////////
+	                Model
+	*/ ///////////////////////////////////
 	Model* model_ = nullptr;
 	Model* skyDomeModel_ = nullptr;
 
-	// ビュープロジェクション
+	/* ///////////////////////////////////
+	              ViewProjection
+	*/ ///////////////////////////////////
 	ViewProjection viewProjection_;
 
-	// ワールドトランスフォーム
+	/* ///////////////////////////////////
+	              WorldTransform
+	*/ ///////////////////////////////////
 	WorldTransform worldTransform_;
 
-	// デバッグカメラ
-	DebugCamera* debugCamera_ = nullptr;
-
-	// テクスチャ
+	/* ///////////////////////////////////
+	               TexTure
+	*/ ///////////////////////////////////
+	// Player
 	uint32_t textureHandle_ = 0; 
+	// Enemy
 	uint32_t enemyTextureHandle_ = 0;
 	
 };
