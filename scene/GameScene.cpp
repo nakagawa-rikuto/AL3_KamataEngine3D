@@ -342,6 +342,9 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("./Resources/mario.png");
 	enemyTextureHandle_ = TextureManager::Load("./Resources/uvChecker.png");
 
+	// レティクルのテクスチャ
+	TextureManager::Load("./Resources/Reticle.png");
+
 	/* //////////////////////////
 	      3Dモデルの読み込み
 	*/ /////////////////////////
@@ -419,7 +422,7 @@ void GameScene::Update() {
 	/* //////////////////////////
 	      Player・PlayerBullet
 	*/ /////////////////////////
-	player_->Update();
+	player_->Update(viewProjection_);
 
 	PlayerBulletUpdate();
 
@@ -546,6 +549,10 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	
+	//2Dスプライトのびょうが
+	player_->DrawUI();
+	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

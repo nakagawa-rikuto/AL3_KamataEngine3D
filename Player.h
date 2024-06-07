@@ -25,6 +25,11 @@ class Player {
 public:
 
 	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Player();
+
+	/// <summary>
 	/// 移動
 	/// </summary>
 	void Move();
@@ -35,10 +40,26 @@ public:
 	void Rotate();
 
 	/// <summary>
+	/// 3Dレティクルの配置
+	/// </summary>
+	void Update3DReticle();
+
+	/// <summary>
+	/// 2Dスプライトの配置
+	/// </summary>
+	void Update2DSprite(ViewProjection& viewProjection);
+
+	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetWorldPosition();
+
+	/// <summary>
+	/// 3Dレティクルのワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorld3DReticlePosition();
 
 	/// <summary>
 	/// 親となるワールどトランスフォームをセット
@@ -67,13 +88,18 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update(ViewProjection& viewProjection);
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	void Draw(ViewProjection& viewProjection);
+
+	/// <summary>
+	/// UI描画
+	/// </summary>
+	void DrawUI();
 
 private:
 
@@ -87,11 +113,20 @@ private:
 	// モデル
 	Model* model_ = nullptr;
 
+	// 2Dレティクル用スプライト
+	Sprite* sprite2DReticle_ = nullptr;
+
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
+	// 3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldTransform3DReticle_;
+
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+
+	// レティクル用テクスチャ取得
+	uint32_t textureReticle_ = 0u;
 
 	/* ///////////////////////////////////////
 	                 メンバ関数

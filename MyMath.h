@@ -28,6 +28,9 @@ Matrix4x4 MakeRotateZMatrix(float radian);
 // 行列同士の掛け算
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 
+// Vector3と行れるの掛け算
+Vector3 Multiply(const Vector3& v, const Matrix4x4& m);
+
 // 3次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 
