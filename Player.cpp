@@ -103,6 +103,12 @@ void Player::Update2DSprite(ViewProjection& viewProjection) {
 	sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
 }
 
+void Player::Mouse() {
+
+	POINT mousePosition;
+	// マウスざ
+}
+
 Vector3 Player::GetWorldPosition() { 
 
 	// ワールド座標を入れる変数

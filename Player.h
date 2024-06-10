@@ -50,6 +50,11 @@ public:
 	void Update2DSprite(ViewProjection& viewProjection);
 
 	/// <summary>
+	/// マウス
+	/// </summary>
+	void Mouse();
+
+	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns></returns>
