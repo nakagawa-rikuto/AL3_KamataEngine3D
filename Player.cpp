@@ -106,10 +106,8 @@ void Player::Update2DSprite(ViewProjection& viewProjection) {
 
 	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
-
 	// ビュー行列とプロジェクション行列、ビューポート行列を合成する
 	Matrix4x4 matWVP =  Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
-
 	// 合成行列を逆行列にする
 	Matrix4x4 matInverseVPV = Inverse(matWVP);
 
@@ -122,14 +120,14 @@ void Player::Update2DSprite(ViewProjection& viewProjection) {
 	posFar_ = Transform(posFar_, matInverseVPV);
 
 	// マウスレイの方向
-	Vector3 mouseDirection = posNear_ - posFar_;
-	mouseDirection = Normalize(mouseDirection);
+	mouseDirection_ = posFar_ - posNear_;
+	mouseDirection_ = Normalize(mouseDirection_);
 
 	// カメラから照準オブジェクトの距離
-	const float kDistanceTestObject = 10.0f;
+	const float kDistanceTestObject = 50.0f;
 
 	// ニアクリップ面上のワールド座標から一定距離前進したところに3Dレティクルを配置
-	worldTransform3DReticle_.translation_ = posNear_ + posFar_ * kDistanceTestObject;
+	worldTransform3DReticle_.translation_ = posNear_ + mouseDirection_ * kDistanceTestObject;
 
 	worldTransform3DReticle_.UpdateMatrix();
 }
@@ -248,7 +246,7 @@ void Player::Update(ViewProjection& viewProjection) {
 	/* //////////////////////
 	        3Dレティクル
 	*/ //////////////////////
-	Update3DReticle();
+	//Update3DReticle();
 
 	/* //////////////////////
 	        2Dレティクル
@@ -267,7 +265,7 @@ void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
 	// 3Dレティクルを描画
-	model_->Draw(worldTransform3DReticle_, viewProjection);
+	//model_->Draw(worldTransform3DReticle_, viewProjection);
 }
 
 void Player::DrawUI() {
