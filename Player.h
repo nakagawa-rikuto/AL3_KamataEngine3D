@@ -42,12 +42,7 @@ public:
 	/// <summary>
 	/// 3Dレティクルの配置
 	/// </summary>
-	void Update3DReticle();
-
-	/// <summary>
-	/// 2Dスプライトの配置
-	/// </summary>
-	void Update2DSprite(ViewProjection& viewProjection);
+	void Update3DReticle(ViewProjection& viewProjection);
 
 	/// <summary>
 	/// ワールド座標を取得

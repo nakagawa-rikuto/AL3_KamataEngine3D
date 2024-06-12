@@ -64,7 +64,7 @@ void Player::Rotate() {
 	}
 }
 
-void Player::Update3DReticle() {
+void Player::Update3DReticle(ViewProjection& viewProjection) {
 
 	// 自機のワールド座標から3Dレティクルのワールド座標を計算
 	// 自機から3Dレティクルへの距離
@@ -80,13 +80,10 @@ void Player::Update3DReticle() {
 	offset = Normalize(offset) * kDistancePlayerTo3DReticle;
 
 	// 3Dレティクルの座標を設定
-	worldTransform3DReticle_.translation_ = GetWorldPosition() + offset;
+	worldTransform3DReticle_.translation_ = {GetWorldPosition().x * offset.x, GetWorldPosition().y * offset.y, GetWorldPosition().z * offset.z};
 
 	// WorldTransform3DReticle_のワールド行列更新と転送
 	worldTransform3DReticle_.UpdateMatrix();
-}
-
-void Player::Update2DSprite(ViewProjection& viewProjection) {
 
 	// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算
 	Vector3 positionReticle = GetWorld3DReticlePosition();
@@ -95,7 +92,7 @@ void Player::Update2DSprite(ViewProjection& viewProjection) {
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
 
 	// ビュー行列とプロジェクション行列、ビューポート行列を合成する
-	Matrix4x4 matWVP =  Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
+	Matrix4x4 matWVP = Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
 
 	// ワールド
 	positionReticle = Transform(positionReticle, matWVP);
@@ -211,12 +208,7 @@ void Player::Update(ViewProjection& viewProjection) {
 	/* //////////////////////
 	        3Dレティクル
 	*/ //////////////////////
-	Update3DReticle();
-
-	/* //////////////////////
-	        2Dレティクル
-	*/ //////////////////////
-	Update2DSprite(viewProjection);
+	Update3DReticle(viewProjection);
 
 	/* //////////////////////
 	        行列計算
