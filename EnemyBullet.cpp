@@ -31,7 +31,7 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	model_ = model;
 
 	// テクスチャの読み込み
-	textureHandle_ = TextureManager::Load("./Resources/uvChecker.png");
+	textureHandle_ = TextureManager::Load("./Resources/RedBullet.png");
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();

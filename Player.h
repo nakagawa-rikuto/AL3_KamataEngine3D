@@ -40,14 +40,10 @@ public:
 	void Rotate();
 
 	/// <summary>
-	/// 3Dレティクルの配置
+	/// Reticle
 	/// </summary>
-	void Update3DReticle();
-
-	/// <summary>
-	/// 2Dスプライトの配置
-	/// </summary>
-	void Update2DSprite(ViewProjection& viewProjection);
+	/// <param name="viewProjection"></param>
+	void Reticle(ViewProjection& viewProjection);
 
 	/// <summary>
 	/// ワールド座標を取得
@@ -115,7 +111,6 @@ private:
 
 	// 2Dレティクル用スプライト
 	Sprite* sprite2DReticle_ = nullptr;
-	Vector3 positionReticle_;
 	Vector3 posNear_;
 	Vector3 posFar_;
 	Vector3 mouseDirection_;
