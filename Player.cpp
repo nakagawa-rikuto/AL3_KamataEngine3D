@@ -86,10 +86,23 @@ void Player::Update3DReticle() {
 	worldTransform3DReticle_.UpdateMatrix();
 }
 
+/* 次はゲームパッド */
+
 void Player::Update2DSprite(ViewProjection& viewProjection) {
 
-	// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算
-	Vector3 positionReticle = GetWorld3DReticlePosition();
+	POINT mousePosition;
+	// マウス座標(スクリーン座標)を取得
+	GetCursorPos(&mousePosition);
+
+	// クライアントエリア座標に変換する
+	HWND hwnd = WinApp::GetInstance()->GetHwnd();
+	ScreenToClient(hwnd, &mousePosition);
+
+	// マウス座標をVector2に変換
+	Vector2 mousePos = Vector2(static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y));
+
+	// マウス座標を2Dレティクルのスプライトに代入する
+	sprite2DReticle_->SetPosition(Vector2(mousePos));
 
 	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
@@ -97,16 +110,28 @@ void Player::Update2DSprite(ViewProjection& viewProjection) {
 	// ビュー行列とプロジェクション行列、ビューポート行列を合成する
 	Matrix4x4 matWVP =  Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
 
-	// ワールド
-	positionReticle = Transform(positionReticle, matWVP);
+	// 合成行列を逆行列にする
+	Matrix4x4 matInverseVPV = Inverse(matWVP);
 
-	sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
-}
+	// スクリーン座標
+	posNear_ = {Vector3(static_cast<float>(mousePos.x), mousePos.y, 0)};
+	posFar_ = {Vector3(mousePos.x, mousePos.y, 1)};
 
-void Player::Mouse() {
+	// スクリーン座標系からワールド座標系へ
+	posNear_ = Transform(posNear_, matInverseVPV);
+	posFar_ = Transform(posFar_, matInverseVPV);
 
-	POINT mousePosition;
-	// マウスざ
+	// マウスレイの方向
+	Vector3 mouseDirection = posNear_ - posFar_;
+	mouseDirection = Normalize(mouseDirection);
+
+	// カメラから照準オブジェクトの距離
+	const float kDistanceTestObject = 10.0f;
+
+	// ニアクリップ面上のワールド座標から一定距離前進したところに3Dレティクルを配置
+	worldTransform3DReticle_.translation_ = posNear_ + posFar_ * kDistanceTestObject;
+
+	worldTransform3DReticle_.UpdateMatrix();
 }
 
 Vector3 Player::GetWorldPosition() { 
@@ -196,6 +221,12 @@ void Player::Update(ViewProjection& viewProjection) {
 	ImGui::DragFloat3("worldTransform.scale", &worldTransform_.scale_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform3DReticle.translation", &worldTransform3DReticle_.translation_.x, 0.01f);
+
+	ImGui::Text("2DReticle : (%f, %f)", positionReticle_.x, positionReticle_.y);
+	ImGui::Text("Near(%+.2f, %+.2f, %+.2f)", posNear_.x, posNear_.y, posNear_.z);
+	ImGui::Text("Far(%+.2f, %+.2f, %+.2f)", posFar_.x, posFar_.y, posFar_.z);
+	ImGui::Text("3DReticle : (%+.2f, %+.2f, %+.2f)", 
+		worldTransform3DReticle_.translation_.x, worldTransform3DReticle_.translation_.y, worldTransform3DReticle_.translation_.z);
 	ImGui::End();
 #endif // DEBUG
 

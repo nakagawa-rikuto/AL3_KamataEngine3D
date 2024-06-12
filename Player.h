@@ -50,11 +50,6 @@ public:
 	void Update2DSprite(ViewProjection& viewProjection);
 
 	/// <summary>
-	/// マウス
-	/// </summary>
-	void Mouse();
-
-	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns></returns>
@@ -120,6 +115,10 @@ private:
 
 	// 2Dレティクル用スプライト
 	Sprite* sprite2DReticle_ = nullptr;
+	Vector3 positionReticle_;
+	Vector3 posNear_;
+	Vector3 posFar_;
+	Vector3 mouseDirection_;
 
 	// ワールド変換データ
 	WorldTransform worldTransform_;
