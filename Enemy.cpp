@@ -108,7 +108,7 @@ void Enemy::Update() {
 	case Enemy::Phase::APPROACH:
 
 		// 接近処理
-		ApproachPhase();
+		//ApproachPhase();
 
 		// 規定の位置に到達したら離脱に切り替え
 		if (worldTransform_.translation_.x < -10.0f) {
@@ -118,7 +118,7 @@ void Enemy::Update() {
 	case Enemy::Phase::LEACE:
 
 		// 後退処理
-		LeasePhase();
+		//LeasePhase();
 
 		// 規定の距離に到達したら接近に切り替え
 		if (worldTransform_.translation_.x > 30.0f) {

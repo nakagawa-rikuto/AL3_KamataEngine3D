@@ -111,9 +111,6 @@ private:
 
 	// 2Dレティクル用スプライト
 	Sprite* sprite2DReticle_ = nullptr;
-	Vector3 posNear_;
-	Vector3 posFar_;
-	Vector3 mouseDirection_;
 
 	// ワールド変換データ
 	WorldTransform worldTransform_;
