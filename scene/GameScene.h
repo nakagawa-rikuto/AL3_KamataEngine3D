@@ -53,6 +53,27 @@ public: // メンバ関数
 	*/ ///////////////////////////////////
 
 	/// <summary>
+	/// 敵発生処理
+	/// </summary>
+	void EnemyInitialize(Enemy* enemy, Vector3 position);
+
+	/// <summary>
+	/// 敵発生データの読み込み
+	/// </summary>
+	void LoadEnemyPopData();
+
+	/// <summary>
+	/// 敵発生コマンドの更新
+	/// </summary>
+	void UpdateEnemyPopCommands();
+
+	/// <summary>
+	/// 敵の更新
+	/// </summary>
+	/// <param name="enemy"></param>
+	void EnemyUpdate();
+
+	/// <summary>
 	/// 敵弾を追加する
 	/// </summary>
 	/// <param name="enemyBullet"></param>
@@ -68,21 +89,6 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	void EnemyBulletDraw(ViewProjection& viewProjection);
-
-	/// <summary>
-	/// 敵発生処理
-	/// </summary>
-	void EnemyInitialize(Enemy* enemy, Vector3 position);
-
-	/// <summary>
-	/// 敵発生データの読み込み
-	/// </summary>
-	void LoadEnemyPopData();
-
-	/// <summary>
-	/// 敵発生コマンドの更新
-	/// </summary>
-	void UpdateEnemyPopCommands();
 
 	/* ///////////////////////////////////
 	              GameScene

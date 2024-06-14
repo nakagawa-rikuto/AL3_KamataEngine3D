@@ -130,7 +130,7 @@ void Player::Reticle(ViewProjection& viewProjection) {
 
 	// ニアクリップ面上のワールド座標から一定距離前進したところに3Dレティクルを配置
 	worldTransform3DReticle_.translation_ = posNear + mouseDirection * kDistanceTestObject;
-	worldTransform3DReticle_.translation_.z = 50.0f;
+	worldTransform3DReticle_.translation_.z = worldTransform_.translation_.z + 30.0f;
 	worldTransform3DReticle_.UpdateMatrix();
 
 	#ifdef _DEBUG
@@ -213,7 +213,9 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 position) 
 	textureReticle_ = TextureManager::Load("./Resources/Reticle.png");
 
 	// スプライト生成
-	sprite2DReticle_ = Sprite::Create(textureReticle_, Vector2(0.0f, 0.0f), Vector4(1.0f, 1.0f, 1.0f, 1.0f), Vector2(0.5f, 0.5f));
+	sprite2DReticle_ = Sprite::Create(textureReticle_, 
+		Vector2(worldTransform3DReticle_.translation_.x, worldTransform3DReticle_.translation_.y), 
+		Vector4(1.0f, 1.0f, 1.0f, 1.0f), Vector2(0.5f, 0.5f));
 }
 
 void Player::Update(ViewProjection& viewProjection) {

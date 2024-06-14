@@ -74,51 +74,8 @@ void GameScene::PlayerBulletDraw(ViewProjection& viewProjection) {
 }
 
 /* ///////////////////////////////////
-              EnemyBullet
+                 Enemy
 */ ///////////////////////////////////
-
-/// <summary>
-/// 敵弾の追加
-/// </summary>
-/// <param name="enemyBullet"></param>
-void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet) {
-
-	// リストに登録
-	enemyBullets_.push_back(enemyBullet);
-}
-
-/// <summary>
-/// 敵弾の更新
-/// </summary>
-void GameScene::EnemyBulletUpdate() {
-	// ですフラグの立った弾を削除
-	// remove_if()はあくまでリストから要素を消すだけ
-	enemyBullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
-
-	// 弾の更新　
-	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Update();
-	}
-}
-
-/// <summary>
-/// 敵弾の描画
-/// </summary>
-/// <param name="viewProjection"></param>
-void GameScene::EnemyBulletDraw(ViewProjection& viewProjection) {
-	// 弾の描画
-	for (EnemyBullet* bullet : enemyBullets_) {
-
-		bullet->Draw(viewProjection);
-	}
-}
-
 void GameScene::EnemyInitialize(Enemy* enemy, Vector3 position) {
 
 	enemy->Initialize(model_, enemyTextureHandle_, position);
@@ -144,10 +101,8 @@ void GameScene::LoadEnemyPopData() {
 }
 
 /// <summary>
-/// Enemyが重なっていて描画している
-/// それが悪いところ
+/// 敵発生コマンドの更新
 /// </summary>
-
 void GameScene::UpdateEnemyPopCommands() {
 
 	// 待機処理
@@ -201,7 +156,7 @@ void GameScene::UpdateEnemyPopCommands() {
 			EnemyInitialize(enemy, Vector3(x, y, z));
 			enemy_.push_back(enemy);
 			//// 敵を発生させる
-			//EnemyInitialize(enemy, Vector3(x, y, z));
+			// EnemyInitialize(enemy, Vector3(x, y, z));
 
 			// WAITコマンドの実行
 		} else if (word.find("WAIT") == 0) {
@@ -218,6 +173,73 @@ void GameScene::UpdateEnemyPopCommands() {
 			// コマンドループを抜ける
 			break;
 		}
+	}
+}
+
+/// <summary>
+/// Enemyの更新
+/// </summary>
+void GameScene::EnemyUpdate() {
+	enemy_.remove_if([](Enemy* enemy) {
+		if (enemy->IsDead()) {
+			delete enemy;
+			return true;
+		}
+		return false;
+	});
+
+	// Enemyの更新
+	for (Enemy* enemy : enemy_) {
+		enemy->Update();
+	}
+
+	// スクリプト実行
+	UpdateEnemyPopCommands();
+}
+
+/* ///////////////////////////////////
+              EnemyBullet
+*/ ///////////////////////////////////
+
+/// <summary>
+/// 敵弾の追加
+/// </summary>
+/// <param name="enemyBullet"></param>
+void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet) {
+
+	// リストに登録
+	enemyBullets_.push_back(enemyBullet);
+}
+
+/// <summary>
+/// 敵弾の更新
+/// </summary>
+void GameScene::EnemyBulletUpdate() {
+	// ですフラグの立った弾を削除
+	// remove_if()はあくまでリストから要素を消すだけ
+	enemyBullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+	// 弾の更新　
+	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->Update();
+	}
+}
+
+/// <summary>
+/// 敵弾の描画
+/// </summary>
+/// <param name="viewProjection"></param>
+void GameScene::EnemyBulletDraw(ViewProjection& viewProjection) {
+	// 弾の描画
+	for (EnemyBullet* bullet : enemyBullets_) {
+
+		bullet->Draw(viewProjection);
 	}
 }
 
@@ -340,7 +362,7 @@ void GameScene::Initialize() {
 	*/ /////////////////////////
 	// テクスチャの読み込み
 	textureHandle_ = TextureManager::Load("./Resources/mario.png");
-	enemyTextureHandle_ = TextureManager::Load("./Resources/uvChecker.png");
+	enemyTextureHandle_ = TextureManager::Load("./Resources/cube/cube.jpg");
 
 	// レティクルのテクスチャ
 	TextureManager::Load("./Resources/Reticle.png");
@@ -380,7 +402,7 @@ void GameScene::Initialize() {
 
 	for (Enemy* enemy : enemy_) {
 
-		enemy->Initialize(model_, enemyTextureHandle_, {0.0f, 0.0f, 0.0f});
+		enemy->Initialize(model_, enemyTextureHandle_, {20.0f, 20.0f, 100.0f});
 		enemy->SetPlayer(player_);
 		enemy->SetGameScene(this);
 	}
@@ -430,14 +452,9 @@ void GameScene::Update() {
 	      Enemy・EnemyBullet
 	*/ /////////////////////////
 
-	for (Enemy* enemy : enemy_) {
-		enemy->Update();
-	}
+	EnemyUpdate();
 
 	EnemyBulletUpdate();
-
-	// スクリプト実行
-	UpdateEnemyPopCommands();
 
 	/* //////////////////////////
 	         Collision
@@ -549,10 +566,9 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-	
-	//2Dスプライトのびょうが
+
+	// 2Dスプライトのびょうが
 	player_->DrawUI();
-	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

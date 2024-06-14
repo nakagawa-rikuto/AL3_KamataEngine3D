@@ -66,7 +66,9 @@ void Enemy::CountTimer() {
 	}
 }
 
-void Enemy::OnCollision() {}
+void Enemy::OnCollision() {
+	isDead_ = true;
+}
 
 Vector3 Enemy::GetWorldPosition() {
 

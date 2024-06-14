@@ -68,6 +68,12 @@ public:
 	/// </summary>
 	void OnCollision();
 
+	/// <summary>
+	/// 死亡情報
+	/// </summary>
+	/// <returns></returns>
+	bool IsDead() const { return isDead_; }
+
 	/* ///////////////////////////////
 	              Setter
 	*/ ///////////////////////////////
@@ -125,6 +131,9 @@ private:
 
 	// GameScene
 	GameScene* gameScene_ = nullptr;
+
+	// デスフラグ
+	bool isDead_ = false;
 
 	// 発射間隔
 	static const int kFireInterval = 60;
