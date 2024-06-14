@@ -5,8 +5,6 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	delete model_;
-	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -15,20 +13,20 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	// 自キャラの生成
-	player_ = new Player();
-
 	// ファイル名を指定してテクスチャを読み込み
 	textureHandle_ = TextureManager::Load("mario.png");
 
 	// 3Dモデルの生成
-	model_ = Model::Create();
+	model_.reset(Model::Create());
 
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
+	// 自キャラの生成
+	player_ = std::make_unique<Player>();
+
 	// 自キャラの初期化
-	player_->Initialeze(model_, textureHandle_, &viewProjection_);
+	player_->Initialeze(model_.get(), textureHandle_, &viewProjection_);
 }
 
 void GameScene::Update() {
