@@ -103,7 +103,7 @@ void Player::Reticle(ViewProjection& viewProjection) {
 	// ビュー行列とプロジェクション行列、ビューポート行列を合成する
 	Matrix4x4 matWVP = Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
 	// 合成行列を逆行列にする
-	Matrix4x4 matInverseVPV = Inverse(matWVP);
+	Matrix4x4 matInverseVPV = Inverse4x4(matWVP);
 
 	/* /////////////////////////////////////
 	            座標の変換
@@ -130,6 +130,7 @@ void Player::Reticle(ViewProjection& viewProjection) {
 
 	// ニアクリップ面上のワールド座標から一定距離前進したところに3Dレティクルを配置
 	worldTransform3DReticle_.translation_ = posNear + mouseDirection * kDistanceTestObject;
+	worldTransform3DReticle_.translation_.z = 50.0f;
 	worldTransform3DReticle_.UpdateMatrix();
 
 	#ifdef _DEBUG
@@ -251,9 +252,6 @@ void Player::Update(ViewProjection& viewProjection) {
 void Player::Draw(ViewProjection& viewProjection) {
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-
-	// 3Dレティクルを描画
-	model_->Draw(worldTransform3DReticle_, viewProjection);
 }
 
 void Player::DrawUI() {

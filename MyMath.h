@@ -55,6 +55,9 @@ Matrix4x4 MakeOrethographicMatrx(float left, float top, float right, float botto
 // 逆行列
 Matrix4x4 Inverse(const Matrix4x4& m);
 
+// 逆行列4x4
+Matrix4x4 Inverse4x4(Matrix4x4& m);
+
 // 座標変換
 Vector3 Transform(Vector3 vector, Matrix4x4 matrix);
 #pragma endregion
