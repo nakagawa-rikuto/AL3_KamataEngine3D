@@ -4,12 +4,15 @@
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
-#include "Player.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
 #include <memory>
+
+#include "Player.h"
+#include "SkyDome.h"
+#include "Ground.h"
 
 /// <summary>
 /// ゲームシーン
@@ -51,15 +54,39 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 
-	// 自キャラ
+	/* //////////////////////////////////////
+	                 Entity
+	*/ //////////////////////////////////////
+	// Player
 	std::unique_ptr<Player> player_;
 
-	// テクスチャハンドル
+	/* //////////////////////////////////////
+	                 Field
+	*/ //////////////////////////////////////
+	// SkyDome
+	std::unique_ptr<SkyDome> skyDome_;
+
+	// Ground
+	std::unique_ptr<Ground> ground_;
+	/* //////////////////////////////////////
+	                  モデル
+	*/ //////////////////////////////////////
+	// 3Dモデルデータ
+	std::unique_ptr<Model> entityModel_;
+
+	// SkyDome
+	std::unique_ptr<Model> skyDomeModel_;
+
+	// Ground
+	std::unique_ptr<Model> groundModel_;
+
+	/* //////////////////////////////////////
+	             テクスチャハンドル
+	*/ //////////////////////////////////////
 	uint32_t textureHandle_ = 0;
 
-	// 3Dモデルデータ
-	std::unique_ptr<Model> model_;
-
-	// ヴュープロジェクション
+	/* //////////////////////////////////////
+	           ビュープロジェクション
+	*/ //////////////////////////////////////
 	ViewProjection viewProjection_;
 };

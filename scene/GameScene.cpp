@@ -13,26 +13,55 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	// ファイル名を指定してテクスチャを読み込み
+	/* /////////////////////////
+	      テクスチャ読み込み
+	*/ /////////////////////////
 	textureHandle_ = TextureManager::Load("mario.png");
 
-	// 3Dモデルの生成
-	model_.reset(Model::Create());
+	/* /////////////////////////
+	           Model生成
+	*/ /////////////////////////
+	entityModel_.reset(Model::Create());
+	skyDomeModel_.reset(Model::CreateFromOBJ("hosizora", true));
+	groundModel_.reset(Model::CreateFromOBJ("Ground", true));
 
-	// ビュープロジェクションの初期化
+	/* /////////////////////////
+	       viewProjection
+	*/ /////////////////////////
 	viewProjection_.Initialize();
 
+	/* /////////////////////////
+	          Player
+	*/ /////////////////////////
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 
 	// 自キャラの初期化
-	player_->Initialeze(model_.get(), textureHandle_, &viewProjection_);
+	player_->Initialeze(entityModel_.get(), textureHandle_, &viewProjection_);
+
+	/* /////////////////////////
+	         SkyDome
+	*/ /////////////////////////
+	skyDome_ = std::make_unique<SkyDome>();
+	skyDome_->Initialize(skyDomeModel_.get(), &viewProjection_);
+
+	/* /////////////////////////
+	          Ground
+	*/ /////////////////////////
+	ground_ = std::make_unique<Ground>();
+	ground_->Initialize(groundModel_.get(), &viewProjection_);
 }
 
 void GameScene::Update() {
 
 	// 　自キャラの更新
 	player_->Update();
+
+	// SkyDomeの更新
+	skyDome_->Update();
+
+	// Groundの更新
+	ground_->Update();
 }
 
 void GameScene::Draw() {
@@ -61,6 +90,12 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+	// SkyDomeの描画
+	skyDome_->Draw();
+
+	// Groundの描画
+	ground_->Draw();
 
 	// 自キャラの描画
 	player_->Draw();
