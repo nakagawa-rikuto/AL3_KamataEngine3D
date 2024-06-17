@@ -7,12 +7,17 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "DebugCamera.h"
+#include "AxisIndicator.h"
 
 #include <memory>
+#include <sstream>
+#include <cassert>
 
 #include "Player.h"
 #include "SkyDome.h"
 #include "Ground.h"
+#include "MyMath.h"
 
 /// <summary>
 /// ゲームシーン
@@ -29,6 +34,12 @@ public: // メンバ関数
 	/// デストラクタ
 	/// </summary>
 	~GameScene();
+
+	/* /////////////////////////////////////
+	               デバッグカメラ
+	*/ /////////////////////////////////////
+
+	void DebugCameraUpdate();
 
 	/// <summary>
 	/// 初期化
@@ -53,7 +64,6 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
-
 	/* //////////////////////////////////////
 	                 Entity
 	*/ //////////////////////////////////////
@@ -68,11 +78,22 @@ private: // メンバ変数
 
 	// Ground
 	std::unique_ptr<Ground> ground_;
+
+	/* //////////////////////////////////////
+	                 カメラ
+	*/ //////////////////////////////////////
+	// デバッグガメラ
+	std::unique_ptr<DebugCamera> debugCamera_;
+	bool isDebugCameraActive_;
+
 	/* //////////////////////////////////////
 	                  モデル
 	*/ //////////////////////////////////////
 	// 3Dモデルデータ
 	std::unique_ptr<Model> entityModel_;
+
+	// Player
+	std::unique_ptr<Model> playerModel_;
 
 	// SkyDome
 	std::unique_ptr<Model> skyDomeModel_;

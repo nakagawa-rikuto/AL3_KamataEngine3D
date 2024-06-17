@@ -13,9 +13,8 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="model"></param>
-	/// <param name="texturehandle"></param>
 	/// <param name="viewProjection"></param>
-	void Initialeze(Model* model, uint32_t texturehandle, ViewProjection* viewProjection);
+	void Initialeze(Model* model, ViewProjection* viewProjection);
 
 	/// <summary>
 	/// 更新
@@ -36,7 +35,4 @@ private:
 
 	// モデル
 	Model* model_ = nullptr;
-
-	// テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
 };
