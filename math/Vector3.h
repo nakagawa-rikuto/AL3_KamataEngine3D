@@ -8,10 +8,10 @@ struct Vector3 final {
 	float y;
 	float z;
 
-	Vector3 operator+=(Vector3& obj);
+	Vector3 operator+=(const Vector3& obj);
 	Vector3 const operator+(const Vector3& obj) const;
-	Vector3 operator-=(Vector3& obj);
+	Vector3 operator-=(const Vector3& obj);
 	Vector3 const operator-(const Vector3& obj) const;
-	Vector3 operator*=(float& obj);
+	Vector3 operator*=(const float& obj);
 	Vector3 const operator*(const float& obj) const;
 };

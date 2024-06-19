@@ -21,6 +21,18 @@ public:
 	void Move();
 
 	/// <summary>
+	/// ViewProjectionを取得
+	/// </summary>
+	/// <param name="viewProjection"></param>
+	void SetViewProjection(const ViewProjection* viewProjection) { viewProjection_ = viewProjection; }
+
+	/// <summary>
+	/// PlayerのWorldTransformを渡す
+	/// </summary>
+	/// <returns></returns>
+	WorldTransform& GetWorldTransform() { return worldTransform_; }
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="model"></param>
@@ -42,7 +54,7 @@ private:
 	WorldTransform worldTransform_;
 
 	//ビュープロジェクション
-	ViewProjection* viewProjection_ = nullptr;
+	const ViewProjection* viewProjection_ = nullptr;
 
 	// モデル
 	Model* model_ = nullptr;

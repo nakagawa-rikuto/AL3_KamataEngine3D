@@ -17,6 +17,7 @@
 #include "Player.h"
 #include "SkyDome.h"
 #include "Ground.h"
+#include "FollowCamera.h"
 #include "MyMath.h"
 
 /// <summary>
@@ -85,6 +86,9 @@ private: // メンバ変数
 	// デバッグガメラ
 	std::unique_ptr<DebugCamera> debugCamera_;
 	bool isDebugCameraActive_;
+
+	// 追従カメラ
+	std::unique_ptr<FollowCamera> followCamera_;
 
 	/* //////////////////////////////////////
 	                  モデル
