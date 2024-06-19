@@ -1,4 +1,32 @@
+#define NOMINMAX
 #include "Player.h"
+#include "TextureManager.h"
+
+void Player::Move() {
+
+	// ジョイスティック
+	XINPUT_STATE joyState;
+
+	// ジョイスティックが有効なら
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+
+		// 速さ
+		const float speed = 0.3f;
+
+		// 移動量
+		Vector3 move = {
+			static_cast<float>(joyState.Gamepad.sThumbLX), 
+			0.0f, 
+			static_cast<float>(joyState.Gamepad.sThumbLY)
+		};
+
+		// 移動量に速さを反映
+		move = Normalize(move) * speed;
+
+		// 移動
+		worldTransform_.translation_ += move;
+	}
+}
 
 void Player::Initialeze(Model* model, ViewProjection* viewProjection) {
 
@@ -17,9 +45,10 @@ void Player::Initialeze(Model* model, ViewProjection* viewProjection) {
 
 void Player::Update() {
 
-	// 行列を定数バッファに転送
-	// TransferMatrixはワールド行列を転送する関数
-	worldTransform_.TransferMatrix();
+	Move();
+
+	// 行列の再計算と転送
+	worldTransform_.UpdateMatrix();
 }
 
 void Player::Draw() {

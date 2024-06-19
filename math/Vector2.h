@@ -6,4 +6,11 @@
 struct Vector2 final {
 	float x;
 	float y;
+
+	Vector2 operator+=(Vector2& obj);
+	Vector2 const operator+(const Vector2& obj) const;
+	Vector2 operator-=(Vector2& obj);
+	Vector2 const operator-(const Vector2& obj) const;
+	Vector2 operator*=(float& obj);
+	Vector2 const operator*(const float& obj) const;
 };
