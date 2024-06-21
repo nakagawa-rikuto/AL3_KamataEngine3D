@@ -32,7 +32,7 @@ void GameScene::DebugCameraUpdate() {
 	} else {
 
 		// ビュープロジェクション行列の更新と転送
-		viewProjection_.UpdateMatrix();
+		//viewProjection_.UpdateMatrix();
 	}
 }
 
@@ -83,7 +83,7 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 
 	// 自キャラの初期化
-	player_->Initialeze(playerModel_.get(), &viewProjection_);
+	player_->Initialize(playerModel_.get(), &viewProjection_);
 
 	/* /////////////////////////
 	         SkyDome

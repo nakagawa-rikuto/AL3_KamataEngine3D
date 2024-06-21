@@ -37,7 +37,7 @@ public:
 	/// </summary>
 	/// <param name="model"></param>
 	/// <param name="viewProjection"></param>
-	void Initialeze(Model* model, ViewProjection* viewProjection);
+	void Initialize(Model* model, ViewProjection* viewProjection);
 
 	/// <summary>
 	/// 更新

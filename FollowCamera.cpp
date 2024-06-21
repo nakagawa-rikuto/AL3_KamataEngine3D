@@ -5,7 +5,7 @@ void FollowCamera::Move() {
 	if (target_) {
 
 		// 追従対象からカメラまでのオフセット
-		Vector3 offset = {0.0f, -5.0f, -40.0f};
+		Vector3 offset = {0.0f, 2.0f, -40.0f};
 
 		offset = TransformNormal(offset, 
 			Multiply(Multiply(

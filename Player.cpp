@@ -4,6 +4,9 @@
 
 void Player::Move() {
 
+	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
+	ImGui::DragFloat3("worldTransform.rotate", &worldTransform_.rotation_.x, 0.01f);
+
 	// ジョイスティック
 	XINPUT_STATE joyState;
 
@@ -27,7 +30,7 @@ void Player::Move() {
 		move = TransformNormal(move, 
 			Multiply(Multiply(
 				MakeRotateXMatrix(viewProjection_->rotation_.x), 
-				MakeRotateYMatrix(viewProjection_->rotation_.y)), 
+				MakeRotateYMatrix(-viewProjection_->rotation_.y)), 
 				MakeRotateZMatrix(viewProjection_->rotation_.z)
 			));
 
@@ -35,14 +38,14 @@ void Player::Move() {
 		worldTransform_.translation_ += move;
 
 		// 移動方向に見た目を合わせる
-		/*worldTransform_.rotation_.y = std::atan2(move.x, move.z);
-		Vector3 moveZ = TransformNormal(move, MakeRotateYMatrix(-worldTransform_.rotation_.y));
+		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+		Vector3 moveZ = TransformNormal(move, MakeRotateYMatrix(worldTransform_.rotation_.y));
 
-		worldTransform_.rotation_.x = std::atan2(moveZ.y, moveZ.z);*/
+		worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
 	}
 }
 
-void Player::Initialeze(Model* model, ViewProjection* viewProjection) {
+void Player::Initialize(Model* model, ViewProjection* viewProjection) {
 
 	// NULLポインタチェック
 	assert(model);
