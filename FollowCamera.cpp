@@ -5,9 +5,14 @@ void FollowCamera::Move() {
 	if (target_) {
 
 		// 追従対象からカメラまでのオフセット
-		Vector3 offset = {0.0f, 10.0f, -50.0f};
+		Vector3 offset = {0.0f, -5.0f, -40.0f};
 
-		offset = TransformNormal(offset, Multiply(Multiply(MakeRotateXMatrix(viewProjection_.rotation_.x), MakeRotateYMatrix(viewProjection_.rotation_.y)), MakeRotateZMatrix(viewProjection_.rotation_.z)));
+		offset = TransformNormal(offset, 
+			Multiply(Multiply(
+				MakeRotateXMatrix(viewProjection_.rotation_.x),
+				MakeRotateYMatrix(viewProjection_.rotation_.y)), 
+				MakeRotateZMatrix(viewProjection_.rotation_.z)
+			));
 
 		// 座標をコピーしてオフセット分ずらす
 		viewProjection_.translation_ = target_->translation_ + offset;

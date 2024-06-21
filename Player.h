@@ -56,6 +56,8 @@ private:
 	//ビュープロジェクション
 	const ViewProjection* viewProjection_ = nullptr;
 
+	//ViewProjection* viewProjection_ = nullptr;
+
 	// モデル
 	Model* model_ = nullptr;
 };

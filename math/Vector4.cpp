@@ -1,5 +1,5 @@
 #include "Vector4.h"
-Vector4 Vector4::operator+=(const Vector4& obj) {
+Vector4 Vector4::operator+=(Vector4& obj) {
 
 	this->x += obj.x;
 	this->y += obj.y;
@@ -20,7 +20,7 @@ Vector4 const Vector4::operator+(const Vector4& obj) const {
 	return sc;
 }
 
-Vector4 Vector4::operator-=(const Vector4& obj) {
+Vector4 Vector4::operator-=(Vector4& obj) {
 
 	this->x -= obj.x;
 	this->y -= obj.y;
@@ -41,7 +41,7 @@ Vector4 const Vector4::operator-(const Vector4& obj) const {
 	return sc;
 }
 
-Vector4 Vector4::operator*=(const float& obj) {
+Vector4 Vector4::operator*=(float& obj) {
 
 	this->x *= obj;
 	this->y *= obj;

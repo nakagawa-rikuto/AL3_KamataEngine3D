@@ -18,6 +18,8 @@ void GameScene::DebugCameraUpdate() {
 	}
 #endif // DEBUG
 
+	ImGui::Checkbox("DebugCamera", &isDebugCameraActive_);
+
 	if (isDebugCameraActive_) {
 
 		// デバッグカメラの更新
@@ -32,6 +34,19 @@ void GameScene::DebugCameraUpdate() {
 		// ビュープロジェクション行列の更新と転送
 		viewProjection_.UpdateMatrix();
 	}
+}
+
+void GameScene::FollowCameraUpdate() {
+
+	// 追従カメラの更新
+	followCamera_->Update();
+
+	// 追従カメラのビュープロジェクションをコピー
+	viewProjection_.matView = followCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+
+	// ViewProjectionの転送
+	viewProjection_.TransferMatrix();
 }
 
 /// <summary>
@@ -70,9 +85,6 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player_->Initialeze(playerModel_.get(), &viewProjection_);
 
-	// 追従カメラのビュープロジェクションをセット
-	player_->SetViewProjection(&followCamera_->GetViewProjection());
-
 	/* /////////////////////////
 	         SkyDome
 	*/ /////////////////////////
@@ -86,17 +98,20 @@ void GameScene::Initialize() {
 	ground_->Initialize(groundModel_.get(), &viewProjection_);
 
 	/* /////////////////////////
-	          デバッグカメラ
-	*/ /////////////////////////
-	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
-
-	/* /////////////////////////
 				追従カメラ
 	*/ /////////////////////////
 	// 追従カメラの生成
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->Initialize();
 	followCamera_->SetTarget(&player_->GetWorldTransform());
+
+	// 追従カメラのビュープロジェクションをセット
+	player_->SetViewProjection(&followCamera_->GetViewProjection());
+
+	/* /////////////////////////
+	          デバッグカメラ
+	*/ /////////////////////////
+	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 
 	/* //////////////////////////
 	         軸方向表示の使用
@@ -122,18 +137,11 @@ void GameScene::Update() {
 	// Groundの更新
 	ground_->Update();
 
+	// FollowCameraの更新
+	FollowCameraUpdate();
+
 	// デバッグカメラの更新
 	DebugCameraUpdate();
-
-	// 追従カメラの更新
-	followCamera_->Update();
-
-	// 追従カメラのビュープロジェクションをコピー
-	viewProjection_.matView = followCamera_->GetViewProjection().matView;
-	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
-
-	// ViewProjectionの転送
-	viewProjection_.TransferMatrix();
 }
 
 /// <summary>

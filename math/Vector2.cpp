@@ -1,6 +1,6 @@
 #include "Vector2.h"
 
-Vector2 Vector2::operator+=(const Vector2& obj) {
+Vector2 Vector2::operator+=(Vector2& obj) {
 
 	this->x += obj.x;
 	this->y += obj.y;
@@ -17,7 +17,7 @@ Vector2 const Vector2::operator+(const Vector2& obj) const {
 	return sc;
 }
 
-Vector2 Vector2::operator-=(const Vector2& obj) {
+Vector2 Vector2::operator-=(Vector2& obj) {
 
 	this->x -= obj.x;
 	this->y -= obj.y;
@@ -34,7 +34,7 @@ Vector2 const Vector2::operator-(const Vector2& obj) const {
 	return sc;
 }
 
-Vector2 Vector2::operator*=(const float& obj) {
+Vector2 Vector2::operator*=(float& obj) {
 
 	this->x *= obj;
 	this->y *= obj;

@@ -24,10 +24,21 @@ void Player::Move() {
 		move = Normalize(move) * speed;
 
 		// 移動ベクトルをカメラの角度だけ回転する
-		move += viewProjection_->rotation_;
+		move = TransformNormal(move, 
+			Multiply(Multiply(
+				MakeRotateXMatrix(viewProjection_->rotation_.x), 
+				MakeRotateYMatrix(viewProjection_->rotation_.y)), 
+				MakeRotateZMatrix(viewProjection_->rotation_.z)
+			));
 
 		// 移動
 		worldTransform_.translation_ += move;
+
+		// 移動方向に見た目を合わせる
+		/*worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+		Vector3 moveZ = TransformNormal(move, MakeRotateYMatrix(-worldTransform_.rotation_.y));
+
+		worldTransform_.rotation_.x = std::atan2(moveZ.y, moveZ.z);*/
 	}
 }
 
