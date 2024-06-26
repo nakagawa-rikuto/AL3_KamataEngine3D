@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "TextureManager.h"
 
+// 
 void Player::Move() {
 
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
@@ -45,21 +46,67 @@ void Player::Move() {
 	}
 }
 
-void Player::InitializeFloatingGimmick() {
+// 
+void Player::InitializeFloatingGimmick() {floatingParameter_ = 0.0f; }
 
-	floatingParameter_ = 0.0f; 
-}
+// 
+void Player::InitializeArmGimmick() { armParameter_ = 0.0f; }
 
+// 
 void Player::UpdateFloatingGimmick() {
 
 	// 浮遊移動のサイクル<frame>
-	const uint16_t period = 300;
+	const uint16_t period = 180;
 
 	// 1フレームでのパラメータ加算値
-	const float step = 2.0f * std::numbers<>
+	const float step = 2.0f * pi() / period;
 
+	// パラメータを1ステップ分加算
+	floatingParameter_ += step;
+
+	// 2πを超えたら0に戻す
+	floatingParameter_ = std::fmod(floatingParameter_, 2.0f * pi());
+
+	// 浮遊の振幅<m>
+	float amplitude = 1.0f;
+
+	// 浮遊を座標に反映
+	worldTransform_.translation_.y = std::sin(floatingParameter_) * amplitude;
 }
 
+void Player::UpdateArmGimmick() {
+
+	// 浮遊移動のサイクル<frame>
+	const uint16_t period = 180;
+
+	// 1フレームでのパラメータ加算値
+	const float step = 2.0f / period;
+
+	// パラメータを1ステップ分加算
+	armParameter_ += step;
+
+	// パラメータを0から2の範囲に制限
+	if (armParameter_ > 2.0f) {
+		armParameter_ -= 2.0f;
+	}
+
+	// 浮遊の振幅<m>
+	const float amplitude = 1.0f;
+
+	// 三角波の生成
+	float triangleWave;
+	if (armParameter_ < 1.0f) {
+		triangleWave = 2.0f * armParameter_ - 1.0f;
+	} else {
+		triangleWave = 1.0f - 2.0f * (armParameter_ - 1.0f);
+	}
+
+	// 浮遊を座標に反映
+	worldTransformLeftArm_.translation_.z = triangleWave * amplitude;
+	worldTransformRightArm_.translation_.z = triangleWave * amplitude;
+}
+
+// 
 void Player::Initialize(Model* modelBody, Model* modelFace, Model* modelCore, Model* modelLeftArm, Model* modelRightArm, ViewProjection* viewProjection) {
 
 	// Modelの指定
@@ -77,24 +124,49 @@ void Player::Initialize(Model* modelBody, Model* modelFace, Model* modelCore, Mo
 	worldTransformLeftArm_.Initialize();
 	worldTransformRightArm_.Initialize();
 
+	// 親子関係を構築
+	worldTransformBody_.SetParent(&worldTransform_);
+	worldTransformFace_.SetParent(&worldTransform_);
+	worldTransformCore_.SetParent(&worldTransform_);
+	worldTransformLeftArm_.SetParent(&worldTransform_);
+	worldTransformRightArm_.SetParent(&worldTransform_);
+
 	// 引数の内容をメンバ変数に記録
 	viewProjection_ = viewProjection;
+
+	// 浮遊の初期化
+	InitializeFloatingGimmick();
+
+	// 腕のギミックの初期化
+	InitializeArmGimmick();
 }
 
+// 
 void Player::Update() {
 
 	Move();
 
+	UpdateFloatingGimmick();
+
+	UpdateArmGimmick();
+
 	// 行列の再計算と転送
 	worldTransform_.UpdateMatrix();
+	worldTransformBody_.UpdateMatrix();
+	worldTransformFace_.UpdateMatrix();
+	worldTransformCore_.UpdateMatrix();
+	worldTransformLeftArm_.UpdateMatrix();
+	worldTransformRightArm_.UpdateMatrix();
 }
 
+// 
 void Player::Draw() {
 
 	// 3Dモデルを描画
-	faceModel_->Draw(worldTransform_, *viewProjection_);
-	bodyModel_->Draw(worldTransform_, *viewProjection_);
-	leftArmModel_->Draw(worldTransform_, *viewProjection_);
-	rightArmModel_->Draw(worldTransform_, *viewProjection_);
-	coreModel_->Draw(worldTransform_, *viewProjection_);
+	bodyModel_->Draw(worldTransformBody_, *viewProjection_);
+	faceModel_->Draw(worldTransformFace_, *viewProjection_);
+	coreModel_->Draw(worldTransformCore_, *viewProjection_);
+	leftArmModel_->Draw(worldTransformLeftArm_, *viewProjection_);
+	rightArmModel_->Draw(worldTransformRightArm_, *viewProjection_);
+	
 }

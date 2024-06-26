@@ -28,9 +28,19 @@ public:
 	void InitializeFloatingGimmick();
 
 	/// <summary>
+	/// 腕のギミックの初期化
+	/// </summary>
+	void InitializeArmGimmick();
+
+	/// <summary>
 	/// 浮遊ギミック
 	/// </summary>
 	void UpdateFloatingGimmick();
+
+	/// <summary>
+	/// 腕のギミック
+	/// </summary>
+	void UpdateArmGimmick();
 
 	/// <summary>
 	/// ViewProjectionを取得
@@ -66,6 +76,9 @@ private:
 	// 浮遊ギミックの媒体変数
 	float floatingParameter_ = 0.0f;
 
+	// 腕ギミックの媒体変数
+	float armParameter_ = 0.0f;
+
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	WorldTransform worldTransformBody_;
@@ -76,8 +89,6 @@ private:
 
 	//ビュープロジェクション
 	const ViewProjection* viewProjection_ = nullptr;
-
-	//ViewProjection* viewProjection_ = nullptr;
 
 	// モデル
 	Model* faceModel_ = nullptr;

@@ -1,7 +1,8 @@
 #include "MyMath.h"
+#include <numbers>
 
 // π
-float pi() { return static_cast<float>(M_PI); }
+float pi() { return std::numbers::pi_v<float>; }
 
 // 平行移動
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {

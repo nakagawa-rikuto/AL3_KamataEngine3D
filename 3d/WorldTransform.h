@@ -57,6 +57,12 @@ public:
 	/// </summary>
 	void UpdateMatrix();
 
+	/// <summary>
+	/// 親の設定
+	/// </summary>
+	/// <param name="parent"></param>
+	void SetParent(const WorldTransform* parent);
+
 private:
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffer_;

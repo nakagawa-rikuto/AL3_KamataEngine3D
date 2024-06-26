@@ -19,3 +19,10 @@ void WorldTransform::UpdateMatrix() {
 	// 定数バッファに転送する
 	TransferMatrix();
 }
+
+// 親の設定
+void WorldTransform::SetParent(const WorldTransform* parent) {
+
+	// 親の情報を元に初期化
+	this->parent_ = parent; 
+}
