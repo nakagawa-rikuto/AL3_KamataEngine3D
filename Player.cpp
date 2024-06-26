@@ -91,7 +91,10 @@ void Player::UpdateArmGimmick() {
 	}
 
 	// 浮遊の振幅<m>
-	const float amplitude = 1.0f;
+	const float amplitude = 0.5f;
+
+	  // 回転のオフセット（中心値）
+	const float rotationOffset = 0.0f; // 回転の中心値を適切に設定
 
 	// 三角波の生成
 	float triangleWave;
@@ -102,8 +105,8 @@ void Player::UpdateArmGimmick() {
 	}
 
 	// 浮遊を座標に反映
-	worldTransformLeftArm_.translation_.z = triangleWave * amplitude;
-	worldTransformRightArm_.translation_.z = triangleWave * amplitude;
+	worldTransformLeftArm_.rotation_.x = rotationOffset + triangleWave * amplitude;
+	worldTransformRightArm_.rotation_.x = rotationOffset + triangleWave * amplitude;
 }
 
 // 
