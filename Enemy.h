@@ -3,6 +3,10 @@
 
 class Enemy : public BaseCharacter {
 public:
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	void Move();
 
 	/// <summary>
 	/// 初期化

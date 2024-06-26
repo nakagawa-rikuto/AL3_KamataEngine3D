@@ -1,5 +1,19 @@
 #include "Enemy.h"
 
+// 移動処理
+void Enemy::Move() {
+
+	const float kEnemySpeed = 1.0f;     // 円軌道上の速度
+	//const float kRotationSpeed = 0.05f; // 回転速度（ラジアン毎フレーム）
+	Vector3 velocity(0, 0, kEnemySpeed);
+
+	worldTransform_.rotation_.y += 0.1f;
+
+	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+	worldTransform_.translation_ += velocity;
+}
+
 // 初期化
 void Enemy::Initialize(const std::vector<Model*>& models) {
 
@@ -19,6 +33,8 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 // 更新
 void Enemy::Update() {
+
+	Move();
 
 	// 行列の再計算と転送
 	BaseCharacter::Update();
