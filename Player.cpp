@@ -71,7 +71,7 @@ void Player::UpdateFloatingGimmick() {
 	float amplitude = 1.0f;
 
 	// 浮遊を座標に反映
-	worldTransform_.translation_.y = std::sin(floatingParameter_) * amplitude;
+	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude;
 }
 
 void Player::UpdateArmGimmick() {
@@ -129,10 +129,10 @@ void Player::Initialize(Model* modelBody, Model* modelFace, Model* modelCore, Mo
 
 	// 親子関係を構築
 	worldTransformBody_.SetParent(&worldTransform_);
-	worldTransformFace_.SetParent(&worldTransform_);
-	worldTransformCore_.SetParent(&worldTransform_);
-	worldTransformLeftArm_.SetParent(&worldTransform_);
-	worldTransformRightArm_.SetParent(&worldTransform_);
+	worldTransformFace_.SetParent(&worldTransformBody_);
+	worldTransformCore_.SetParent(&worldTransformBody_);
+	worldTransformLeftArm_.SetParent(&worldTransformBody_);
+	worldTransformRightArm_.SetParent(&worldTransformBody_);
 
 	// 引数の内容をメンバ変数に記録
 	viewProjection_ = viewProjection;
