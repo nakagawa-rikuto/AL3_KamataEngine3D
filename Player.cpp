@@ -71,9 +71,10 @@ void Player::UpdateFloatingGimmick() {
 	float amplitude = 1.0f;
 
 	// 浮遊を座標に反映
-	worldTransform_.translation_.y = std::sin(floatingParameter_) * amplitude;
+	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude;
 }
 
+// 
 void Player::UpdateArmGimmick() {
 
 	// 浮遊移動のサイクル<frame>
@@ -107,14 +108,10 @@ void Player::UpdateArmGimmick() {
 }
 
 // 
-void Player::Initialize(Model* modelBody, Model* modelFace, Model* modelCore, Model* modelLeftArm, Model* modelRightArm, ViewProjection* viewProjection) {
+void Player::Initialize(const std::vector<Model*>& models) {
 
-	// Modelの指定
-	faceModel_ = modelFace;
-	bodyModel_ = modelBody;
-	leftArmModel_ = modelLeftArm;
-	rightArmModel_ = modelRightArm;
-	coreModel_ = modelCore;
+	// 基底クラスの初期化
+	BaseCharacter::Initialize(models);
 
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
@@ -126,13 +123,12 @@ void Player::Initialize(Model* modelBody, Model* modelFace, Model* modelCore, Mo
 
 	// 親子関係を構築
 	worldTransformBody_.SetParent(&worldTransform_);
-	worldTransformFace_.SetParent(&worldTransform_);
-	worldTransformCore_.SetParent(&worldTransform_);
-	worldTransformLeftArm_.SetParent(&worldTransform_);
-	worldTransformRightArm_.SetParent(&worldTransform_);
+	worldTransformFace_.SetParent(&worldTransformBody_);
+	worldTransformCore_.SetParent(&worldTransformBody_);
+	worldTransformLeftArm_.SetParent(&worldTransformBody_);
+	worldTransformRightArm_.SetParent(&worldTransformBody_);
 
 	// 引数の内容をメンバ変数に記録
-	viewProjection_ = viewProjection;
 
 	// 浮遊の初期化
 	InitializeFloatingGimmick();
@@ -151,7 +147,7 @@ void Player::Update() {
 	UpdateArmGimmick();
 
 	// 行列の再計算と転送
-	worldTransform_.UpdateMatrix();
+	BaseCharacter::Update();
 	worldTransformBody_.UpdateMatrix();
 	worldTransformFace_.UpdateMatrix();
 	worldTransformCore_.UpdateMatrix();
@@ -160,13 +156,13 @@ void Player::Update() {
 }
 
 // 
-void Player::Draw() {
+void Player::Draw(const ViewProjection& viewProjection) {
 
 	// 3Dモデルを描画
-	bodyModel_->Draw(worldTransformBody_, *viewProjection_);
-	faceModel_->Draw(worldTransformFace_, *viewProjection_);
-	coreModel_->Draw(worldTransformCore_, *viewProjection_);
-	leftArmModel_->Draw(worldTransformLeftArm_, *viewProjection_);
-	rightArmModel_->Draw(worldTransformRightArm_, *viewProjection_);
+	models_[kModelIndexBody]->Draw(worldTransformBody_, viewProjection);
+	models_[kModelIndexFace]->Draw(worldTransformFace_, viewProjection);
+	models_[kModelIndexCore]->Draw(worldTransformCore_, viewProjection);
+	models_[kModelIndexL_Arm]->Draw(worldTransformLeftArm_, viewProjection);
+	models_[kModelIndexR_Arm]->Draw(worldTransformRightArm_, viewProjection);
 	
 }

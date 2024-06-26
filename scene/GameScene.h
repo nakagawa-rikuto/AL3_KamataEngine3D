@@ -15,6 +15,7 @@
 #include <cassert>
 
 #include "Player.h"
+#include "Enemy.h"
 #include "SkyDome.h"
 #include "Ground.h"
 #include "FollowCamera.h"
@@ -75,6 +76,9 @@ private: // メンバ変数
 	// Player
 	std::unique_ptr<Player> player_;
 
+	// Enemy
+	std::unique_ptr<Enemy> enemy_;
+
 	/* //////////////////////////////////////
 	                 Field
 	*/ //////////////////////////////////////
@@ -106,6 +110,10 @@ private: // メンバ変数
 	std::unique_ptr<Model> playerCoreModel_;
 	std::unique_ptr<Model> playerLeftArmModel_;
 	std::unique_ptr<Model> playerRightArmModel_;
+
+	// Enemy
+	std::unique_ptr<Model> enemyBodyModel_;
+	std::unique_ptr<Model> enemyWeaponModel_;
 
 	// SkyDome
 	std::unique_ptr<Model> skyDomeModel_;

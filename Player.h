@@ -8,13 +8,14 @@
 
 #include <numbers>
 
+#include "BaseCharacter.h"
 #include "MyMath.h"
 #include "imgui.h"
 
 /// <summary>
 /// 自キャラ
 /// </summary>
-class Player {
+class Player : public BaseCharacter {
 public:
 
 	/// <summary>
@@ -59,19 +60,27 @@ public:
 	/// </summary>
 	/// <param name="model"></param>
 	/// <param name="viewProjection"></param>
-	void Initialize(Model* modelBody, Model* modelFace, Model* modelCore, Model* modelLeftArm, Model* modelRightArm, ViewProjection* viewProjection);
+	void Initialize(const std::vector<Model*>& models) override;
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update()override;
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(const ViewProjection& viewProjection) override;
 
 private:
+
+	enum ModelNum { 
+		kModelIndexBody,
+		kModelIndexFace,
+		kModelIndexCore,
+		kModelIndexL_Arm,
+		kModelIndexR_Arm
+	};
 
 	// 浮遊ギミックの媒体変数
 	float floatingParameter_ = 0.0f;
@@ -80,7 +89,6 @@ private:
 	float armParameter_ = 0.0f;
 
 	// ワールド変換データ
-	WorldTransform worldTransform_;
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformFace_;
 	WorldTransform worldTransformCore_;
@@ -89,11 +97,4 @@ private:
 
 	//ビュープロジェクション
 	const ViewProjection* viewProjection_ = nullptr;
-
-	// モデル
-	Model* faceModel_ = nullptr;
-	Model* bodyModel_ = nullptr;
-	Model* leftArmModel_ = nullptr;
-	Model* rightArmModel_ = nullptr;
-	Model* coreModel_ = nullptr;
 };

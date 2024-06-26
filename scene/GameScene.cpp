@@ -66,16 +66,24 @@ void GameScene::Initialize() {
 	/* /////////////////////////
 	           Model生成
 	*/ /////////////////////////
+	// Entity
 	entityModel_.reset(Model::Create());
 
+	// Player
 	playerBodyModel_.reset(Model::CreateFromOBJ("PlayerBody", true));
 	playerFaceModel_.reset(Model::CreateFromOBJ("PlayerFeace", true));
 	playerCoreModel_.reset(Model::CreateFromOBJ("PlayerCore", true));
 	playerLeftArmModel_.reset(Model::CreateFromOBJ("PlayerLeftArm", true));
 	playerRightArmModel_.reset(Model::CreateFromOBJ("PlayerRightArm", true));
 
+	// Enemy
+	enemyBodyModel_.reset(Model::CreateFromOBJ("EnemyBody", true));
+	enemyWeaponModel_.reset(Model::CreateFromOBJ("EnemyWeapon", true));
+
+	// SkyDome
 	skyDomeModel_.reset(Model::CreateFromOBJ("hosizora", true));
 
+	// Ground
 	groundModel_.reset(Model::CreateFromOBJ("Ground", true));
 
 	/* /////////////////////////
@@ -88,10 +96,21 @@ void GameScene::Initialize() {
 	*/ /////////////////////////
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
-
+	// 自キャラのモデル
+	std::vector<Model*> playerModels = {
+		playerBodyModel_.get(), playerFaceModel_.get(), playerCoreModel_.get(), playerLeftArmModel_.get(), playerRightArmModel_.get()};
 	// 自キャラの初期化
-	player_->Initialize(
-		playerBodyModel_.get(), playerFaceModel_.get(), playerCoreModel_.get(), playerLeftArmModel_.get(), playerRightArmModel_.get(), &viewProjection_);
+	player_->Initialize(playerModels);
+
+	/* /////////////////////////
+	          Enemy
+	*/ /////////////////////////
+	// 敵キャラの生成
+	enemy_ = std::make_unique<Enemy>();
+	// 敵キャラのモデル
+	std::vector<Model*> enemyModels = {enemyBodyModel_.get(), enemyWeaponModel_.get()};
+	// 敵キャラの初期化
+	enemy_->Initialize(enemyModels);
 
 	/* /////////////////////////
 	         SkyDome
@@ -138,6 +157,9 @@ void GameScene::Update() {
 
 	// 　自キャラの更新
 	player_->Update();
+
+	// 敵キャラの更新
+	enemy_->Update();
 
 	// SkyDomeの更新
 	skyDome_->Update();
@@ -189,7 +211,10 @@ void GameScene::Draw() {
 	ground_->Draw();
 
 	// 自キャラの描画
-	player_->Draw();
+	player_->Draw(viewProjection_);
+
+	// 敵キャラの描画
+	enemy_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
