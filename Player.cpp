@@ -45,16 +45,37 @@ void Player::Move() {
 	}
 }
 
-void Player::Initialize(Model* model, ViewProjection* viewProjection) {
+void Player::InitializeFloatingGimmick() {
 
-	// NULLポインタチェック
-	assert(model);
+	floatingParameter_ = 0.0f; 
+}
 
-	// 引数として受け取ったデータをメンバ変数に記録する
-	model_ = model;
+void Player::UpdateFloatingGimmick() {
+
+	// 浮遊移動のサイクル<frame>
+	const uint16_t period = 300;
+
+	// 1フレームでのパラメータ加算値
+	const float step = 2.0f * std::numbers<>
+
+}
+
+void Player::Initialize(Model* modelBody, Model* modelFace, Model* modelCore, Model* modelLeftArm, Model* modelRightArm, ViewProjection* viewProjection) {
+
+	// Modelの指定
+	faceModel_ = modelFace;
+	bodyModel_ = modelBody;
+	leftArmModel_ = modelLeftArm;
+	rightArmModel_ = modelRightArm;
+	coreModel_ = modelCore;
 
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
+	worldTransformBody_.Initialize();
+	worldTransformFace_.Initialize();
+	worldTransformCore_.Initialize();
+	worldTransformLeftArm_.Initialize();
+	worldTransformRightArm_.Initialize();
 
 	// 引数の内容をメンバ変数に記録
 	viewProjection_ = viewProjection;
@@ -71,5 +92,9 @@ void Player::Update() {
 void Player::Draw() {
 
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *viewProjection_);
+	faceModel_->Draw(worldTransform_, *viewProjection_);
+	bodyModel_->Draw(worldTransform_, *viewProjection_);
+	leftArmModel_->Draw(worldTransform_, *viewProjection_);
+	rightArmModel_->Draw(worldTransform_, *viewProjection_);
+	coreModel_->Draw(worldTransform_, *viewProjection_);
 }

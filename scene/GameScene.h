@@ -101,7 +101,11 @@ private: // メンバ変数
 	std::unique_ptr<Model> entityModel_;
 
 	// Player
-	std::unique_ptr<Model> playerModel_;
+	std::unique_ptr<Model> playerBodyModel_;
+	std::unique_ptr<Model> playerFaceModel_;
+	std::unique_ptr<Model> playerCoreModel_;
+	std::unique_ptr<Model> playerLeftArmModel_;
+	std::unique_ptr<Model> playerRightArmModel_;
 
 	// SkyDome
 	std::unique_ptr<Model> skyDomeModel_;

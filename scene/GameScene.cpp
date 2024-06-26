@@ -67,8 +67,15 @@ void GameScene::Initialize() {
 	           Model生成
 	*/ /////////////////////////
 	entityModel_.reset(Model::Create());
-	playerModel_.reset(Model::CreateFromOBJ("Player", true));
+
+	playerBodyModel_.reset(Model::CreateFromOBJ("PlayerBody", true));
+	playerFaceModel_.reset(Model::CreateFromOBJ("PlayerFeace", true));
+	playerCoreModel_.reset(Model::CreateFromOBJ("PlayerCore", true));
+	playerLeftArmModel_.reset(Model::CreateFromOBJ("PlayerLeftArm", true));
+	playerRightArmModel_.reset(Model::CreateFromOBJ("PlayerRightArm", true));
+
 	skyDomeModel_.reset(Model::CreateFromOBJ("hosizora", true));
+
 	groundModel_.reset(Model::CreateFromOBJ("Ground", true));
 
 	/* /////////////////////////
@@ -83,7 +90,8 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 
 	// 自キャラの初期化
-	player_->Initialize(playerModel_.get(), &viewProjection_);
+	player_->Initialize(
+		playerBodyModel_.get(), playerFaceModel_.get(), playerCoreModel_.get(), playerLeftArmModel_.get(), playerRightArmModel_.get(), &viewProjection_);
 
 	/* /////////////////////////
 	         SkyDome
