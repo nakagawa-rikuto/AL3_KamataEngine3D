@@ -7,6 +7,7 @@
 #include "cassert"
 
 #include <numbers>
+#include <optional>
 
 #include "BaseCharacter.h"
 #include "MyMath.h"
@@ -23,6 +24,9 @@ public:
 	/// </summary>
 	void Move();
 
+	/* ///////////////////////////////////////////////
+						初期化
+	*/ ///////////////////////////////////////////////
 	/// <summary>
 	/// 浮遊魏キックの初期化
 	/// </summary>
@@ -34,15 +38,41 @@ public:
 	void InitializeArmGimmick();
 
 	/// <summary>
-	/// 浮遊ギミック
+	/// 通常行動の初期化
+	/// </summary>
+	void BehaviorRootInitialize();
+
+	/// <summary>
+	/// 攻撃行動の初期化
+	/// </summary>
+	void BehaviorAttackInitialize();
+
+	/* ///////////////////////////////////////////////
+	                    更新
+	*/ ///////////////////////////////////////////////
+	/// <summary>
+	/// 浮遊ギミックの更新
 	/// </summary>
 	void UpdateFloatingGimmick();
 
 	/// <summary>
-	/// 腕のギミック
+	/// 腕ギミックの更新
 	/// </summary>
 	void UpdateArmGimmick();
 
+	/// <summary>
+	/// 通常行動の更新
+	/// </summary>
+	void BehaviorRootUpdate();
+
+	/// <summary>
+	/// 攻撃行動の更新
+	/// </summary>
+	void BehaviorAttackUpdate();
+
+	/* ///////////////////////////////////////////////
+	                 セッター・ゲッター
+	*/ ///////////////////////////////////////////////
 	/// <summary>
 	/// ViewProjectionを取得
 	/// </summary>
@@ -54,6 +84,7 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	WorldTransform& GetWorldTransform() { return worldTransform_; }
+
 
 	/// <summary>
 	/// 初期化
@@ -74,13 +105,28 @@ public:
 
 private:
 
+	// PlayerModel
 	enum ModelNum { 
 		kModelIndexBody,
 		kModelIndexFace,
 		kModelIndexCore,
 		kModelIndexL_Arm,
-		kModelIndexR_Arm
+		kModelIndexR_Arm,
+		kModelIndexWeapon
 	};
+
+	// 振る舞い
+	enum class Behavior {
+		kRoot,   // 通常状態
+		kAttack, // 攻撃中
+	};
+
+	// 振る舞い
+	Behavior behavior_ = Behavior::kRoot;
+	float changeTimer_ = 300.0f;
+
+	// 次の振る舞いリクエスト
+	std::optional<Behavior> behaviorRequest_ = std::nullopt; // std::nullpotは無効状態であることを表す値
 
 	// 浮遊ギミックの媒体変数
 	float floatingParameter_ = 0.0f;
@@ -94,6 +140,7 @@ private:
 	WorldTransform worldTransformCore_;
 	WorldTransform worldTransformLeftArm_;
 	WorldTransform worldTransformRightArm_;
+	WorldTransform worldTransformWeapon_;
 
 	//ビュープロジェクション
 	const ViewProjection* viewProjection_ = nullptr;

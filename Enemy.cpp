@@ -3,11 +3,11 @@
 // 移動処理
 void Enemy::Move() {
 
-	const float kEnemySpeed = 1.0f;     // 円軌道上の速度
+	const float kEnemySpeed = 0.1f;     // 円軌道上の速度
 	//const float kRotationSpeed = 0.05f; // 回転速度（ラジアン毎フレーム）
 	Vector3 velocity(0, 0, kEnemySpeed);
 
-	worldTransform_.rotation_.y += 0.1f;
+	worldTransform_.rotation_.y += 0.01f;
 
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 

@@ -70,15 +70,16 @@ void GameScene::Initialize() {
 	entityModel_.reset(Model::Create());
 
 	// Player
-	playerBodyModel_.reset(Model::CreateFromOBJ("PlayerBody", true));
-	playerFaceModel_.reset(Model::CreateFromOBJ("PlayerFeace", true));
-	playerCoreModel_.reset(Model::CreateFromOBJ("PlayerCore", true));
-	playerLeftArmModel_.reset(Model::CreateFromOBJ("PlayerLeftArm", true));
-	playerRightArmModel_.reset(Model::CreateFromOBJ("PlayerRightArm", true));
+	playerModel_.body_.reset(Model::CreateFromOBJ("PlayerBody", true));
+	playerModel_.face_.reset(Model::CreateFromOBJ("PlayerFeace", true));
+	playerModel_.core_.reset(Model::CreateFromOBJ("PlayerCore", true));
+	playerModel_.leftArm_.reset(Model::CreateFromOBJ("PlayerLeftArm", true));
+	playerModel_.rightArm_.reset(Model::CreateFromOBJ("PlayerRightArm", true));
+	playerModel_.weapon_.reset(Model::CreateFromOBJ("PlayerWeapon", true));
 
 	// Enemy
-	enemyBodyModel_.reset(Model::CreateFromOBJ("EnemyBody", true));
-	enemyWeaponModel_.reset(Model::CreateFromOBJ("EnemyWeapon", true));
+	enemyModel_.body_.reset(Model::CreateFromOBJ("EnemyBody", true));
+	enemyModel_.weapon_.reset(Model::CreateFromOBJ("EnemyWeapon", true));
 
 	// SkyDome
 	skyDomeModel_.reset(Model::CreateFromOBJ("hosizora", true));
@@ -98,7 +99,8 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	// 自キャラのモデル
 	std::vector<Model*> playerModels = {
-		playerBodyModel_.get(), playerFaceModel_.get(), playerCoreModel_.get(), playerLeftArmModel_.get(), playerRightArmModel_.get()};
+		playerModel_.body_.get(),    playerModel_.face_.get(),     playerModel_.core_.get(),
+		playerModel_.leftArm_.get(), playerModel_.rightArm_.get(), playerModel_.weapon_.get()};
 	// 自キャラの初期化
 	player_->Initialize(playerModels);
 
@@ -108,7 +110,7 @@ void GameScene::Initialize() {
 	// 敵キャラの生成
 	enemy_ = std::make_unique<Enemy>();
 	// 敵キャラのモデル
-	std::vector<Model*> enemyModels = {enemyBodyModel_.get(), enemyWeaponModel_.get()};
+	std::vector<Model*> enemyModels = {enemyModel_.body_.get(), enemyModel_.weapon_.get()};
 	// 敵キャラの初期化
 	enemy_->Initialize(enemyModels);
 

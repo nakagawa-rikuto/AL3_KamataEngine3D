@@ -23,6 +23,7 @@ void WorldTransform::UpdateMatrix() {
 // 親の設定
 void WorldTransform::SetParent(const WorldTransform* parent) {
 
+	this->Initialize();
 	// 親の情報を元に初期化
 	this->parent_ = parent; 
 }

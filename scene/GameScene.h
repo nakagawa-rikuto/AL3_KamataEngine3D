@@ -27,6 +27,27 @@
 class GameScene {
 
 public: // メンバ関数
+
+	/// <summary>
+	/// PlayerModel
+	/// </summary>
+	struct PlayerModel {
+		std::unique_ptr<Model> body_;
+		std::unique_ptr<Model> face_;
+		std::unique_ptr<Model> core_;
+		std::unique_ptr<Model> leftArm_;
+		std::unique_ptr<Model> rightArm_;
+		std::unique_ptr<Model> weapon_;
+	};
+
+	/// <summary>
+	/// EnemyModel
+	/// </summary>
+	struct EnemyModel {
+		std::unique_ptr<Model> body_;
+		std::unique_ptr<Model> weapon_;
+	};
+
 	/// <summary>
 	/// コンストクラタ
 	/// </summary>
@@ -105,15 +126,10 @@ private: // メンバ変数
 	std::unique_ptr<Model> entityModel_;
 
 	// Player
-	std::unique_ptr<Model> playerBodyModel_;
-	std::unique_ptr<Model> playerFaceModel_;
-	std::unique_ptr<Model> playerCoreModel_;
-	std::unique_ptr<Model> playerLeftArmModel_;
-	std::unique_ptr<Model> playerRightArmModel_;
+	PlayerModel playerModel_;
 
 	// Enemy
-	std::unique_ptr<Model> enemyBodyModel_;
-	std::unique_ptr<Model> enemyWeaponModel_;
+	EnemyModel enemyModel_;
 
 	// SkyDome
 	std::unique_ptr<Model> skyDomeModel_;
