@@ -5,6 +5,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "cassert"
+#include "Input.h"
 
 #include <numbers>
 #include <optional>
@@ -120,6 +121,8 @@ private:
 		kRoot,   // 通常状態
 		kAttack, // 攻撃中
 	};
+
+	Input* input_ = nullptr;
 
 	// 振る舞い
 	Behavior behavior_ = Behavior::kRoot;

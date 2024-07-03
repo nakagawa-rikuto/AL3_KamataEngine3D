@@ -4,6 +4,7 @@
 #include <variant>
 #include <string>
 #include <map>
+#include <json.hpp>
 
 #include  "MyMath.h"
 /// <summary>
@@ -48,6 +49,12 @@ public:
 	void SetValue(const std::string& groupName, const std::string& key, const Vector3 value);
 
 	/// <summary>
+	/// ファイルの書き出し
+	/// </summary>
+	/// <param name="groupName"></param>
+	void SaveFile(const std::string& groupName);
+
+	/// <summary>
 	/// 毎フレームの処理
 	/// </summary>
 	void Update();
@@ -89,4 +96,10 @@ private:
 
 	// 全データ
 	std::map<std::string, Group> datas_;
+
+	// using
+	using json = nlohmann::json;
+
+	// グローバル変数の保存先ファイルパス
+	const std::string kDirectoryPath_ = "Resources/GlobalVariables/";
 };

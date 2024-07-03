@@ -201,6 +201,8 @@ void Player::BehaviorAttackUpdate() {
 // 初期化
 void Player::Initialize(const std::vector<Model*>& models) {
 
+	input_ = Input::GetInstance();
+
 	// 基底クラスの初期化
 	BaseCharacter::Initialize(models);
 
@@ -235,17 +237,19 @@ void Player::Initialize(const std::vector<Model*>& models) {
 // 更新
 void Player::Update() { 
 
-
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.rotate", &worldTransform_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("Weapon.translation", &worldTransformLeftArm_.translation_.x, 0.01f);
 	ImGui::DragFloat3("Weapon.rotate", &worldTransformLeftArm_.rotation_.x, 0.01f);
 	ImGui::DragFloat("Timer", &changeTimer_);
 
+	if (input_->TriggerKey(DIK_SPACE)) {
+
+		GlobalVariables::GetInstance()->SaveFile("Player");
+	}
+
 	// カウントの減少
 	changeTimer_--;
-
-	
 
 	/* /////////////////
 	  Behavior遷移の実装
