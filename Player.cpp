@@ -1,6 +1,7 @@
 #define NOMINMAX
 #include "Player.h"
 #include "TextureManager.h"
+#include "GlobalVariables.h"
 
 // 
 void Player::Move() {
@@ -222,6 +223,13 @@ void Player::Initialize(const std::vector<Model*>& models) {
 
 	// 腕のギミックの初期化
 	InitializeArmGimmick();
+
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+
+	// グループの追加
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+	globalVariables->SetValue(groupName, "Test", 90);
 }
 
 // 更新
