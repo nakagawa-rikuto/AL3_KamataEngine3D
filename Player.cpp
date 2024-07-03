@@ -1,9 +1,9 @@
 #define NOMINMAX
 #include "Player.h"
-#include "TextureManager.h"
 #include "GlobalVariables.h"
+#include "TextureManager.h"
 
-// 
+//
 void Player::Move() {
 
 	// ジョイスティック
@@ -16,22 +16,14 @@ void Player::Move() {
 		const float speed = 0.3f;
 
 		// 移動量
-		Vector3 move = {
-			static_cast<float>(joyState.Gamepad.sThumbLX), 
-			0.0f, 
-			static_cast<float>(joyState.Gamepad.sThumbLY)
-		};
+		Vector3 move = {static_cast<float>(joyState.Gamepad.sThumbLX), 0.0f, static_cast<float>(joyState.Gamepad.sThumbLY)};
 
 		// 移動量に速さを反映
 		move = Normalize(move) * speed;
 
 		// 移動ベクトルをカメラの角度だけ回転する
-		move = TransformNormal(move, 
-			Multiply(Multiply(
-				MakeRotateXMatrix(viewProjection_->rotation_.x), 
-				MakeRotateYMatrix(-viewProjection_->rotation_.y)), 
-				MakeRotateZMatrix(viewProjection_->rotation_.z)
-			));
+		move = TransformNormal(
+		    move, Multiply(Multiply(MakeRotateXMatrix(viewProjection_->rotation_.x), MakeRotateYMatrix(-viewProjection_->rotation_.y)), MakeRotateZMatrix(viewProjection_->rotation_.z)));
 
 		// 移動
 		worldTransform_.translation_ += move;
@@ -44,19 +36,19 @@ void Player::Move() {
 	}
 }
 
-// 
-void Player::InitializeFloatingGimmick() {floatingParameter_ = 0.0f; }
+//
+void Player::InitializeFloatingGimmick() { floatingParameter_ = 0.0f; }
 
-// 
+//
 void Player::InitializeArmGimmick() { armParameter_ = 0.0f; }
 
-// 
+//
 void Player::BehaviorRootInitialize() {}
 
-// 
+//
 void Player::BehaviorAttackInitialize() {}
 
-// 
+//
 void Player::UpdateFloatingGimmick() {
 
 	// 浮遊移動のサイクル<frame>
@@ -78,7 +70,7 @@ void Player::UpdateFloatingGimmick() {
 	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude;
 }
 
-// 
+//
 void Player::UpdateArmGimmick() {
 
 	// 振り上げのサイクル<frame>
@@ -142,7 +134,7 @@ void Player::BehaviorRootUpdate() {
 void Player::BehaviorAttackUpdate() {
 
 	if (changeTimer_ <= 0) {
-	
+
 		behaviorRequest_ = Behavior::kRoot;
 		changeTimer_ = 300.0f;
 	}
@@ -186,7 +178,7 @@ void Player::BehaviorAttackUpdate() {
 	worldTransformRightArm_.rotation_.x = mappedAngleArm * (pi() / 180.0f); // 度からラジアンに変換
 
 	// アイテムの回転
-	worldTransformWeapon_.rotation_.x = mappedAngleWeapon * (pi() / 180.0f);  // 度からラジアンに変換
+	worldTransformWeapon_.rotation_.x = mappedAngleWeapon * (pi() / 180.0f); // 度からラジアンに変換
 
 	// 行列の再計算と転送
 	BaseCharacter::Update();
@@ -196,6 +188,15 @@ void Player::BehaviorAttackUpdate() {
 	worldTransformLeftArm_.UpdateMatrix();
 	worldTransformRightArm_.UpdateMatrix();
 	worldTransformWeapon_.UpdateMatrix();
+}
+
+// 
+void Player::ApplyGlobalVariables() { 
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	worldTransformBody_.translation_ = globalVariables->GetVector3Value(groupName, "Body Translation");
+	worldTransformLeftArm_.translation_ = globalVariables->GetVector3Value(groupName, "L_Arm Translation");
+	worldTransformRightArm_.translation_ = globalVariables->GetVector3Value(groupName, "R_Arm Translation");
 }
 
 // 初期化
@@ -231,11 +232,13 @@ void Player::Initialize(const std::vector<Model*>& models) {
 
 	// グループの追加
 	GlobalVariables::GetInstance()->CreateGroup(groupName);
-	globalVariables->SetValue(groupName, "Test", 90);
+	globalVariables->AddItem(groupName, "Body Translation", worldTransformBody_.translation_);
+	globalVariables->AddItem(groupName, "LeftArm Translation", worldTransformLeftArm_.translation_);
+	globalVariables->AddItem(groupName, "RightArm Translation", worldTransformRightArm_.translation_);
 }
 
 // 更新
-void Player::Update() { 
+void Player::Update() {
 
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.rotate", &worldTransform_.rotation_.x, 0.01f);
@@ -273,7 +276,7 @@ void Player::Update() {
 
 		// 振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;
-	}	
+	}
 
 	// 各振る舞い毎の更新
 	switch (behavior_) {
@@ -298,7 +301,7 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[kModelIndexL_Arm]->Draw(worldTransformLeftArm_, viewProjection);
 	models_[kModelIndexR_Arm]->Draw(worldTransformRightArm_, viewProjection);
 	if (behavior_ == Behavior::kAttack) {
-	
+
 		models_[kModelIndexWeapon]->Draw(worldTransformWeapon_, viewProjection);
 	}
 }

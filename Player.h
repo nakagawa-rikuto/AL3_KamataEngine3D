@@ -71,6 +71,11 @@ public:
 	/// </summary>
 	void BehaviorAttackUpdate();
 
+	/// <summary>
+	/// 調整項目の適用
+	/// </summary>
+	void ApplyGlobalVariables();
+
 	/* ///////////////////////////////////////////////
 	                 セッター・ゲッター
 	*/ ///////////////////////////////////////////////
