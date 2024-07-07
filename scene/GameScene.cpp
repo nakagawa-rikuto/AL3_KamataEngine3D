@@ -116,6 +116,13 @@ void GameScene::Initialize() {
 	enemy_->Initialize(enemyModels);
 
 	/* /////////////////////////
+	          LockOn
+	*/ /////////////////////////
+	// ロックオンの生成
+	lockOn_ = std::make_unique<LockOn>();
+	lockOn_->Initialize();
+
+	/* /////////////////////////
 	         SkyDome
 	*/ /////////////////////////
 	skyDome_ = std::make_unique<SkyDome>();
@@ -218,6 +225,9 @@ void GameScene::Draw() {
 
 	// 敵キャラの描画
 	enemy_->Draw(viewProjection_);
+
+	// ロックオンの描画
+	lockOn_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

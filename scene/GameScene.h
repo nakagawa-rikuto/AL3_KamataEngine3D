@@ -19,6 +19,7 @@
 #include "SkyDome.h"
 #include "Ground.h"
 #include "FollowCamera.h"
+#include "LockOn.h"
 #include "MyMath.h"
 
 /// <summary>
@@ -99,6 +100,13 @@ private: // メンバ変数
 
 	// Enemy
 	std::unique_ptr<Enemy> enemy_;
+	std::list<std::unique_ptr<Enemy>> enemies_;
+
+	/* //////////////////////////////////////
+	                 Object
+	*/ //////////////////////////////////////
+	// LockOn
+	std::unique_ptr<LockOn> lockOn_;
 
 	/* //////////////////////////////////////
 	                 Field
