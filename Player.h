@@ -20,11 +20,6 @@
 class Player : public BaseCharacter {
 public:
 
-	/// <summary>
-	/// 移動
-	/// </summary>
-	void Move();
-
 	/* ///////////////////////////////////////////////
 						初期化
 	*/ ///////////////////////////////////////////////
@@ -48,6 +43,11 @@ public:
 	/// </summary>
 	void BehaviorAttackInitialize();
 
+	/// <summary>
+	/// ジャンプ行動の初期化
+	/// </summary>
+	void BehaviorJumpInitialize();
+
 	/* ///////////////////////////////////////////////
 	                    更新
 	*/ ///////////////////////////////////////////////
@@ -70,6 +70,11 @@ public:
 	/// 攻撃行動の更新
 	/// </summary>
 	void BehaviorAttackUpdate();
+
+	/// <summary>
+	/// ジャンプ行動の更新
+	/// </summary>
+	void BehaviorJumpUpdate();
 
 	/// <summary>
 	/// 調整項目の適用
@@ -121,10 +126,11 @@ private:
 		kModelIndexWeapon
 	};
 
-	// 振る舞い
+	// 振る舞い(ビヘイビア)
 	enum class Behavior {
 		kRoot,   // 通常状態
 		kAttack, // 攻撃中
+		kJump,   // ジャンプ中
 	};
 
 	Input* input_ = nullptr;
@@ -141,6 +147,9 @@ private:
 
 	// 腕ギミックの媒体変数
 	float armParameter_ = 0.0f;
+
+	// 速度
+	Vector3 velocity_ = {};
 
 	// ワールド変換データ
 	WorldTransform worldTransformBody_;

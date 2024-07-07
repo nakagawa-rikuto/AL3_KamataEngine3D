@@ -3,52 +3,39 @@
 #include "GlobalVariables.h"
 #include "TextureManager.h"
 
-//
-void Player::Move() {
-
-	// ジョイスティック
-	XINPUT_STATE joyState;
-
-	// ジョイスティックが有効なら
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-
-		// 速さ
-		const float speed = 0.3f;
-
-		// 移動量
-		Vector3 move = {static_cast<float>(joyState.Gamepad.sThumbLX), 0.0f, static_cast<float>(joyState.Gamepad.sThumbLY)};
-
-		// 移動量に速さを反映
-		move = Normalize(move) * speed;
-
-		// 移動ベクトルをカメラの角度だけ回転する
-		move = TransformNormal(
-		    move, Multiply(Multiply(MakeRotateXMatrix(viewProjection_->rotation_.x), MakeRotateYMatrix(-viewProjection_->rotation_.y)), MakeRotateZMatrix(viewProjection_->rotation_.z)));
-
-		// 移動
-		worldTransform_.translation_ += move;
-
-		// 移動方向に見た目を合わせる
-		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
-		Vector3 moveZ = TransformNormal(move, MakeRotateYMatrix(worldTransform_.rotation_.y));
-
-		worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
-	}
-}
-
-//
+/* ///////////////////////////////////////////
+                    初期化
+*/ ///////////////////////////////////////////
+//  浮遊魏キックの初期化
 void Player::InitializeFloatingGimmick() { floatingParameter_ = 0.0f; }
 
-//
+// 腕のギミックの初期化
 void Player::InitializeArmGimmick() { armParameter_ = 0.0f; }
 
-//
+// 通常行動の初期化
 void Player::BehaviorRootInitialize() {}
 
-//
-void Player::BehaviorAttackInitialize() {}
+// 攻撃行動の初期化
+void Player::BehaviorAttackInitialize() { 
 
-//
+	worldTransformWeapon_.translation_ = {0.0f, 0.0f, 0.0f}; 
+}
+
+// ジャンプ行動の初期化
+void Player::BehaviorJumpInitialize() {
+	worldTransform_.translation_.y = 0.0f;
+
+	// ジャンプの初速
+	const float kJumpFirstSpeed = 3.0f;
+
+	// ジャンプの初速を与える
+	velocity_.y = kJumpFirstSpeed;
+}
+
+/* ///////////////////////////////////////////
+                    更新
+*/ ///////////////////////////////////////////
+// 浮遊ギミックの更新
 void Player::UpdateFloatingGimmick() {
 
 	// 浮遊移動のサイクル<frame>
@@ -70,7 +57,7 @@ void Player::UpdateFloatingGimmick() {
 	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude;
 }
 
-//
+// 腕ギミックの更新
 void Player::UpdateArmGimmick() {
 
 	// 振り上げのサイクル<frame>
@@ -105,8 +92,11 @@ void Player::UpdateArmGimmick() {
 	worldTransformRightArm_.rotation_.x = triangleWave * amplitude * (pi() / 180.0f); // 度からラジアンに変換
 }
 
-//
+// 通常行動の更新
 void Player::BehaviorRootUpdate() {
+
+	// ジョイスティック
+	XINPUT_STATE joyState;
 
 	// ビヘイビアの遷移
 	if (changeTimer_ <= 0) {
@@ -114,23 +104,58 @@ void Player::BehaviorRootUpdate() {
 		changeTimer_ = 150.0f;
 	}
 
-	Move();
+	// 移動処理
+	// ジョイスティックが有効なら
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 
+		// 速さ
+		const float speed = 0.3f;
+
+		// 移動量
+		velocity_ = {
+			(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 
+			0.0f, 
+			(float)joyState.Gamepad.sThumbLY / SHRT_MAX
+		};
+
+		// 移動量に速さを反映
+		velocity_ = Normalize(velocity_) * speed;
+
+		// 移動ベクトルをカメラの角度だけ回転する
+		velocity_ = TransformNormal(
+		    velocity_, Multiply(Multiply(
+				MakeRotateXMatrix(viewProjection_->rotation_.x), 
+				MakeRotateYMatrix(-viewProjection_->rotation_.y)), 
+				MakeRotateZMatrix(viewProjection_->rotation_.z)));
+
+		// 移動
+		worldTransform_.translation_ += velocity_;
+
+		// 移動方向に見た目を合わせる
+		worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+		Vector3 moveZ = 
+			TransformNormal(velocity_, MakeRotateYMatrix(worldTransform_.rotation_.y));
+
+		worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
+	}
+
+	// ジャンプボタンを押したら
+	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+
+		// 行動リクエストにジャンプをセット
+		behaviorRequest_ = Behavior::kJump;
+	}
+
+	// 浮遊処理
 	UpdateFloatingGimmick();
 
+	// 腕の処理
 	UpdateArmGimmick();
 
-	// 行列の再計算と転送
-	BaseCharacter::Update();
-	worldTransformBody_.UpdateMatrix();
-	worldTransformFace_.UpdateMatrix();
-	worldTransformCore_.UpdateMatrix();
-	worldTransformLeftArm_.UpdateMatrix();
-	worldTransformRightArm_.UpdateMatrix();
-	worldTransformWeapon_.UpdateMatrix();
+	
 }
 
-//
+// 攻撃行動の更新
 void Player::BehaviorAttackUpdate() {
 
 	if (changeTimer_ <= 0) {
@@ -179,19 +204,35 @@ void Player::BehaviorAttackUpdate() {
 
 	// アイテムの回転
 	worldTransformWeapon_.rotation_.x = mappedAngleWeapon * (pi() / 180.0f); // 度からラジアンに変換
-
-	// 行列の再計算と転送
-	BaseCharacter::Update();
-	worldTransformBody_.UpdateMatrix();
-	worldTransformFace_.UpdateMatrix();
-	worldTransformCore_.UpdateMatrix();
-	worldTransformLeftArm_.UpdateMatrix();
-	worldTransformRightArm_.UpdateMatrix();
-	worldTransformWeapon_.UpdateMatrix();
 }
 
-// 
-void Player::ApplyGlobalVariables() { 
+// ジャンプ行動の更新
+void Player::BehaviorJumpUpdate() {
+
+	// 移動
+	worldTransform_.translation_ += velocity_;
+
+	// 重力加速度
+	const float kGravityAcceleration = 0.5f;
+
+	// 加速度ベクトル
+	Vector3 accelerationVector = {0, -kGravityAcceleration, 0};
+
+	// 加速する
+	velocity_ += accelerationVector;
+
+	// 着地
+	if (worldTransform_.translation_.y <= 0.0f) {
+
+		worldTransform_.translation_.y = 0.0f;
+
+		// ジャンプの終了
+		behaviorRequest_ = Behavior::kRoot;
+	}
+}
+
+// 調整項目の適用
+void Player::ApplyGlobalVariables() {
 	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
 	worldTransformBody_.translation_ = globalVariables->GetVector3Value(groupName, "Body Translation");
@@ -242,8 +283,8 @@ void Player::Update() {
 
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.rotate", &worldTransform_.rotation_.x, 0.01f);
-	ImGui::DragFloat3("Weapon.translation", &worldTransformLeftArm_.translation_.x, 0.01f);
-	ImGui::DragFloat3("Weapon.rotate", &worldTransformLeftArm_.rotation_.x, 0.01f);
+	ImGui::DragFloat3("Weapon.translation", &worldTransformWeapon_.translation_.x, 0.01f);
+	ImGui::DragFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, 0.01f);
 	ImGui::DragFloat("Timer", &changeTimer_);
 
 	if (input_->TriggerKey(DIK_SPACE)) {
@@ -272,6 +313,10 @@ void Player::Update() {
 
 			BehaviorAttackInitialize();
 			break;
+		case Player::Behavior::kJump:
+
+			BehaviorJumpInitialize();
+			break;
 		}
 
 		// 振る舞いリクエストをリセット
@@ -288,7 +333,20 @@ void Player::Update() {
 
 		BehaviorAttackUpdate();
 		break;
+	case Player::Behavior::kJump:
+
+		BehaviorJumpUpdate();
+		break;
 	}
+
+	// 行列の再計算と転送
+	BaseCharacter::Update();
+	worldTransformBody_.UpdateMatrix();
+	worldTransformFace_.UpdateMatrix();
+	worldTransformCore_.UpdateMatrix();
+	worldTransformLeftArm_.UpdateMatrix();
+	worldTransformRightArm_.UpdateMatrix();
+	worldTransformWeapon_.UpdateMatrix();
 }
 
 // 描画
