@@ -1,10 +1,23 @@
 #include "LockOn.h"
 
+Vector3 LockOn::GetWorldPosition() { 
+
+	// ワールド座標を格納するための変数
+	Vector3 worldPos;
+
+	// ワールド行列の平行移動成分を取得
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
 // 初期化
 void LockOn::Initialize() {
 
 	// テクスチャの取得
-	textureHandle_ = TextureManager::Load("./Resource/Reticle.png");
+	textureHandle_ = TextureManager::Load("Reticle.png");
 
 	// WorldTransformの初期化
 	worldTransform_.Initialize();
@@ -22,21 +35,61 @@ void LockOn::Initialize() {
 void LockOn::Update(
 	const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
 
-	// ジョイスティック
-	XINPUT_STATE joyState;
+	// ロックオン状態なら
+	if (isLockOn_) {
 
-	// ロックオンボタンをトリガーしたら
-	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) {
+		/* C.ロックオン解放処理 */
+		//if (Input::GetInstance()->TriggerKey(DIK_Q)) {
 
-		// ロックオン対象の検索
-		
+		//	// ロックオンを外す
+		//	target_ = nullptr;
+		//}
+		//// 範囲外判定
+		//else if () {
+		//
+		//	// ロックオンを外す
+		//	target_ = nullptr;
+		//}
+	} else {
+
+		/* A.ロックオン対象の検索 */
+		// ロックオンボタンをトリガーしたら
+		if (Input::GetInstance()->TriggerKey(DIK_Q)) {
+
+			// 
+			isLockOn_ = true;
+
+			// ロックオン対象の検索
+			Search(enemies, viewProjection);
+		}
+	}
+
+	// ロックオン状態なら
+	if (isLockOn_) {
+
+		/* B.ロックオンマークの座標計算 */
+		// ロックオン継続
+		if (target_) {
+
+			// 敵のロックオン座標の取得
+			Vector3 positionWorld = target_->GetCenterPosition();
+
+			// ワールド座標からスクリーン座標に変換
+			Vector3 positionScreen = TransformScreen(positionWorld);
+
+			// Vector2に格納
+			Vector2 positionScreenV2 = Vector2(positionScreen.x, positionScreen.y);
+
+			// スプライトの座標を設定
+			lockOnMark_->SetPosition(positionScreenV2);
+		}
 	}
 }
 
 // 描画
 void LockOn::Draw() {
 
-	if (target_ = nullptr) {
+	if (isLockOn_) {
 
 		lockOnMark_->Draw();
 	}
@@ -87,4 +140,20 @@ void LockOn::Search(
 			target_ = targets.front().second;
 		}
 	}
+}
+
+Vector3 LockOn::TransformScreen(Vector3 position) { 
+
+	Vector3 positionWorld = position;
+
+	// ビューポート行列
+	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+
+	// ビュー行列とプロジェクション行列、ビューポート行列を合成
+	Matrix4x4 matWVP = Multiply(Multiply(viewProjection_.matView, viewProjection_.matProjection), matViewport);
+
+	// ワールド
+	positionWorld = Transform(positionWorld, matWVP);
+
+	return positionWorld;
 }

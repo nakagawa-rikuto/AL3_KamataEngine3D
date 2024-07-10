@@ -12,7 +12,7 @@ public:
 	/// 中心座標の取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetCenterPosition();
+	const Vector3 GetCenterPosition()const;
 
 	/// <summary>
 	/// 初期化

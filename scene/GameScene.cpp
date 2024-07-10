@@ -114,7 +114,7 @@ void GameScene::Initialize() {
 	std::vector<Model*> enemyModels = {enemyModel_.body_.get(), enemyModel_.weapon_.get()};
 	// 敵キャラの初期化
 	// 途中
-	for (std::unique_ptr<Enemy> enemy : enemies_) {
+	for (const auto& enemy : enemies_) {
 
 		enemy->Initialize(enemyModels);
 	}
@@ -172,8 +172,10 @@ void GameScene::Update() {
 	// 　自キャラの更新
 	player_->Update();
 
-	// 敵キャラの更新
-	enemies_->Update();
+	for (const auto& enemy : enemies_) {
+		// 敵キャラの更新
+		enemy->Update();
+	}
 
 	// ロックオン更新
 	lockOn_->Update(enemies_, viewProjection_);
@@ -230,11 +232,10 @@ void GameScene::Draw() {
 	// 自キャラの描画
 	player_->Draw(viewProjection_);
 
-	// 敵キャラの描画
-	enemies_->Draw(viewProjection_);
-
-	// ロックオンの描画
-	lockOn_->Draw();
+	for (const auto& enemy : enemies_) {
+		// 敵キャラの描画
+		enemy->Draw(viewProjection_);
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -247,6 +248,9 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+
+	// ロックオンの描画
+	lockOn_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

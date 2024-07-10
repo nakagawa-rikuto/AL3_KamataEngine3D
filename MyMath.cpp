@@ -1,6 +1,8 @@
 #include "MyMath.h"
 #include <numbers>
 
+#include "WinApp.h"
+
 // π
 float pi() { return std::numbers::pi_v<float>; }
 

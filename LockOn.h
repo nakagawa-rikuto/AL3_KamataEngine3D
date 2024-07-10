@@ -21,6 +21,13 @@
 /// </summary>
 class LockOn {
 public:
+
+	/// <summary>
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -42,6 +49,9 @@ private:
 	// ロックオンの対象
 	const Enemy* target_ = nullptr;
 
+	// ロックオン状態かの判断
+	bool isLockOn_ = false;
+
 	//
 	const float kDegreeToRadian_ = 3.0f;
 
@@ -60,6 +70,9 @@ private:
 	// ロックオンマークのWorldTransform
 	WorldTransform worldTransform_;
 
+	// ロックオンマークのViewProjection
+	ViewProjection viewProjection_;
+
 	// ロックオンマークのテクスチャ
 	uint32_t textureHandle_ = 0u;
 
@@ -72,4 +85,18 @@ private: // メンバ関数
 	/// <param name="viewProjection"></param>
 	void Search(
 		const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection);
+
+	/// <summary>
+	/// スクリーン座標への変換
+	/// </summary>
+	/// <param name="position"></param>
+	/// <returns></returns>
+	Vector3 TransformScreen(Vector3 position);
+
+	/// <summary>
+	/// 範囲外判定
+	/// </summary>
+	/// <param name="viewProjection"></param>
+	/// <returns></returns>
+	bool CheckOutRange(ViewProjection viewProjection);
 };
