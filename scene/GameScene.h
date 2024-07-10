@@ -9,6 +9,7 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include "AxisIndicator.h"
+#include "TextureManager.h"
 
 #include <memory>
 #include <sstream>
@@ -99,7 +100,7 @@ private: // メンバ変数
 	std::unique_ptr<Player> player_;
 
 	// Enemy
-	std::unique_ptr<Enemy> enemy_;
+	//std::unique_ptr<Enemy> enemy_;
 	std::list<std::unique_ptr<Enemy>> enemies_;
 
 	/* //////////////////////////////////////

@@ -14,6 +14,17 @@ void Enemy::Move() {
 	worldTransform_.translation_ += velocity;
 }
 
+// 中心座標の取得
+Vector3 Enemy::GetCenterPosition() {
+
+	// 見た目上の中心点オフセット(モデル座標)
+	const Vector3 offset = {0.0f, 1.0f, 0.0f};
+
+	// ワールド座標に変換
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+	return worldPos;
+}
+
 // 初期化
 void Enemy::Initialize(const std::vector<Model*>& models) {
 

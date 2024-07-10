@@ -109,11 +109,15 @@ void GameScene::Initialize() {
 	          Enemy
 	*/ /////////////////////////
 	// 敵キャラの生成
-	enemy_ = std::make_unique<Enemy>();
+	enemies_.push_back(std::make_unique<Enemy>());
 	// 敵キャラのモデル
 	std::vector<Model*> enemyModels = {enemyModel_.body_.get(), enemyModel_.weapon_.get()};
 	// 敵キャラの初期化
-	enemy_->Initialize(enemyModels);
+	// 途中
+	for (std::unique_ptr<Enemy> enemy : enemies_) {
+
+		enemy->Initialize(enemyModels);
+	}
 
 	/* /////////////////////////
 	          LockOn
@@ -169,7 +173,10 @@ void GameScene::Update() {
 	player_->Update();
 
 	// 敵キャラの更新
-	enemy_->Update();
+	enemies_->Update();
+
+	// ロックオン更新
+	lockOn_->Update(enemies_, viewProjection_);
 
 	// SkyDomeの更新
 	skyDome_->Update();
@@ -224,7 +231,7 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 
 	// 敵キャラの描画
-	enemy_->Draw(viewProjection_);
+	enemies_->Draw(viewProjection_);
 
 	// ロックオンの描画
 	lockOn_->Draw();

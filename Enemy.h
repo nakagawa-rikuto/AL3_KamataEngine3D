@@ -9,6 +9,12 @@ public:
 	void Move();
 
 	/// <summary>
+	/// 中心座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetCenterPosition();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="models"></param>
