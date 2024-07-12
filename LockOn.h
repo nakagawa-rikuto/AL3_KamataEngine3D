@@ -31,7 +31,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(Sprite* lockOnMark, uint32_t textureHandle);
 
 	/// <summary>
 	/// 更新
@@ -53,19 +53,19 @@ private:
 	bool isLockOn_ = false;
 
 	//
-	const float kDegreeToRadian_ = 3.0f;
+	const float kDegreeToRadian_ = pi() * 2.0f;
 
 	// 最小距離
-	float minDistance_ = 10.0f;
+	float minDistance_ = 1.0f;
 
 	// 最大距離
-	float maxDistance_ = 30.0f;
+	float maxDistance_ = 100.0f;
 
 	// 角度範囲
 	float angleRange_ = 20.0f * kDegreeToRadian_;
 
 	// ロックオンマーク用のスプライト
-	std::unique_ptr<Sprite> lockOnMark_;
+	Sprite* lockOnMark_;
 
 	// ロックオンマークのWorldTransform
 	WorldTransform worldTransform_;
@@ -98,5 +98,5 @@ private: // メンバ関数
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	/// <returns></returns>
-	bool CheckOutRange(ViewProjection viewProjection);
+	bool CheckOutRange(const ViewProjection& viewProjection);
 };

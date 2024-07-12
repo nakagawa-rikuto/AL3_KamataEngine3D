@@ -63,6 +63,7 @@ void GameScene::Initialize() {
 	      テクスチャ読み込み
 	*/ /////////////////////////
 	textureHandle_ = TextureManager::Load("mario.png");
+	textureHandleLockOnMark_ = TextureManager::Load("Reticle.png");
 
 	/* /////////////////////////
 	           Model生成
@@ -123,8 +124,9 @@ void GameScene::Initialize() {
 	          LockOn
 	*/ /////////////////////////
 	// ロックオンの生成
+	lockOnMark_.reset(Sprite::Create(textureHandleLockOnMark_, Vector2(0.0f, 0.0f)));
 	lockOn_ = std::make_unique<LockOn>();
-	lockOn_->Initialize();
+	lockOn_->Initialize(lockOnMark_.get(), textureHandleLockOnMark_);
 
 	/* /////////////////////////
 	         SkyDome

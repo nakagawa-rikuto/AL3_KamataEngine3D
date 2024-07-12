@@ -1,6 +1,6 @@
 #include "LockOn.h"
 
-Vector3 LockOn::GetWorldPosition() { 
+Vector3 LockOn::GetWorldPosition() {
 
 	// ワールド座標を格納するための変数
 	Vector3 worldPos;
@@ -14,53 +14,47 @@ Vector3 LockOn::GetWorldPosition() {
 }
 
 // 初期化
-void LockOn::Initialize() {
+void LockOn::Initialize(Sprite* lockOnMark, uint32_t textureHandle) {
 
 	// テクスチャの取得
-	textureHandle_ = TextureManager::Load("Reticle.png");
+	textureHandle_ = textureHandle;
 
 	// WorldTransformの初期化
 	worldTransform_.Initialize();
 
 	// スプライトの生成
-	lockOnMark_ = std::make_unique<Sprite>();
-	lockOnMark_->Create(
-		textureHandle_, 
-		Vector2(worldTransform_.translation_.x, worldTransform_.translation_.y), 
-		Vector4(1.0f, 1.0f, 1.0f, 1.0f), 
-		Vector2(0.5f, 0.5f));
+	lockOnMark_ = lockOnMark;
 }
 
 // 更新
-void LockOn::Update(
-	const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
+void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
 
 	// ロックオン状態なら
 	if (isLockOn_) {
 
 		/* C.ロックオン解放処理 */
-		//if (Input::GetInstance()->TriggerKey(DIK_Q)) {
+		if (Input::GetInstance()->TriggerKey(DIK_Q)) {
 
-		//	// ロックオンを外す
-		//	target_ = nullptr;
-		//}
-		//// 範囲外判定
-		//else if () {
-		//
-		//	// ロックオンを外す
-		//	target_ = nullptr;
-		//}
+			// ロックオンを外す
+			target_ = nullptr;
+		}
+		// 範囲外判定
+		else if (CheckOutRange(viewProjection)) {
+
+			// ロックオンを外す
+			target_ = nullptr;
+		}
 	} else {
 
 		/* A.ロックオン対象の検索 */
 		// ロックオンボタンをトリガーしたら
 		if (Input::GetInstance()->TriggerKey(DIK_Q)) {
 
-			// 
-			isLockOn_ = true;
-
 			// ロックオン対象の検索
 			Search(enemies, viewProjection);
+
+			//
+			isLockOn_ = true;
 		}
 	}
 
@@ -96,11 +90,10 @@ void LockOn::Draw() {
 }
 
 // 検索
-void LockOn::Search(
-	const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
+void LockOn::Search(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
 
 	/* ////////////////////////
-		ロックオン対象の絞り込み
+	    ロックオン対象の絞り込み
 	*/ ////////////////////////
 	// 目標
 	std::list<std::pair<float, const Enemy*>> targets;
@@ -118,12 +111,10 @@ void LockOn::Search(
 		if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
 
 			// カメラ前方都の角度を計算
-			float arcTangent = std::atan2(
-				std::sqrt(positionView.x * positionView.x + positionView.y * positionView.y), 
-				positionView.z);
+			float arcTangent = std::atan2(std::sqrt(positionView.x * positionView.x + positionView.y * positionView.y), positionView.z);
 
 			// 角度条件チェック(コーンに収まっているか)
-			if (arcTangent <= angleRange_) {
+			if (std::fabs(arcTangent) <= angleRange_) {
 
 				targets.emplace_back(std::make_pair(positionView.z, enemy.get()));
 			}
@@ -142,9 +133,7 @@ void LockOn::Search(
 	}
 }
 
-Vector3 LockOn::TransformScreen(Vector3 position) { 
-
-	Vector3 positionWorld = position;
+Vector3 LockOn::TransformScreen(Vector3 position) {
 
 	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
@@ -152,8 +141,33 @@ Vector3 LockOn::TransformScreen(Vector3 position) {
 	// ビュー行列とプロジェクション行列、ビューポート行列を合成
 	Matrix4x4 matWVP = Multiply(Multiply(viewProjection_.matView, viewProjection_.matProjection), matViewport);
 
-	// ワールド
-	positionWorld = Transform(positionWorld, matWVP);
+	// ワールドに変換
+	Vector3 positionWorld = Transform(position, matWVP);
 
 	return positionWorld;
+}
+
+bool LockOn::CheckOutRange(const ViewProjection& viewProjection) {
+
+	// 敵のロックオン座標の取得
+	Vector3 lockOnTargetPos = target_->GetCenterPosition();
+
+	// ワールド->ビュー座標変換
+	Vector3 positionView = Transform(lockOnTargetPos, viewProjection.matView);
+
+	// 距離条件のチェック
+	if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
+
+		// カメラ前方都の角度を計算
+		float arcTangent = std::atan2(std::sqrt(positionView.x * positionView.x + positionView.y * positionView.y), positionView.z);
+
+		// 角度条件チェック(コーンに収まっているか)
+		if (std::fabs(arcTangent) <= angleRange_) {
+
+			// 範囲外ではない
+			return false;
+		}
+	}
+	// 範囲外である
+	return true;
 }

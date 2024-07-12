@@ -79,7 +79,7 @@ public: // 静的メンバ関数
 	/// <returns>生成されたスプライト</returns>
 	static Sprite* Create(
 	    uint32_t textureHandle, Vector2 position, Vector4 color = {1, 1, 1, 1},
-	    Vector2 anchorpoint = {0.0f, 0.0f}, bool isFlipX = false, bool isFlipY = false);
+	    Vector2 anchorpoint = {0.5f, 0.5f}, bool isFlipX = false, bool isFlipY = false);
 
 private: // 静的メンバ変数
 	// 頂点数

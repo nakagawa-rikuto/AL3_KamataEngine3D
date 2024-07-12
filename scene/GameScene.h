@@ -100,13 +100,13 @@ private: // メンバ変数
 	std::unique_ptr<Player> player_;
 
 	// Enemy
-	//std::unique_ptr<Enemy> enemy_;
 	std::list<std::unique_ptr<Enemy>> enemies_;
 
 	/* //////////////////////////////////////
 	                 Object
 	*/ //////////////////////////////////////
 	// LockOn
+	std::unique_ptr<Sprite> lockOnMark_;
 	std::unique_ptr<LockOn> lockOn_;
 
 	/* //////////////////////////////////////
@@ -150,6 +150,7 @@ private: // メンバ変数
 	             テクスチャハンドル
 	*/ //////////////////////////////////////
 	uint32_t textureHandle_ = 0;
+	uint32_t textureHandleLockOnMark_ = 0u;
 
 	/* //////////////////////////////////////
 	           ビュープロジェクション
