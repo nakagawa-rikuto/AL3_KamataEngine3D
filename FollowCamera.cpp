@@ -1,4 +1,5 @@
 #include "FollowCamera.h"
+#include "LockOn.h"
 
 void FollowCamera::Move() {
 
@@ -39,6 +40,9 @@ void FollowCamera::Rotate() {
 void FollowCamera::Initialize() { viewProjection_.Initialize(); }
 
 void FollowCamera::Update() {
+
+	// ロックオン中
+	//if ()
 
 	Move();
 

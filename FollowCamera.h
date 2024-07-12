@@ -9,6 +9,9 @@
 #include "MyMath.h"
 #include "imgui.h"
 
+// 前方宣言
+class LockOn;
+
 /// <summary>
 /// 追従カメラ
 /// </summary>
@@ -32,6 +35,8 @@ public:
 	/// <param name="target"></param>
 	void SetTarget(const WorldTransform* target) { target_ = target; }
 
+	void SetLockOn(const LockOn* lockOn) { lockOn_ = lockOn; }
+
 	/// <summary>
 	/// viewProjectionを渡す
 	/// </summary>
@@ -49,6 +54,9 @@ public:
 	void Update();
 
 private:
+	// ロックオン
+	const LockOn* lockOn_ = nullptr;
+
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
 

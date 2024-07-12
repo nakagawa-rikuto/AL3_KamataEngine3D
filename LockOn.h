@@ -91,7 +91,7 @@ private: // メンバ関数
 	/// </summary>
 	/// <param name="position"></param>
 	/// <returns></returns>
-	Vector3 TransformScreen(Vector3 position);
+	Vector3 TransformScreen(Vector3 position, const ViewProjection& viewProjection);
 
 	/// <summary>
 	/// 範囲外判定

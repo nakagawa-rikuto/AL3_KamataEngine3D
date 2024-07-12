@@ -69,7 +69,7 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 			Vector3 positionWorld = target_->GetCenterPosition();
 
 			// ワールド座標からスクリーン座標に変換
-			Vector3 positionScreen = TransformScreen(positionWorld);
+			Vector3 positionScreen = TransformScreen(positionWorld, viewProjection);
 
 			// Vector2に格納
 			Vector2 positionScreenV2 = Vector2(positionScreen.x, positionScreen.y);
@@ -133,13 +133,13 @@ void LockOn::Search(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 	}
 }
 
-Vector3 LockOn::TransformScreen(Vector3 position) {
+Vector3 LockOn::TransformScreen(Vector3 position, const ViewProjection& viewProjection) {
 
 	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
 
 	// ビュー行列とプロジェクション行列、ビューポート行列を合成
-	Matrix4x4 matWVP = Multiply(Multiply(viewProjection_.matView, viewProjection_.matProjection), matViewport);
+	Matrix4x4 matWVP = Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
 
 	// ワールドに変換
 	Vector3 positionWorld = Transform(position, matWVP);
