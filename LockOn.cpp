@@ -1,5 +1,5 @@
 #include "LockOn.h"
-
+// ワールド座標の取得
 Vector3 LockOn::GetWorldPosition() {
 
 	// ワールド座標を格納するための変数
@@ -12,6 +12,19 @@ Vector3 LockOn::GetWorldPosition() {
 
 	return worldPos;
 }
+
+// ロックオン対象の座標の取得
+Vector3 LockOn::GetTargetPosition() const { 
+
+	if (target_) {
+		return target_->GetCenterPosition();
+	}
+
+	return Vector3();
+}
+
+// ロックオン中かどうかを取得
+bool LockOn::ExistTarget() const { return target_ ? true : false; }
 
 // 初期化
 void LockOn::Initialize(Sprite* lockOnMark, uint32_t textureHandle) {
@@ -30,7 +43,7 @@ void LockOn::Initialize(Sprite* lockOnMark, uint32_t textureHandle) {
 void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
 
 	// ロックオン状態なら
-	if (isLockOn_) {
+	if (target_ ? true : false) {
 
 		/* C.ロックオン解放処理 */
 		if (Input::GetInstance()->TriggerKey(DIK_Q)) {
@@ -52,14 +65,11 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 
 			// ロックオン対象の検索
 			Search(enemies, viewProjection);
-
-			//
-			isLockOn_ = true;
 		}
 	}
 
 	// ロックオン状態なら
-	if (isLockOn_) {
+	if (target_ ? true : false) {
 
 		/* B.ロックオンマークの座標計算 */
 		// ロックオン継続
@@ -83,7 +93,7 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 // 描画
 void LockOn::Draw() {
 
-	if (isLockOn_) {
+	if (target_ ? true : false) {
 
 		lockOnMark_->Draw();
 	}
@@ -133,6 +143,7 @@ void LockOn::Search(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 	}
 }
 
+// スクリーン座標への変換
 Vector3 LockOn::TransformScreen(Vector3 position, const ViewProjection& viewProjection) {
 
 	// ビューポート行列
@@ -147,6 +158,7 @@ Vector3 LockOn::TransformScreen(Vector3 position, const ViewProjection& viewProj
 	return positionWorld;
 }
 
+// 範囲外判定
 bool LockOn::CheckOutRange(const ViewProjection& viewProjection) {
 
 	// 敵のロックオン座標の取得

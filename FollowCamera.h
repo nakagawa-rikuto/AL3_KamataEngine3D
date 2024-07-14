@@ -30,6 +30,11 @@ public:
 	void Rotate();
 
 	/// <summary>
+	/// ロックオン状態の処理
+	/// </summary>
+	void LockOnMove();
+
+	/// <summary>
 	/// targetの座標を受け取る
 	/// </summary>
 	/// <param name="target"></param>
@@ -56,6 +61,7 @@ public:
 private:
 	// ロックオン
 	const LockOn* lockOn_ = nullptr;
+	bool isLockOn_ = false;
 
 	// ビュープロジェクション
 	ViewProjection viewProjection_;

@@ -29,6 +29,18 @@ public:
 	Vector3 GetWorldPosition();
 
 	/// <summary>
+	/// ロックオン対象の座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetTargetPosition() const;
+
+	/// <summary>
+	/// ロックオン中かどうかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool ExistTarget() const;
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize(Sprite* lockOnMark, uint32_t textureHandle);
@@ -48,9 +60,6 @@ public:
 private:
 	// ロックオンの対象
 	const Enemy* target_ = nullptr;
-
-	// ロックオン状態かの判断
-	bool isLockOn_ = false;
 
 	//
 	const float kDegreeToRadian_ = pi() * 2.0f;

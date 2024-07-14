@@ -37,16 +37,34 @@ void FollowCamera::Rotate() {
 	}
 }
 
+void FollowCamera::LockOnMove() {
+
+	// ロックオン座標
+	Vector3 lockOnPosition = lockOn_->GetTargetPosition();
+
+	// 追従対象空ロックオン対象へのベクトル
+	Vector3 sub = lockOnPosition - lockOn_->GetTargetPosition();
+
+	// y軸周りの角度
+	viewProjection_.rotation_.y = std::atan2(sub.x, sub.z);
+}
+
 void FollowCamera::Initialize() { viewProjection_.Initialize(); }
 
 void FollowCamera::Update() {
 
 	// ロックオン中
-	//if ()
+	if (lockOn_->ExistTarget()) {
 
-	Move();
+		LockOnMove();
+	} 
+	// ロックオン中じゃない
+	else {
 
-	Rotate();
+		Move();
+
+		Rotate();
+	}
 
 	// ビュー行列の更新
 	viewProjection_.UpdateMatrix();
