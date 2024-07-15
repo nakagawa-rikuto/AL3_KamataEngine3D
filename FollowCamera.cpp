@@ -42,19 +42,24 @@ void FollowCamera::LockOnMove() {
 	// ロックオン座標
 	Vector3 lockOnPosition = lockOn_->GetTargetPosition();
 
-	// 追従対象空ロックオン対象へのベクトル
-	Vector3 sub = lockOnPosition - lockOn_->GetTargetPosition();
+	// 追従対象からロックオン対象へのベクトル
+	Vector3 sub = lockOnPosition - target_->translation_;
 
 	// y軸周りの角度
 	viewProjection_.rotation_.y = std::atan2(sub.x, sub.z);
 }
 
-void FollowCamera::Initialize() { viewProjection_.Initialize(); }
+void FollowCamera::Initialize() { 
+
+	viewProjection_.Initialize(); 
+}
 
 void FollowCamera::Update() {
 
 	// ロックオン中
 	if (lockOn_->ExistTarget()) {
+
+		Move();
 
 		LockOnMove();
 	} 

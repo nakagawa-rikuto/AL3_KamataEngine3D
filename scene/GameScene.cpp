@@ -127,6 +127,8 @@ void GameScene::Initialize() {
 	lockOnMark_.reset(Sprite::Create(textureHandleLockOnMark_, Vector2(0.0f, 0.0f)));
 	lockOn_ = std::make_unique<LockOn>();
 	lockOn_->Initialize(lockOnMark_.get(), textureHandleLockOnMark_);
+	// ロックオンをセット
+	player_->SetLockOn(lockOn_.get());
 
 	/* /////////////////////////
 	         SkyDome
@@ -147,6 +149,7 @@ void GameScene::Initialize() {
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->Initialize();
 	followCamera_->SetTarget(&player_->GetWorldTransform());
+	followCamera_->SetLockOn(lockOn_.get());
 
 	// 追従カメラのビュープロジェクションをセット
 	player_->SetViewProjection(&followCamera_->GetViewProjection());

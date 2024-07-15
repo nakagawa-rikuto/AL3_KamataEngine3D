@@ -14,6 +14,9 @@
 #include "MyMath.h"
 #include "imgui.h"
 
+// 前方宣言
+class LockOn;
+
 /// <summary>
 /// 自キャラ
 /// </summary>
@@ -91,6 +94,12 @@ public:
 	void SetViewProjection(const ViewProjection* viewProjection) { viewProjection_ = viewProjection; }
 
 	/// <summary>
+	/// LockOnを取得
+	/// </summary>
+	/// <param name="lockOn"></param>
+	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
+
+	/// <summary>
 	/// PlayerのWorldTransformを渡す
 	/// </summary>
 	/// <returns></returns>
@@ -134,11 +143,11 @@ private:
 	};
 
 	Input* input_ = nullptr;
+	LockOn* lockOn_ = nullptr;
 
 	// 振る舞い
 	Behavior behavior_ = Behavior::kRoot;
-	float changeTimer_ = 300.0f;
-
+	
 	// 次の振る舞いリクエスト
 	std::optional<Behavior> behaviorRequest_ = std::nullopt; // std::nullpotは無効状態であることを表す値
 
@@ -147,6 +156,17 @@ private:
 
 	// 腕ギミックの媒体変数
 	float armParameter_ = 0.0f;
+
+	// Attackの際に使用する変数
+	// 定数
+	const float maxVelocity_ = 3.0f;  // 最大速度
+	const float acceleration_ = 0.1f; // 加速度
+	const float deceleration_ = 0.1f; // 減速度
+	const float startAngleWeapon_ = -30.0f;
+	const float endAngleWeapon_ = 100.0f;
+
+	// 状態
+	float weaponAngle_ = startAngleWeapon_; // 初期角度
 
 	// 速度
 	Vector3 velocity_ = {};

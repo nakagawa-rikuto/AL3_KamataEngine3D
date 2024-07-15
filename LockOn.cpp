@@ -14,7 +14,7 @@ Vector3 LockOn::GetWorldPosition() {
 }
 
 // ロックオン対象の座標の取得
-Vector3 LockOn::GetTargetPosition() const { 
+Vector3 LockOn::GetTargetPosition() const {
 
 	if (target_) {
 		return target_->GetCenterPosition();

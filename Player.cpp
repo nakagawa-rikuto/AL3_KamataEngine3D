@@ -1,6 +1,7 @@
 #define NOMINMAX
 #include "Player.h"
 #include "GlobalVariables.h"
+#include "LockOn.h"
 #include "TextureManager.h"
 
 /* ///////////////////////////////////////////
@@ -13,12 +14,15 @@ void Player::InitializeFloatingGimmick() { floatingParameter_ = 0.0f; }
 void Player::InitializeArmGimmick() { armParameter_ = 0.0f; }
 
 // 通常行動の初期化
-void Player::BehaviorRootInitialize() {}
+void Player::BehaviorRootInitialize() { velocity_ = {0.0f, 0.0f, 0.0f}; }
 
 // 攻撃行動の初期化
-void Player::BehaviorAttackInitialize() { 
+void Player::BehaviorAttackInitialize() {
 
-	worldTransformWeapon_.translation_ = {0.0f, 0.0f, 0.0f}; 
+	// 状態
+	worldTransformWeapon_.translation_ = {0.0f, 0.0f, 0.0f};
+	velocity_ = {};
+	weaponAngle_ = startAngleWeapon_; // 初期角度
 }
 
 // ジャンプ行動の初期化
@@ -98,52 +102,60 @@ void Player::BehaviorRootUpdate() {
 	// ジョイスティック
 	XINPUT_STATE joyState;
 
-	// ビヘイビアの遷移
-	if (changeTimer_ <= 0) {
-		behaviorRequest_ = Behavior::kAttack;
-		changeTimer_ = 150.0f;
-	}
-
 	// 移動処理
 	// ジョイスティックが有効なら
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 
-		// 速さ
-		const float speed = 0.3f;
+		// Attackボタンを押したら
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
 
-		// 移動量
-		velocity_ = {
-			(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 
-			0.0f, 
-			(float)joyState.Gamepad.sThumbLY / SHRT_MAX
-		};
+			// 行動リクエストにアタックをセット
+			behaviorRequest_ = Behavior::kAttack;
+		}
 
-		// 移動量に速さを反映
-		velocity_ = Normalize(velocity_) * speed;
+		// ジャンプボタンを押したら
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
 
-		// 移動ベクトルをカメラの角度だけ回転する
-		velocity_ = TransformNormal(
-		    velocity_, Multiply(Multiply(
-				MakeRotateXMatrix(viewProjection_->rotation_.x), 
-				MakeRotateYMatrix(-viewProjection_->rotation_.y)), 
-				MakeRotateZMatrix(viewProjection_->rotation_.z)));
+			// 行動リクエストにジャンプをセット
+			behaviorRequest_ = Behavior::kJump;
+		}
 
-		// 移動
-		worldTransform_.translation_ += velocity_;
+		// スティックによる移動入力がある
+		// ロックオン状態なら
+		if (lockOn_->ExistTarget()) {
 
-		// 移動方向に見た目を合わせる
-		worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
-		Vector3 moveZ = 
-			TransformNormal(velocity_, MakeRotateYMatrix(worldTransform_.rotation_.y));
+			// ロックオン座標
+			Vector3 lockOnPosition = lockOn_->GetTargetPosition();
 
-		worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
-	}
+			// 追従対象からロックオン対象へのベクトル
+			Vector3 sub = lockOnPosition - GetWorldTransform().translation_;
 
-	// ジャンプボタンを押したら
-	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+			// y軸周りの角度
+			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+		} else {
 
-		// 行動リクエストにジャンプをセット
-		behaviorRequest_ = Behavior::kJump;
+			// 速さ
+			const float speed = 0.3f;
+
+			// 移動量
+			velocity_ = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
+
+			// 移動量に速さを反映
+			velocity_ = Normalize(velocity_) * speed;
+
+			// 移動ベクトルをカメラの角度だけ回転する
+			velocity_ = TransformNormal(
+			    velocity_, Multiply(Multiply(MakeRotateXMatrix(viewProjection_->rotation_.x), MakeRotateYMatrix(-viewProjection_->rotation_.y)), MakeRotateZMatrix(viewProjection_->rotation_.z)));
+
+			// 移動
+			worldTransform_.translation_ += velocity_;
+
+			// 移動方向に見た目を合わせる
+			worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+			Vector3 moveZ = TransformNormal(velocity_, MakeRotateYMatrix(worldTransform_.rotation_.y));
+
+			worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
+		}
 	}
 
 	// 浮遊処理
@@ -151,59 +163,39 @@ void Player::BehaviorRootUpdate() {
 
 	// 腕の処理
 	UpdateArmGimmick();
-
-	
 }
 
 // 攻撃行動の更新
 void Player::BehaviorAttackUpdate() {
 
-	if (changeTimer_ <= 0) {
-
-		behaviorRequest_ = Behavior::kRoot;
-		changeTimer_ = 300.0f;
+	// 加速フェーズ
+	if (weaponAngle_ < (startAngleWeapon_ + endAngleWeapon_) / 2.0f && velocity_.y < maxVelocity_) {
+		velocity_.y += acceleration_;
+	}
+	// 減速フェーズ
+	else if (weaponAngle_ >= (startAngleWeapon_ + endAngleWeapon_) / 2.0f && velocity_.y > 0.0f) {
+		velocity_.y -= deceleration_;
 	}
 
-	// 振り下げのサイクル<frame>
-	const uint16_t downPeriod = 150;
+	// 速度を使って角度を更新
+	weaponAngle_ += velocity_.y;
 
-	// 1フレームでのパラメータ加算値
-	const float downStep = 2.0f / downPeriod;
+	// 武器の角度をアームの角度にマッピン
+	const float startAngleArm = -210.0f;
+	const float endAngleArm = -80.0f;
+	float mappedAngleArm = startAngleArm + (weaponAngle_ - startAngleWeapon_) / (endAngleWeapon_ - startAngleWeapon_) * (endAngleArm - startAngleArm);
 
-	// 振り下げパラメータを1ステップ分加算
-	armParameter_ += downStep;
+	// 度からラジアンに変換して武器の回転を設定
+	worldTransformWeapon_.rotation_.x = weaponAngle_ * (pi() / 180.0f);
+	worldTransformLeftArm_.rotation_.x = mappedAngleArm * (pi() / 180.0f);
+	worldTransformRightArm_.rotation_.x = mappedAngleArm * (pi() / 180.0f);
 
-	// パラメータを0から2の範囲に制限
-	if (armParameter_ > 2.0f) {
-		armParameter_ -= 2.0f;
+	// 角度を範囲に制限
+	if (weaponAngle_ >= 80.0f) {
+		weaponAngle_ = endAngleWeapon_;
+		velocity_ = {0.0f, 0.0f, 0.0f};     // 振り下げ完了時に速度をゼロにする
+		behaviorRequest_ = Behavior::kRoot; // 動作リクエストを変更
 	}
-
-	// 三角波の生成（振り下げ用）
-	float downTriangleWave;
-	if (armParameter_ < 1.0f) {
-		downTriangleWave = 2.0f * armParameter_ - 1.0f;
-	} else {
-		downTriangleWave = 1.0f - 2.0f * (armParameter_ - 1.0f);
-	}
-
-	// 角度の範囲を設定
-	const float startAngleArm = -210.0f; // 開始角度(Arm)
-	const float endAngleArm = -80.0f;    // 終了角度(Arm)
-	const float startAngleWeapon = -30.0f;
-	const float endAngleWeapon = 100.0f;
-
-	// 三角波を角度範囲にマッピング
-	float mappedAngleArm = startAngleArm + (downTriangleWave + 1.0f) / 2.0f * (endAngleArm - startAngleArm);
-	float mappedAngleWeapon = startAngleWeapon + (downTriangleWave + 1.0f) / 2.0f * (endAngleWeapon - startAngleWeapon);
-
-	// 左腕の回転（振り下げ）
-	worldTransformLeftArm_.rotation_.x = mappedAngleArm * (pi() / 180.0f); // 度からラジアンに変換
-
-	// 右腕の回転（振り下げ）
-	worldTransformRightArm_.rotation_.x = mappedAngleArm * (pi() / 180.0f); // 度からラジアンに変換
-
-	// アイテムの回転
-	worldTransformWeapon_.rotation_.x = mappedAngleWeapon * (pi() / 180.0f); // 度からラジアンに変換
 }
 
 // ジャンプ行動の更新
@@ -285,15 +277,12 @@ void Player::Update() {
 	ImGui::DragFloat3("worldTransform.rotate", &worldTransform_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("Weapon.translation", &worldTransformWeapon_.translation_.x, 0.01f);
 	ImGui::DragFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, 0.01f);
-	ImGui::DragFloat("Timer", &changeTimer_);
+	ImGui::DragFloat("weaponAngle", &weaponAngle_, 0.1f);
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 
 		GlobalVariables::GetInstance()->SaveFile("Player");
 	}
-
-	// カウントの減少
-	changeTimer_--;
 
 	/* /////////////////
 	  Behavior遷移の実装
@@ -331,7 +320,22 @@ void Player::Update() {
 		break;
 	case Player::Behavior::kAttack:
 
-		BehaviorAttackUpdate();
+		if (lockOn_->ExistTarget()) {
+
+			// ロックオン座標
+			Vector3 lockOnPosition = lockOn_->GetTargetPosition();
+
+			// 追従対象からロックオン対象へのベクトル
+			Vector3 sub = lockOnPosition - GetWorldTransform().translation_;
+
+			// y軸周りの角度
+			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+
+			BehaviorAttackUpdate();
+		} else {
+		
+			BehaviorAttackUpdate();
+		}
 		break;
 	case Player::Behavior::kJump:
 

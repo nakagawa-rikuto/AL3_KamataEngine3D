@@ -38,7 +38,7 @@ public:
 	/// ロックオン中かどうかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool ExistTarget() const;
+	bool ExistTarget() const; 
 
 	/// <summary>
 	/// 初期化
