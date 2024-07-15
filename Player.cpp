@@ -132,6 +132,7 @@ void Player::BehaviorRootUpdate() {
 
 			// y軸周りの角度
 			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+			
 		} else {
 
 			// 速さ
@@ -167,6 +168,37 @@ void Player::BehaviorRootUpdate() {
 
 // 攻撃行動の更新
 void Player::BehaviorAttackUpdate() {
+
+	if (lockOn_->ExistTarget()) {
+
+		// ロックオン座標
+		Vector3 lockOnPosition = lockOn_->GetTargetPosition();
+
+		// 追従対象からロックオン対象へのベクトル
+		Vector3 sub = lockOnPosition - GetWorldTransform().translation_;
+
+		// y軸周りの角度
+		worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+
+		//// 距離
+		//float distance = Length(sub);
+
+		//// 距離しきい値
+		//const float threshold = 0.2f;
+
+		//// しきい値より離れている時のみ
+		//if (distance > threshold) {
+
+
+
+		//	// しきい値を超える速さなら補正する
+		//	if (speed > distance - threshold) {
+		//	
+		//		// ロックオン対象へのめりこみ防止
+		//		speed = distance - threshold;
+		//	}
+		//}
+	} 
 
 	// 加速フェーズ
 	if (weaponAngle_ < (startAngleWeapon_ + endAngleWeapon_) / 2.0f && velocity_.y < maxVelocity_) {
@@ -320,22 +352,7 @@ void Player::Update() {
 		break;
 	case Player::Behavior::kAttack:
 
-		if (lockOn_->ExistTarget()) {
-
-			// ロックオン座標
-			Vector3 lockOnPosition = lockOn_->GetTargetPosition();
-
-			// 追従対象からロックオン対象へのベクトル
-			Vector3 sub = lockOnPosition - GetWorldTransform().translation_;
-
-			// y軸周りの角度
-			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
-
-			BehaviorAttackUpdate();
-		} else {
-		
-			BehaviorAttackUpdate();
-		}
+		BehaviorAttackUpdate();
 		break;
 	case Player::Behavior::kJump:
 

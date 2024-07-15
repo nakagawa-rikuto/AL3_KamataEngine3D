@@ -105,7 +105,6 @@ public:
 	/// <returns></returns>
 	WorldTransform& GetWorldTransform() { return worldTransform_; }
 
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -164,6 +163,7 @@ private:
 	const float deceleration_ = 0.1f; // 減速度
 	const float startAngleWeapon_ = -30.0f;
 	const float endAngleWeapon_ = 100.0f;
+	const float moveSpeed_ = 0.5f;
 
 	// 状態
 	float weaponAngle_ = startAngleWeapon_; // 初期角度
