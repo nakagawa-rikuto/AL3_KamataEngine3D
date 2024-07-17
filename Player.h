@@ -116,7 +116,6 @@ private: /* メンバ変数 */
 	Vector3 velocity_ = {};
 
 	// ワールド変換データ
-	WorldTransform worldTransform_;
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformFace_;
 	WorldTransform worldTransformCore_;
