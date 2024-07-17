@@ -9,10 +9,14 @@
 #include <numbers>
 #include <vector>
 
+#include "Collider.h"
 #include "MyMath.h"
 #include "imgui.h"
 
-class BaseCharacter {
+/// <summary>
+/// キャラクターの基礎
+/// </summary>
+class BaseCharacter : public Collider{
 
 protected:
 	// モデルデータ配列
@@ -40,8 +44,19 @@ public:
 	virtual void Draw(const ViewProjection& viewProjection);
 
 	/// <summary>
+	/// 衝突時に呼ばれる関数
+	/// </summary>
+	virtual void OnCollision() override;
+
+	/// <summary>
 	/// ワールド変換データを取得
 	/// </summary>
 	/// <returns></returns>
-	const WorldTransform& GetWorldTransform();
+	virtual const WorldTransform& GetWorldTransform() const;
+
+	/// <summary>
+	/// 中心座標を取得
+	/// </summary>
+	/// <returns></returns>
+	virtual Vector3 GetCenterPosition() const override;
 };

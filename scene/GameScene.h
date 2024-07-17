@@ -15,6 +15,7 @@
 #include <sstream>
 #include <cassert>
 
+#include "CollisionManager.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "SkyDome.h"
@@ -70,6 +71,11 @@ public: // メンバ関数
 	*/ /////////////////////////////////////
 	void FollowCameraUpdate();
 
+	/* /////////////////////////////////////
+	               衝突判定と応答
+	*/ /////////////////////////////////////
+	void CheckAllCollisions();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -93,6 +99,12 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	/* //////////////////////////////////////
+	              衝突マネージャ
+	*/ //////////////////////////////////////
+	// 衝突マネージャ
+	std::unique_ptr<CollisionManager> collisionManeger_; 
+	
 	/* //////////////////////////////////////
 	                 Entity
 	*/ //////////////////////////////////////

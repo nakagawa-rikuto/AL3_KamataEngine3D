@@ -51,6 +51,27 @@ void GameScene::FollowCameraUpdate() {
 }
 
 /// <summary>
+/// 衝突判定と応答
+/// </summary>
+void GameScene::CheckAllCollisions() {
+
+	// 衝突マネージャのリセット
+	collisionManeger_->Reset();
+
+	// コライダーをリストに登録
+	collisionManeger_->AddCollider(player_.get());
+
+	// 敵全てについて
+	for (const std::unique_ptr<Enemy>& enemy : enemies_) {
+
+		collisionManeger_->AddCollider(enemy.get());
+	}
+
+	// 衝突判定と応答
+	collisionManeger_->CheckAllCollisiions();
+}
+
+/// <summary>
 /// 初期化
 /// </summary>
 void GameScene::Initialize() {
@@ -93,6 +114,12 @@ void GameScene::Initialize() {
 	       viewProjection
 	*/ /////////////////////////
 	viewProjection_.Initialize();
+
+	/* /////////////////////////
+	          Player
+	*/ /////////////////////////
+	// 衝突マネージャの生成
+	collisionManeger_ = std::make_unique<CollisionManager>();
 
 	/* /////////////////////////
 	          Player
@@ -173,6 +200,9 @@ void GameScene::Initialize() {
 /// 更新
 /// </summary>
 void GameScene::Update() {
+
+	// 衝突判定と応答
+	CheckAllCollisions();
 
 	// 　自キャラの更新
 	player_->Update();

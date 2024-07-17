@@ -4,6 +4,12 @@
 #include "LockOn.h"
 #include "TextureManager.h"
 
+void Player::OnCollision() {
+
+	// ジャンプリクエスト
+	behaviorRequest_ = Behavior::kJump;
+}
+
 /* ///////////////////////////////////////////
                     初期化
 */ ///////////////////////////////////////////
@@ -189,8 +195,6 @@ void Player::BehaviorAttackUpdate() {
 		//// しきい値より離れている時のみ
 		//if (distance > threshold) {
 
-
-
 		//	// しきい値を超える速さなら補正する
 		//	if (speed > distance - threshold) {
 		//	
@@ -262,6 +266,18 @@ void Player::ApplyGlobalVariables() {
 	worldTransformBody_.translation_ = globalVariables->GetVector3Value(groupName, "Body Translation");
 	worldTransformLeftArm_.translation_ = globalVariables->GetVector3Value(groupName, "L_Arm Translation");
 	worldTransformRightArm_.translation_ = globalVariables->GetVector3Value(groupName, "R_Arm Translation");
+}
+
+// 中心座標を取得
+Vector3 Player::GetCenterPosition() const { 
+
+	// ローカル座標でのオフセット
+	const Vector3 offset = {0.0f, 1.5f, 0.0f};
+
+	// ワールド座標に変換
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+
+	return worldPos;
 }
 
 // 初期化
