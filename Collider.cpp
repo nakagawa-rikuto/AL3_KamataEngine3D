@@ -8,3 +8,20 @@ void Collider::SetRadius(float& radius) {
 
 	radius_ = radius; 
 }
+
+// 初期化
+void Collider::Initialize() { worldTransform_.Initialize(); }
+
+// 描画
+void Collider::UpdateWorldTransform() {
+
+	// ワールド座標をワールドトランスフォームに適用
+	worldTransform_.translation_ = GetCenterPosition();
+	worldTransform_.UpdateMatrix();
+}
+
+void Collider::Draw(Model* model, const ViewProjection& viewProjection) {
+
+	// モデルの描画
+	model->Draw(worldTransform_, viewProjection);
+}

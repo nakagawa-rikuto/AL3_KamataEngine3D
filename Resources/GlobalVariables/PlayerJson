@@ -1,5 +1,19 @@
 {
     "Player": {
-        "Test": 11
+        "Body Translation": [
+            10.0,
+            10.0,
+            -10.0
+        ],
+        "LeftArm Translation": [
+            4.0,
+            10.0,
+            10.0
+        ],
+        "RightArm Translation": [
+            10.0,
+            10.0,
+            -10.0
+        ]
     }
 }

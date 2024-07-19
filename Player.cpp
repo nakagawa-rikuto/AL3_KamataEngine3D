@@ -333,6 +333,8 @@ void Player::Update() {
 		GlobalVariables::GetInstance()->SaveFile("Player");
 	}
 
+	//ApplyGlobalVariables();
+
 	/* /////////////////
 	  Behavior遷移の実装
 	*/ /////////////////

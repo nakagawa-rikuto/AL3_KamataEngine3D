@@ -1,6 +1,6 @@
 #include "GameScene.h"
-#include "TextureManager.h"
 #include "GlobalVariables.h"
+#include "TextureManager.h"
 
 GameScene::GameScene() {}
 
@@ -33,7 +33,7 @@ void GameScene::DebugCameraUpdate() {
 	} else {
 
 		// ビュープロジェクション行列の更新と転送
-		//viewProjection_.UpdateMatrix();
+		// viewProjection_.UpdateMatrix();
 	}
 }
 
@@ -120,6 +120,7 @@ void GameScene::Initialize() {
 	*/ /////////////////////////
 	// 衝突マネージャの生成
 	collisionManeger_ = std::make_unique<CollisionManager>();
+	collisionManeger_->Initialize();
 
 	/* /////////////////////////
 	          Player
@@ -127,9 +128,8 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	// 自キャラのモデル
-	std::vector<Model*> playerModels = {
-		playerModel_.body_.get(),    playerModel_.face_.get(),     playerModel_.core_.get(),
-		playerModel_.leftArm_.get(), playerModel_.rightArm_.get(), playerModel_.weapon_.get()};
+	std::vector<Model*> playerModels = {playerModel_.body_.get(),    playerModel_.face_.get(),     playerModel_.core_.get(),
+	                                    playerModel_.leftArm_.get(), playerModel_.rightArm_.get(), playerModel_.weapon_.get()};
 	// 自キャラの初期化
 	player_->Initialize(playerModels);
 
@@ -170,7 +170,7 @@ void GameScene::Initialize() {
 	ground_->Initialize(groundModel_.get(), &viewProjection_);
 
 	/* /////////////////////////
-				追従カメラ
+	            追従カメラ
 	*/ /////////////////////////
 	// 追従カメラの生成
 	followCamera_ = std::make_unique<FollowCamera>();
@@ -200,6 +200,13 @@ void GameScene::Initialize() {
 /// 更新
 /// </summary>
 void GameScene::Update() {
+
+#ifdef _DEBUG
+
+	// デバッグ表示用にワールドトランスフォームを更新
+	collisionManeger_->UpdateWorldTransform();
+
+#endif // DEBUG
 
 	// 衝突判定と応答
 	CheckAllCollisions();
@@ -257,6 +264,13 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+#ifdef _DEBUG
+
+	// 当たり判定の表示
+	collisionManeger_->Draw(viewProjection_);
+
+#endif // DEBUG
 
 	// SkyDomeの描画
 	skyDome_->Draw();

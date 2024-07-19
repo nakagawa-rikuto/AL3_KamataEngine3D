@@ -1,4 +1,8 @@
 #pragma once
+#include "WorldTransform.h"
+#include "Model.h"
+#include "ViewProjection.h"
+
 #include "MyMath.h"
 #include "imgui.h"
 
@@ -19,6 +23,19 @@ public:
 	/// <param name="radius"></param>
 	void SetRadius(float& radius);
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize();
+
+	/// <summary>
+	/// ワールドトランスフォームの更新
+	/// </summary>
+	void UpdateWorldTransform();
+
+	// 描画
+	void Draw(Model* model, const ViewProjection& viewProjection);
+
 public: /* 仮想関数 */
 	virtual Vector3 GetCenterPosition() const = 0;
 
@@ -30,6 +47,9 @@ public: /* 仮想関数 */
 private: /* メンバ変数 */
 	// 衝突半径
 	float radius_ = 1.5f;
+
+	// ワールドトランスフォーム
+	WorldTransform worldTransform_;
 
 private: /* ポリモーフィズム */
 	//virtual ~Collider() = default;

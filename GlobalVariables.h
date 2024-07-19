@@ -25,6 +25,23 @@ public:
 	void CreateGroup(const std::string& groupName);
 
 	/// <summary>
+	/// ファイルの書き出し
+	/// </summary>
+	/// <param name="groupName"></param>
+	void SaveFile(const std::string& groupName);
+
+	/// <summary>
+	/// ディレクトリの全ファイル読み込み
+	/// </summary>
+	void LoadFiles();
+
+	/// <summary>
+	/// ファイルから読み込む
+	/// </summary>
+	/// <param name="groupName"></param>
+	void LoadFiles(const std::string& groupName);
+
+	/// <summary>
 	/// 値のセット(int)
 	/// </summary>
 	/// <param name="groupName"></param>
@@ -49,21 +66,12 @@ public:
 	void SetValue(const std::string& groupName, const std::string& key, const Vector3 value);
 
 	/// <summary>
-	/// ファイルの書き出し
+	/// 値のセット(bool)
 	/// </summary>
 	/// <param name="groupName"></param>
-	void SaveFile(const std::string& groupName);
-
-	/// <summary>
-	/// ディレクトリの全ファイル読み込み
-	/// </summary>
-	void LoadFiles();
-
-	/// <summary>
-	/// ファイルから読み込む
-	/// </summary>
-	/// <param name="groupName"></param>
-	void LoadFiles(const std::string& groupName);
+	/// <param name="key"></param>
+	/// <param name="value"></param>
+	void SetValue(const std::string& groupName, const std::string& key, bool value);
 
 	/// <summary>
 	/// 項目の追加(int)
@@ -90,6 +98,14 @@ public:
 	void AddItem(const std::string& groupName, const std::string& key, const Vector3& value);
 
 	/// <summary>
+	/// 項目の追加(bool)
+	/// </summary>
+	/// <param name="groupName"></param>
+	/// <param name="key"></param>
+	/// <param name="value"></param>
+	void AddItem(const std::string& groupName, const std::string& key, bool value);
+
+	/// <summary>
 	/// 値の取得(int)
 	/// </summary>
 	/// <param name="groupName"></param>
@@ -112,6 +128,14 @@ public:
 	/// <param name="key"></param>
 	/// <returns></returns>
 	Vector3 GetVector3Value(const std::string& groupName, const std::string& key) const;
+
+	/// <summary>
+	/// 値の取得(bool)
+	/// </summary>
+	/// <param name="groupName"></param>
+	/// <param name="key"></param>
+	/// <returns></returns>
+	bool GetBoolValue(const std::string& groupName, const std::string& key) const;
 
 	/// <summary>
 	/// 毎フレームの処理
@@ -145,7 +169,7 @@ private:
 	// 項目
 	struct Item {
 		// 項目の値
-		std::variant<int32_t, float, Vector3> value;
+		std::variant<int32_t, float, Vector3, bool> value;
 	};
 
 	// グループ

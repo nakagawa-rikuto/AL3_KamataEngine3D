@@ -1,4 +1,5 @@
 #include "CollisionManager.h"
+#include "GlobalVariables.h"
 
 /// <summary>
 /// リセット
@@ -70,4 +71,63 @@ void CollisionManager::CheckAllCollisiions() {
 			CheckCollisionPair(colliderA, colliderB);
 		}
 	}
+}
+
+// 初期化
+void CollisionManager::Initialize() { 
+	// モデルの読み込み
+	debugModel_.reset(Model::CreateFromOBJ("ColliderModel", true)); 
+
+	// フラグの初期化
+	isDisPlaye_ = true;
+
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Collider";
+
+	// グループの追加
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+	globalVariables->AddItem(groupName, "Body Translation", isDisPlaye_);
+}
+
+// 更新
+void CollisionManager::UpdateWorldTransform() {
+
+	// 非表示なら抜ける
+	if (!isDisPlaye_) {
+
+		return;
+	}
+
+	// 全てのコライダーについて
+	for (Collider* collider : colliders_) {
+
+		// 更新
+		collider->UpdateWorldTransform();
+	}
+
+	ApplyGlobaVariables();
+}
+
+// 描画
+void CollisionManager::Draw(const ViewProjection& viewProjection) {
+
+		// 非表示なら抜ける
+	if (!isDisPlaye_) {
+
+		return;
+	}
+
+	// 全てのコライダーについて
+	for (Collider* collider : colliders_) {
+
+		// 更新
+		collider->Draw(debugModel_.get(), viewProjection);
+	}
+}
+
+void CollisionManager::ApplyGlobaVariables() { 
+	
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Collider";
+	isDisPlaye_ = globalVariables->GetBoolValue(groupName, "IsDisPlay");
 }
