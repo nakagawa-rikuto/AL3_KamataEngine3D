@@ -86,7 +86,7 @@ void CollisionManager::Initialize() {
 
 	// グループの追加
 	GlobalVariables::GetInstance()->CreateGroup(groupName);
-	globalVariables->AddItem(groupName, "Body Translation", isDisPlaye_);
+	globalVariables->AddItem(groupName, "IsDisPlay", isDisPlaye_);
 }
 
 // 更新

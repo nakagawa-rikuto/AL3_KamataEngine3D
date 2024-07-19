@@ -1,7 +1,7 @@
 #include "GlobalVariables.h"
 #include "WinApp.h"
-#include <fstream>
 #include <format>
+#include <fstream>
 #include <imgui.h>
 
 //
@@ -120,7 +120,7 @@ void GlobalVariables::LoadFiles() {
 
 		// ファイル拡張子を取得
 		std::string extension = filePath.extension().string();
-		
+
 		// .jsonファイル以外はスキップ
 		if (extension.compare(".json") != 0) {
 			continue;
@@ -198,7 +198,6 @@ void GlobalVariables::LoadFiles(const std::string& groupName) {
 			bool value = itItem->get<bool>();
 			SetValue(groupName, itemName, value);
 		}
-
 	}
 }
 
@@ -254,7 +253,7 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 }
 
 /* ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-													項目の追加
+                                                    項目の追加
 */ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, int32_t value) {
 
@@ -311,53 +310,81 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
 /* ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                    　値の取得
 */ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::string& key) const { 
+int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::string& key) const {
+
+	// 指定グループが存在するか確認
+	auto itGroup = datas_.find(groupName);
+	assert(itGroup != datas_.end());
 
 	// グループの参照を取得
-	const Group& group = datas_.at(groupName);
+	const Group& group = itGroup->second;
 
-	// 指定したグループに指定のキーが存在する
-	auto it = group.items.find(key);
-	assert(it != group.items.end());
+	// 指定したグループに指定のキーが存在するか確認
+	auto itItem = group.items.find(key);
+	assert(itItem != group.items.end());
+
+	// 指定したキーの値がint32_t型か確認
+	assert(std::holds_alternative<int32_t>(itItem->second.value));
 
 	// 指定したグループから指定のキーの値を取得
-	return std::get<int32_t>(it->second.value);
+	return std::get<int32_t>(itItem->second.value);
 }
-float GlobalVariables::GetFloatValue(const std::string& groupName, const std::string& key) const { 
+float GlobalVariables::GetFloatValue(const std::string& groupName, const std::string& key) const {
 
-	  // グループの参照を取得
-	const Group& group = datas_.at(groupName);
+	// 指定グループが存在するか確認
+	auto itGroup = datas_.find(groupName);
+	assert(itGroup != datas_.end());
 
-	// 指定したグループに指定のキーが存在する
-	auto it = group.items.find(key);
-	assert(it != group.items.end());
+	// グループの参照を取得
+	const Group& group = itGroup->second;
+
+	// 指定したグループに指定のキーが存在するか確認
+	auto itItem = group.items.find(key);
+	assert(itItem != group.items.end());
+
+	// 指定したキーの値がbool型か確認
+	assert(std::holds_alternative<float>(itItem->second.value));
 
 	// 指定したグループから指定のキーの値を取得
-	return std::get<float>(it->second.value);
+	return std::get<float>(itItem->second.value);
 }
-Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std::string& key) const { 
+Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std::string& key) const {
 
-	 // グループの参照を取得
-	const Group& group = datas_.at(groupName);
+	 // 指定グループが存在するか確認
+	auto itGroup = datas_.find(groupName);
+	assert(itGroup != datas_.end());
 
-	// 指定したグループに指定のキーが存在する
-	auto it = group.items.find(key);
-	assert(it != group.items.end());
+	// グループの参照を取得
+	const Group& group = itGroup->second;
+
+	// 指定したグループに指定のキーが存在するか確認
+	auto itItem = group.items.find(key);
+	assert(itItem != group.items.end());
+
+	// 指定したキーの値がVector3型か確認
+	assert(std::holds_alternative<Vector3>(itItem->second.value));
 
 	// 指定したグループから指定のキーの値を取得
-	return std::get<Vector3>(it->second.value);
+	return std::get<Vector3>(itItem->second.value);
 }
-bool GlobalVariables::GetBoolValue(const std::string& groupName, const std::string& key) const { 
+bool GlobalVariables::GetBoolValue(const std::string& groupName, const std::string& key) const {
 
-	 // グループの参照を取得
-	const Group& group = datas_.at(groupName);
+	// 指定グループが存在するか確認
+	 auto itGroup = datas_.find(groupName);
+	 assert(itGroup != datas_.end());
 
-	// 指定したグループに指定のキーが存在する
-	auto it = group.items.find(key);
-	assert(it != group.items.end());
+	// グループの参照を取得
+	 const Group& group = itGroup->second;
+
+	// 指定したグループに指定のキーが存在するか確認
+	 auto itItem = group.items.find(key);
+	 assert(itItem != group.items.end());
+
+	// 指定したキーの値がbool型か確認
+	 assert(std::holds_alternative<bool>(itItem->second.value));
 
 	// 指定したグループから指定のキーの値を取得
-	return std::get<bool>(it->second.value);
+	 return std::get<bool>(itItem->second.value);
 }
 
 // 更新

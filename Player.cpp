@@ -264,8 +264,8 @@ void Player::ApplyGlobalVariables() {
 	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
 	worldTransformBody_.translation_ = globalVariables->GetVector3Value(groupName, "Body Translation");
-	worldTransformLeftArm_.translation_ = globalVariables->GetVector3Value(groupName, "L_Arm Translation");
-	worldTransformRightArm_.translation_ = globalVariables->GetVector3Value(groupName, "R_Arm Translation");
+	worldTransformLeftArm_.translation_ = globalVariables->GetVector3Value(groupName, "LeftArm Translation");
+	worldTransformRightArm_.translation_ = globalVariables->GetVector3Value(groupName, "RightArm Translation");
 }
 
 // 中心座標を取得
@@ -333,8 +333,6 @@ void Player::Update() {
 		GlobalVariables::GetInstance()->SaveFile("Player");
 	}
 
-	//ApplyGlobalVariables();
-
 	/* /////////////////
 	  Behavior遷移の実装
 	*/ /////////////////
@@ -378,6 +376,8 @@ void Player::Update() {
 		BehaviorJumpUpdate();
 		break;
 	}
+
+	ApplyGlobalVariables();
 
 	// 行列の再計算と転送
 	BaseCharacter::Update();
