@@ -42,50 +42,67 @@ void LockOn::Initialize(Sprite* lockOnMark, uint32_t textureHandle) {
 // 更新
 void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
 
-	// ロックオン状態なら
-	if (target_ ? true : false) {
+	DWORD dwResult;
 
-		/* C.ロックオン解放処理 */
-		if (Input::GetInstance()->TriggerKey(DIK_Q)) {
+	// ジョイスティック
+	XINPUT_STATE joyState;
 
-			// ロックオンを外す
-			target_ = nullptr;
-		}
-		// 範囲外判定
-		else if (CheckOutRange(viewProjection)) {
+	// コントローラーの状態を取得する
+	dwResult = XInputGetState(0, &joyState);
 
-			// ロックオンを外す
-			target_ = nullptr;
-		}
-	} else {
+	// 移動処理
+	// ジョイスティックが有効なら
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 
-		/* A.ロックオン対象の検索 */
-		// ロックオンボタンをトリガーしたら
-		if (Input::GetInstance()->TriggerKey(DIK_Q)) {
+		// コントローラーの状態を取得する
+		if (dwResult == ERROR_SUCCESS) {
 
-			// ロックオン対象の検索
-			Search(enemies, viewProjection);
-		}
-	}
+			// ロックオン状態なら
+			if (target_ ? true : false) {
 
-	// ロックオン状態なら
-	if (target_ ? true : false) {
+				/* C.ロックオン解放処理 */
+				if (joyState.Gamepad.sThumbRX & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
 
-		/* B.ロックオンマークの座標計算 */
-		// ロックオン継続
-		if (target_) {
+					// ロックオンを外す
+					target_ = nullptr;
+				}
+				// 範囲外判定
+				else if (CheckOutRange(viewProjection)) {
 
-			// 敵のロックオン座標の取得
-			Vector3 positionWorld = target_->GetCenterPosition();
+					// ロックオンを外す
+					target_ = nullptr;
+				}
+			} else {
 
-			// ワールド座標からスクリーン座標に変換
-			Vector3 positionScreen = TransformScreen(positionWorld, viewProjection);
+				/* A.ロックオン対象の検索 */
+				// ロックオンボタンをトリガーしたら
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
 
-			// Vector2に格納
-			Vector2 positionScreenV2 = Vector2(positionScreen.x, positionScreen.y);
+					// ロックオン対象の検索
+					Search(enemies, viewProjection);
+				}
+			}
 
-			// スプライトの座標を設定
-			lockOnMark_->SetPosition(positionScreenV2);
+			// ロックオン状態なら
+			if (target_ ? true : false) {
+
+				/* B.ロックオンマークの座標計算 */
+				// ロックオン継続
+				if (target_) {
+
+					// 敵のロックオン座標の取得
+					Vector3 positionWorld = target_->GetCenterPosition();
+
+					// ワールド座標からスクリーン座標に変換
+					Vector3 positionScreen = TransformScreen(positionWorld, viewProjection);
+
+					// Vector2に格納
+					Vector2 positionScreenV2 = Vector2(positionScreen.x, positionScreen.y);
+
+					// スプライトの座標を設定
+					lockOnMark_->SetPosition(positionScreenV2);
+				}
+			}
 		}
 	}
 }

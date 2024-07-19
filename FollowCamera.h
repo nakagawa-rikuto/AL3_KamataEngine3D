@@ -40,6 +40,10 @@ public:
 	/// <param name="target"></param>
 	void SetTarget(const WorldTransform* target) { target_ = target; }
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="lockOn"></param>
 	void SetLockOn(const LockOn* lockOn) { lockOn_ = lockOn; }
 
 	/// <summary>
