@@ -299,6 +299,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformRightArm_.SetParent(&worldTransformBody_);
 	worldTransformWeapon_.SetParent(&worldTransformBody_);
 
+	// 位置の調整
 	worldTransform_.translation_ = {0.0f, .0f, -5.0f};
 	worldTransformLeftArm_.translation_ = {-1.8f, 3.0f, 0.0f};
 	worldTransformRightArm_.translation_ = {1.8f, 3.0f, 0.0f};
