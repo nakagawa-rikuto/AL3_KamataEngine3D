@@ -1,0 +1,82 @@
+#pragma once
+#include "Input.h"
+#include "Model.h"
+#include "Sprite.h"
+#include "ViewProjection.h"
+#include "WorldTransform.h"
+#include "cassert"
+
+#include <numbers>
+#include <optional>
+
+#include "Collider.h"
+#include "MyMath.h"
+#include "imgui.h"
+
+// 前方宣言
+class Player;
+
+/// <summary>
+/// 武器
+/// </summary>
+class Hammer final : public Collider {
+public:
+
+	/// <summary>
+	/// 回転の取得
+	/// </summary>
+	/// <returns></returns>
+	const Vector3& GetRotate() const;
+
+	/// <summary>
+	/// 回転のセット
+	/// </summary>
+	/// <param name="rotation"></param>
+	void SetRotate(const Vector3& rotation); 
+
+	/// <summary>
+	/// Playerのセット
+	/// </summary>
+	/// <param name="player"></param>
+	void SetPlayer(Player* player);
+
+	/// <summary>
+	/// 中心座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetCenterPosition() const override;
+
+	/// <summary>
+	/// 衝突判定
+	/// </summary>
+	void OnCollision() override;
+
+	/// <summary>
+	/// WorldTransformの初期化
+	/// </summary>
+	void WorldTransformInitialize();
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="worldTransform"></param>
+	void Initialize(Model* model, const WorldTransform *worldTransform);
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="viewProjection"></param>
+	void Draw(const ViewProjection &viewProjection);
+
+private:
+	Player* player_;
+
+	Model* model_ = nullptr;        // モデル
+	WorldTransform worldTransform_; // WorldTransform
+};

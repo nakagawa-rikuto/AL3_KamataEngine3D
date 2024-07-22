@@ -18,6 +18,7 @@
 #include "CollisionManager.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Hammer.h"
 #include "SkyDome.h"
 #include "Ground.h"
 #include "FollowCamera.h"
@@ -40,7 +41,6 @@ public: // メンバ関数
 		std::unique_ptr<Model> core_;
 		std::unique_ptr<Model> leftArm_;
 		std::unique_ptr<Model> rightArm_;
-		std::unique_ptr<Model> weapon_;
 	};
 
 	/// <summary>
@@ -49,6 +49,13 @@ public: // メンバ関数
 	struct EnemyModel {
 		std::unique_ptr<Model> body_;
 		std::unique_ptr<Model> weapon_;
+	};
+
+	/// <summary>
+	/// PlayerWeapon
+	/// </summary>
+	struct PlayerWeapon {
+		std::unique_ptr<Model> hammer_;
 	};
 
 	/// <summary>
@@ -121,6 +128,9 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> lockOnMark_;
 	std::unique_ptr<LockOn> lockOn_;
 
+	// PlayerWeapon
+	std::unique_ptr<Hammer> hammer_;
+
 	/* //////////////////////////////////////
 	                 Field
 	*/ //////////////////////////////////////
@@ -148,6 +158,9 @@ private: // メンバ変数
 
 	// Player
 	PlayerModel playerModel_;
+
+	// PlayerWeapon
+	PlayerWeapon PlayerWeaponModel_;
 
 	// Enemy
 	EnemyModel enemyModel_;

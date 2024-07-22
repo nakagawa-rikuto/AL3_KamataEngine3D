@@ -67,6 +67,8 @@ void GameScene::CheckAllCollisions() {
 		collisionManeger_->AddCollider(enemy.get());
 	}
 
+	//collisionManeger_->AddCollider(hammer_.get());
+
 	// 衝突判定と応答
 	collisionManeger_->CheckAllCollisiions();
 }
@@ -98,7 +100,9 @@ void GameScene::Initialize() {
 	playerModel_.core_.reset(Model::CreateFromOBJ("PlayerCore", true));
 	playerModel_.leftArm_.reset(Model::CreateFromOBJ("PlayerLeftArm", true));
 	playerModel_.rightArm_.reset(Model::CreateFromOBJ("PlayerRightArm", true));
-	playerModel_.weapon_.reset(Model::CreateFromOBJ("PlayerWeapon", true));
+
+	// PlayerWeapon
+	PlayerWeaponModel_.hammer_.reset(Model::CreateFromOBJ("PlayerWeapon", true));
 
 	// Enemy
 	enemyModel_.body_.reset(Model::CreateFromOBJ("EnemyBody", true));
@@ -128,8 +132,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	// 自キャラのモデル
-	std::vector<Model*> playerModels = {playerModel_.body_.get(),    playerModel_.face_.get(),     playerModel_.core_.get(),
-	                                    playerModel_.leftArm_.get(), playerModel_.rightArm_.get(), playerModel_.weapon_.get()};
+	std::vector<Model*> playerModels = {playerModel_.body_.get(), playerModel_.face_.get(), playerModel_.core_.get(), playerModel_.leftArm_.get(), playerModel_.rightArm_.get()};
 	// 自キャラの初期化
 	player_->Initialize(playerModels);
 
@@ -141,11 +144,18 @@ void GameScene::Initialize() {
 	// 敵キャラのモデル
 	std::vector<Model*> enemyModels = {enemyModel_.body_.get(), enemyModel_.weapon_.get()};
 	// 敵キャラの初期化
-	// 途中
 	for (const auto& enemy : enemies_) {
 
 		enemy->Initialize(enemyModels);
 	}
+
+	/* /////////////////////////
+	          PlayerWeapon
+	*/ /////////////////////////
+	hammer_ = std::make_unique<Hammer>();
+	hammer_->Initialize(PlayerWeaponModel_.hammer_.get(), &player_->GetWorldTransformBody());
+	hammer_->SetPlayer(player_.get());
+	player_->SetHammer(hammer_.get());
 
 	/* /////////////////////////
 	          LockOn
@@ -214,6 +224,9 @@ void GameScene::Update() {
 	// 　自キャラの更新
 	player_->Update();
 
+	// Hammerの更新
+	hammer_->Update();
+
 	for (const auto& enemy : enemies_) {
 		// 敵キャラの更新
 		enemy->Update();
@@ -280,6 +293,9 @@ void GameScene::Draw() {
 
 	// 自キャラの描画
 	player_->Draw(viewProjection_);
+
+	// ハンマーの描画
+	hammer_->Draw(viewProjection_);
 
 	for (const auto& enemy : enemies_) {
 		// 敵キャラの描画

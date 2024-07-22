@@ -1,9 +1,11 @@
 #define NOMINMAX
 #include "Player.h"
+#include "Hammer.h"
 #include "GlobalVariables.h"
 #include "LockOn.h"
 #include "TextureManager.h"
 
+// 衝突判定
 void Player::OnCollision() {
 
 	// ジャンプリクエスト
@@ -26,7 +28,7 @@ void Player::BehaviorRootInitialize() { velocity_ = {0.0f, 0.0f, 0.0f}; }
 void Player::BehaviorAttackInitialize() {
 
 	// 状態
-	worldTransformWeapon_.translation_ = {0.0f, 0.0f, 0.0f};
+	hammer_->WorldTransformInitialize();
 	velocity_ = {};
 	weaponAngle_ = startAngleWeapon_; // 初期角度
 }
@@ -113,7 +115,7 @@ void Player::BehaviorRootUpdate() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 
 		// Attackボタンを押したら
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 
 			// 行動リクエストにアタックをセット
 			behaviorRequest_ = Behavior::kAttack;
@@ -175,6 +177,8 @@ void Player::BehaviorRootUpdate() {
 // 攻撃行動の更新
 void Player::BehaviorAttackUpdate() {
 
+	Vector3 rotation = hammer_->GetRotate();
+
 	if (lockOn_->ExistTarget()) {
 
 		// ロックオン座標
@@ -222,9 +226,11 @@ void Player::BehaviorAttackUpdate() {
 	float mappedAngleArm = startAngleArm + (weaponAngle_ - startAngleWeapon_) / (endAngleWeapon_ - startAngleWeapon_) * (endAngleArm - startAngleArm);
 
 	// 度からラジアンに変換して武器の回転を設定
-	worldTransformWeapon_.rotation_.x = weaponAngle_ * (pi() / 180.0f);
+	rotation.x = weaponAngle_ * (pi() / 180.0f);
 	worldTransformLeftArm_.rotation_.x = mappedAngleArm * (pi() / 180.0f);
 	worldTransformRightArm_.rotation_.x = mappedAngleArm * (pi() / 180.0f);
+
+	hammer_->SetRotate(rotation);
 
 	// 角度を範囲に制限
 	if (weaponAngle_ >= 80.0f) {
@@ -297,7 +303,6 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformCore_.SetParent(&worldTransformBody_);
 	worldTransformLeftArm_.SetParent(&worldTransformBody_);
 	worldTransformRightArm_.SetParent(&worldTransformBody_);
-	worldTransformWeapon_.SetParent(&worldTransformBody_);
 
 	// 位置の調整
 	worldTransform_.translation_ = {0.0f, .0f, -5.0f};
@@ -325,8 +330,6 @@ void Player::Update() {
 
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.rotate", &worldTransform_.rotation_.x, 0.01f);
-	ImGui::DragFloat3("Weapon.translation", &worldTransformWeapon_.translation_.x, 0.01f);
-	ImGui::DragFloat3("Weapon.rotate", &worldTransformWeapon_.rotation_.x, 0.01f);
 	ImGui::DragFloat("weaponAngle", &weaponAngle_, 0.1f);
 
 	if (input_->TriggerKey(DIK_SPACE)) {
@@ -387,7 +390,6 @@ void Player::Update() {
 	worldTransformCore_.UpdateMatrix();
 	worldTransformLeftArm_.UpdateMatrix();
 	worldTransformRightArm_.UpdateMatrix();
-	worldTransformWeapon_.UpdateMatrix();
 }
 
 // 描画
@@ -399,8 +401,4 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[kModelIndexCore]->Draw(worldTransformCore_, viewProjection);
 	models_[kModelIndexL_Arm]->Draw(worldTransformLeftArm_, viewProjection);
 	models_[kModelIndexR_Arm]->Draw(worldTransformRightArm_, viewProjection);
-	if (behavior_ == Behavior::kAttack) {
-
-		models_[kModelIndexWeapon]->Draw(worldTransformWeapon_, viewProjection);
-	}
 }
