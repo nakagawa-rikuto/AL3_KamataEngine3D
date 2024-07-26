@@ -1,7 +1,7 @@
 #define NOMINMAX
 #include "Player.h"
-#include "Hammer.h"
 #include "GlobalVariables.h"
+#include "Hammer.h"
 #include "LockOn.h"
 #include "TextureManager.h"
 
@@ -128,6 +128,29 @@ void Player::BehaviorRootUpdate() {
 			behaviorRequest_ = Behavior::kJump;
 		}
 
+		// 速さ
+		const float speed = 0.3f;
+
+		// 移動量
+		velocity_ = {
+			(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 
+			0.0f, 
+			(float)joyState.Gamepad.sThumbLY / SHRT_MAX
+		};
+
+		// 移動量に速さを反映
+		velocity_ = Normalize(velocity_) * speed;
+
+		// 移動ベクトルをカメラの角度だけ回転する
+		velocity_ = TransformNormal(
+		    velocity_, Multiply(Multiply(
+				MakeRotateXMatrix(viewProjection_->rotation_.x), 
+				MakeRotateYMatrix(-viewProjection_->rotation_.y)), 
+				MakeRotateZMatrix(viewProjection_->rotation_.z)));
+
+		// 移動
+		worldTransform_.translation_ += velocity_;
+
 		// スティックによる移動入力がある
 		// ロックオン状態なら
 		if (lockOn_->ExistTarget()) {
@@ -140,32 +163,17 @@ void Player::BehaviorRootUpdate() {
 
 			// y軸周りの角度
 			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
-			
+
 		} else {
 
 			// 移動方向に見た目を合わせる
 			worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+
 			Vector3 moveZ = TransformNormal(velocity_, MakeRotateYMatrix(worldTransform_.rotation_.y));
 
 			worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
 		}
 	}
-
-	// 速さ
-	const float speed = 0.3f;
-
-	// 移動量
-	velocity_ = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
-
-	// 移動量に速さを反映
-	velocity_ = Normalize(velocity_) * speed;
-
-	// 移動ベクトルをカメラの角度だけ回転する
-	velocity_ = TransformNormal(
-	    velocity_, Multiply(Multiply(MakeRotateXMatrix(viewProjection_->rotation_.x), MakeRotateYMatrix(-viewProjection_->rotation_.y)), MakeRotateZMatrix(viewProjection_->rotation_.z)));
-
-	// 移動
-	worldTransform_.translation_ += velocity_;
 
 	// 浮遊処理
 	UpdateFloatingGimmick();
@@ -191,22 +199,22 @@ void Player::BehaviorAttackUpdate() {
 		worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
 
 		//// 距離
-		//float distance = Length(sub);
+		// float distance = Length(sub);
 
 		//// 距離しきい値
-		//const float threshold = 0.2f;
+		// const float threshold = 0.2f;
 
 		//// しきい値より離れている時のみ
-		//if (distance > threshold) {
+		// if (distance > threshold) {
 
 		//	// しきい値を超える速さなら補正する
 		//	if (speed > distance - threshold) {
-		//	
+		//
 		//		// ロックオン対象へのめりこみ防止
 		//		speed = distance - threshold;
 		//	}
 		//}
-	} 
+	}
 
 	// 加速フェーズ
 	if (weaponAngle_ < (startAngleWeapon_ + endAngleWeapon_) / 2.0f && velocity_.y < maxVelocity_) {
@@ -275,7 +283,7 @@ void Player::ApplyGlobalVariables() {
 }
 
 // 中心座標を取得
-Vector3 Player::GetCenterPosition() const { 
+Vector3 Player::GetCenterPosition() const {
 
 	// ローカル座標でのオフセット
 	const Vector3 offset = {0.0f, 1.5f, 0.0f};
