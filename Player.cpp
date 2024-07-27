@@ -317,6 +317,9 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformLeftArm_.translation_ = {-1.8f, 3.0f, 0.0f};
 	worldTransformRightArm_.translation_ = {1.8f, 3.0f, 0.0f};
 
+	hammer_ = std::make_unique<Hammer>();
+	hammer_->Initialize(models_[kModelIndexWeapon], &worldTransformBody_);
+	
 	// 浮遊の初期化
 	InitializeFloatingGimmick();
 
@@ -391,6 +394,8 @@ void Player::Update() {
 
 	ApplyGlobalVariables();
 
+	hammer_->Update();
+
 	// 行列の再計算と転送
 	BaseCharacter::Update();
 	worldTransformBody_.UpdateMatrix();
@@ -409,4 +414,8 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[kModelIndexCore]->Draw(worldTransformCore_, viewProjection);
 	models_[kModelIndexL_Arm]->Draw(worldTransformLeftArm_, viewProjection);
 	models_[kModelIndexR_Arm]->Draw(worldTransformRightArm_, viewProjection);
+
+	if (behavior_ == Behavior::kAttack) {
+		hammer_->Draw(viewProjection);
+	}
 }

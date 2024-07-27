@@ -18,7 +18,6 @@
 #include "CollisionManager.h"
 #include "Player.h"
 #include "Enemy.h"
-#include "Hammer.h"
 #include "SkyDome.h"
 #include "Ground.h"
 #include "FollowCamera.h"
@@ -127,9 +126,6 @@ private: // メンバ変数
 	// LockOn
 	std::unique_ptr<Sprite> lockOnMark_;
 	std::unique_ptr<LockOn> lockOn_;
-
-	// PlayerWeapon
-	std::unique_ptr<Hammer> hammer_;
 
 	/* //////////////////////////////////////
 	                 Field

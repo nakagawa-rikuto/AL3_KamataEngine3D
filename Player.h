@@ -11,12 +11,12 @@
 
 #include "BaseCharacter.h"
 #include "Collider.h"
+#include "Hammer.h"
 #include "MyMath.h"
 #include "imgui.h"
 
 // 前方宣言
 class LockOn;
-class Hammer;
 
 /// <summary>
 /// 自キャラ
@@ -25,7 +25,7 @@ class Player : public BaseCharacter {
 public:
 
 	// PlayerModel
-	enum ModelNum { kModelIndexBody, kModelIndexFace, kModelIndexCore, kModelIndexL_Arm, kModelIndexR_Arm };
+	enum ModelNum { kModelIndexBody, kModelIndexFace, kModelIndexCore, kModelIndexL_Arm, kModelIndexR_Arm, kModelIndexWeapon };
 
 	// 振る舞い(ビヘイビア)
 	enum class Behavior {
@@ -48,12 +48,6 @@ public:
 	/// </summary>
 	/// <param name="lockOn"></param>
 	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
-
-	/// <summary>
-	/// Hammerを取得
-	/// </summary>
-	/// <param name="hammer"></param>
-	void SetHammer(Hammer* hammer) { hammer_ = hammer; }
 
 	/// <summary>
 	/// PlayerのWorldTransformを取得
@@ -85,6 +79,12 @@ public:
 	/// <returns></returns>
 	Vector3 GetCenterPosition() const override;
 
+	/// <summary>
+	/// ハンマーのポインターを取得
+	/// </summary>
+	/// <returns></returns>
+	Hammer* GetHammer() { return hammer_.get(); }
+
 	/* ///////////////////////////////////////////////
 	                    衝突判定
 	*/ ///////////////////////////////////////////////
@@ -112,7 +112,7 @@ private: /* メンバ変数 */
 
 	Input* input_ = nullptr;
 	LockOn* lockOn_ = nullptr;
-	Hammer* hammer_ = nullptr;
+	std::unique_ptr<Hammer> hammer_;
 
 	// 振る舞い
 	Behavior behavior_ = Behavior::kRoot;

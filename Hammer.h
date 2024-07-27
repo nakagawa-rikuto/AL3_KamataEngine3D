@@ -13,9 +13,6 @@
 #include "MyMath.h"
 #include "imgui.h"
 
-// 前方宣言
-class Player;
-
 /// <summary>
 /// 武器
 /// </summary>
@@ -33,12 +30,6 @@ public:
 	/// </summary>
 	/// <param name="rotation"></param>
 	void SetRotate(const Vector3& rotation); 
-
-	/// <summary>
-	/// Playerのセット
-	/// </summary>
-	/// <param name="player"></param>
-	void SetPlayer(Player* player);
 
 	/// <summary>
 	/// 中心座標の取得
@@ -75,7 +66,6 @@ public:
 	void Draw(const ViewProjection &viewProjection);
 
 private:
-	Player* player_;
 
 	Model* model_ = nullptr;        // モデル
 	WorldTransform worldTransform_; // WorldTransform
