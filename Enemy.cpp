@@ -34,6 +34,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = Vector3(5.0f, 0.0f, 10.0f);
+	worldTransform_.scale_ = {1.5f, 1.5f, 1.5f};
 	worldTransformBody_.Initialize();
 	worldTransformWeapon_.Initialize();
 

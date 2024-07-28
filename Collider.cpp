@@ -10,7 +10,10 @@ void Collider::SetRadius(float& radius) {
 }
 
 // 初期化
-void Collider::Initialize() { worldTransform_.Initialize(); }
+void Collider::Initialize() { 
+	worldTransform_.Initialize(); 
+	worldTransform_.scale_ = {1.5f, 1.5f, 1.5f};
+}
 
 // 描画
 void Collider::UpdateWorldTransform() {
