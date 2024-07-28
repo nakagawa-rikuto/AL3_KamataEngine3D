@@ -204,15 +204,15 @@ void GameScene::Initialize() {
 /// </summary>
 void GameScene::Update() {
 
+	// 衝突判定と応答
+	CheckAllCollisions();
+
 #ifdef _DEBUG
 
 	// デバッグ表示用にワールドトランスフォームを更新
 	collisionManeger_->UpdateWorldTransform();
 
 #endif // DEBUG
-
-	// 衝突判定と応答
-	CheckAllCollisions();
 
 	// 　自キャラの更新
 	player_->Update();

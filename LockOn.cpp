@@ -50,6 +50,8 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 	// コントローラーの状態を取得する
 	dwResult = XInputGetState(0, &joyState);
 
+	//Input::GetInstance()->GetJoystickStatePrevious(0, joyState);
+
 	// 移動処理
 	// ジョイスティックが有効なら
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
@@ -61,7 +63,7 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 			if (target_ ? true : false) {
 
 				/* C.ロックオン解放処理 */
-				if (joyState.Gamepad.sThumbRX & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 
 					// ロックオンを外す
 					target_ = nullptr;
@@ -76,7 +78,7 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, const View
 
 				/* A.ロックオン対象の検索 */
 				// ロックオンボタンをトリガーしたら
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 
 					// ロックオン対象の検索
 					Search(enemies, viewProjection);

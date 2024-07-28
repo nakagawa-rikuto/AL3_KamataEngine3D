@@ -129,13 +129,13 @@ void Player::BehaviorRootUpdate() {
 		}
 
 		// 速さ
-		const float speed = 0.3f;
+		const float speed = 0.5f;
 
 		// 移動量
 		velocity_ = {
-			(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 
+		    (float) joyState.Gamepad.sThumbLX / SHRT_MAX, 
 			0.0f, 
-			(float)joyState.Gamepad.sThumbLY / SHRT_MAX
+			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
 		};
 
 		// 移動量に速さを反映
@@ -151,7 +151,6 @@ void Player::BehaviorRootUpdate() {
 		// 移動
 		worldTransform_.translation_ += velocity_;
 
-		// スティックによる移動入力がある
 		// ロックオン状態なら
 		if (lockOn_->ExistTarget()) {
 
@@ -348,6 +347,9 @@ void Player::Update() {
 		GlobalVariables::GetInstance()->SaveFile("Player");
 	}
 
+	// ハンマーの更新
+	hammer_->Update();
+
 	/* /////////////////
 	  Behavior遷移の実装
 	*/ /////////////////
@@ -393,8 +395,6 @@ void Player::Update() {
 	}
 
 	ApplyGlobalVariables();
-
-	hammer_->Update();
 
 	// 行列の再計算と転送
 	BaseCharacter::Update();

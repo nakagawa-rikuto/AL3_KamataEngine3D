@@ -59,17 +59,15 @@ void FollowCamera::Update() {
 	// ロックオン中
 	if (lockOn_->ExistTarget()) {
 
-		Move();
-
 		LockOnMove();
 	} 
 	// ロックオン中じゃない
 	else {
 
-		Move();
-
 		Rotate();
 	}
+
+	Move();
 
 	// ビュー行列の更新
 	viewProjection_.UpdateMatrix();

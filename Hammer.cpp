@@ -28,9 +28,13 @@ void Hammer::Initialize(Model* model, const WorldTransform* worldTransform) {
 }
 
 // 更新
-void Hammer::Update() { worldTransform_.UpdateMatrix(); }
+void Hammer::Update() { 
+
+	worldTransform_.UpdateMatrix(); 
+}
 
 // 描画
 void Hammer::Draw(const ViewProjection& viewProjection) { 
+
 	model_->Draw(worldTransform_, viewProjection); 
 }

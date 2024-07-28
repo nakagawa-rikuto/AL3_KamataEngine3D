@@ -10,9 +10,6 @@ void BaseCharacter::Initialize(const std::vector<Model*>& models) {
 
 	// ワールド変換データの初期化
 	worldTransform_.Initialize();
-
-	// コライダーの初期化
-	Collider::Initialize();
 }
 
 /// <summary>

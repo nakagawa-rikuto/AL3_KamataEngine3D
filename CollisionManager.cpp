@@ -13,9 +13,13 @@ void CollisionManager::Reset() {
 /// <summary>
 /// 登録
 /// </summary>
-void CollisionManager::AddCollider(Collider* colliders) { 
+void CollisionManager::AddCollider(Collider* colliders) {
 
-	colliders_.push_back(colliders); 
+	colliders_.push_back(colliders);
+	for (Collider* collider : colliders_) {
+
+		collider->Initialize();
+	}
 }
 
 /// <summary>
@@ -23,7 +27,7 @@ void CollisionManager::AddCollider(Collider* colliders) {
 /// </summary>
 /// <param name="colliderA"></param>
 /// <param name="colliderB"></param>
-void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) { 
+void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
 
 	// コライダーAの座標を取得
 	Vector3 positionA = colliderA->GetCenterPosition();
@@ -74,9 +78,9 @@ void CollisionManager::CheckAllCollisiions() {
 }
 
 // 初期化
-void CollisionManager::Initialize() { 
+void CollisionManager::Initialize() {
 	// モデルの読み込み
-	debugModel_.reset(Model::CreateFromOBJ("ColliderModel", true)); 
+	debugModel_.reset(Model::CreateFromOBJ("ColliderModel", true));
 
 	// フラグの初期化
 	isDisPlaye_ = true;
@@ -111,7 +115,7 @@ void CollisionManager::UpdateWorldTransform() {
 // 描画
 void CollisionManager::Draw(const ViewProjection& viewProjection) {
 
-		// 非表示なら抜ける
+	// 非表示なら抜ける
 	if (!isDisPlaye_) {
 
 		return;
@@ -125,8 +129,8 @@ void CollisionManager::Draw(const ViewProjection& viewProjection) {
 	}
 }
 
-void CollisionManager::ApplyGlobaVariables() { 
-	
+void CollisionManager::ApplyGlobaVariables() {
+
 	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Collider";
 	isDisPlaye_ = globalVariables->GetBoolValue(groupName, "IsDisPlay");
