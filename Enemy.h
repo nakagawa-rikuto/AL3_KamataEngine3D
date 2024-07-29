@@ -4,17 +4,17 @@
 #include "WorldTransform.h"
 #include "cassert"
 
+class Player;
 
 /// <summary>
 /// 敵
 /// </summary>
 class Enemy {
 private:
-
 	/*//////////////////////////////////////////////////////////////////////
 	                           メンバ変数
 	*///////////////////////////////////////////////////////////////////////
-	
+
 	// WorldTransform
 	WorldTransform worldTransform_;
 
@@ -32,6 +32,13 @@ private:
 
 	// 速度
 	Vector3 velocity_ = {};
+
+	/*///////////////////////////////////////////
+	        　　     衝突判定
+	*////////////////////////////////////////////
+	// キャラクターの当たり判定サイズ
+	static inline const float kWidth_ = 1.6f;
+	static inline const float kHeight_ = 1.6f;
 
 	/*///////////////////////////////////////////
 	        　　     アニメーション
@@ -52,8 +59,11 @@ private:
 
 	float radian_;
 
-public:
+private: /* メンバ関数 */
 
+	
+
+public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -71,4 +81,20 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
+
+	/// <summary>
+	/// 衝突判定
+	/// </summary>
+	void OnCollision(const Player* player);
+
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
+	/// <summary>
+	/// AABBを取得
+	/// </summary>
+	AABB GetAABB();
 };

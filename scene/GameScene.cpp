@@ -10,7 +10,7 @@ void GameScene::GenerateBlocks() {
 	// 要素数を変更する
 	// 列数を設定(縦方向のブロック数)
 	worldTransformBlocks_.resize(numBlockVirtical);
-	//for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+	// for (uint32_t i = 0; i < numBlockVirtical; ++i) {
 
 	//	// 1列の要素数を設定(横方向のブロック数)
 	//	worldTransformBlocks_[i].resize(numBlockHorizontal);
@@ -23,7 +23,7 @@ void GameScene::GenerateBlocks() {
 			// 1列の要素数を設定(横方向のブロック数)
 			worldTransformBlocks_[i].resize(numBlockHorizontal);
 
-			if (mapChipField_->GetMapChipTypeByIndex(j,i) == MapChipType::kBlock) {
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
 				worldTransformBlocks_[i][j] = worldTransform;
@@ -33,8 +33,42 @@ void GameScene::GenerateBlocks() {
 	}
 }
 
+void GameScene::CheckAllCollisions(){
+#pragma region 自キャラと敵キャラの当たり判定
 
-GameScene::GameScene() {}
+	// 判定対象1と2の座標
+	AABB aabb1, aabb2;
+
+	// 自キャラの座標
+	aabb1 = player_->GetAABB();
+
+	// 自キャラと敵弾すべての当たり判定
+	for (Enemy* enemy : enemies_) {
+
+		// 敵弾の座標
+		aabb2 = enemy->GetAABB();
+
+		// AABB同士の交差判定
+		if (IsCollision(aabb1, aabb2)) {
+			// 自キャラの衝突時コールバックを呼び出す
+			player_->OnCollision(enemy);
+			
+			// 敵弾の衝突時コールバックを呼び出す
+			enemy->OnCollision(player_);
+		}
+	}
+
+#pragma endregion
+
+#pragma region 自キャラとアイテムの当たり判定
+#pragma endregion
+
+#pragma region 自弾と敵キャラの当たり判定
+#pragma endregion
+}
+
+GameScene::GameScene() {
+}
 
 GameScene::~GameScene() {
 	delete model_;
@@ -42,7 +76,10 @@ GameScene::~GameScene() {
 	delete modelPlayer_;
 	delete modelEnemy_;
 	delete player_;
-	delete enemy_;
+	for (Enemy* enemies : enemies_) {
+
+		delete enemies;
+	}
 	delete skyDome_;
 	delete cameraController_;
 	delete mapChipField_;
@@ -85,7 +122,7 @@ void GameScene::Initialize() {
 	/// *************************************
 	/// Initialize
 	/// *************************************
-	
+
 	// viewProjectionの初期化
 	viewProjection_.Initialize();
 
@@ -104,9 +141,14 @@ void GameScene::Initialize() {
 	player_->SetMapChipField(mapChipField_);
 
 	// Enemy
-	enemy_ = new Enemy();
-	enemyPosition_ = mapChipField_->GetMapChipPositionByIndex(10, 18);
-	enemy_->Initialize(modelEnemy_, &viewProjection_, enemyPosition_);
+	for (int32_t i = 0; i < 3; ++i) {
+
+		Enemy* newEnemy = new Enemy();
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10 + i * 2, 18);
+		newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
+
+		enemies_.push_back(newEnemy);
+	}
 
 	// CameraController
 	cameraController_ = new CameraController();
@@ -133,7 +175,9 @@ void GameScene::Update() {
 
 	skyDome_->Update();
 	player_->Update();
-	enemy_->Update();
+	for (Enemy* enemies : enemies_) {
+		enemies->Update();
+	}
 	cameraController_->Update();
 
 	//  ブロックの更新
@@ -144,6 +188,9 @@ void GameScene::Update() {
 			worldTransformBlock->UpdateMatrix();
 		}
 	}
+
+	// 全ての当たり判定を行う
+	CheckAllCollisions();
 
 	/// *************************************
 	/// デバッグカメラの生清と解放
@@ -166,7 +213,7 @@ void GameScene::Update() {
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		
+
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
 	} else {
@@ -208,15 +255,16 @@ void GameScene::Draw() {
 	/// *************************************
 	skyDome_->Draw();
 	player_->Draw();
-	enemy_->Draw();
-
+	for (Enemy* enemies : enemies_) {
+		enemies->Draw();
+	}
 	// ブロックの描画
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock) {
 				continue;
 			}
-				
+
 			model_->Draw(*worldTransformBlock, viewProjection_);
 		}
 	}
@@ -238,4 +286,3 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
-

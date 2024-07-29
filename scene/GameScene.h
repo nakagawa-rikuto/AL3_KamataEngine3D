@@ -9,6 +9,7 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include <vector>
+#include <list>
 #include "skydome.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -29,13 +30,12 @@ private:
 	// クラス
 	skydome* skyDome_ = nullptr;                   // SkyDome
 	Player* player_ = nullptr;                     // Player
-	Enemy* enemy_ = nullptr;
+	std::list<Enemy*> enemies_;
 	MapChipField* mapChipField_ = nullptr;         // マップチップフィールド
 	CameraController* cameraController_ = nullptr; // CameraController
 
 	// Playerの座標
 	Vector3 playerPosition_;
-	Vector3 enemyPosition_;
 
 	// カメラの移動範囲
 	Vector4 cameraLimitMove_ = {0.0f, 100.0f, 0.0f, 100.0f};
@@ -103,6 +103,9 @@ public: // メンバ関数
 	/// 表示ブロックの生成
 	/// </summary>
 	void GenerateBlocks();
-
-
+	
+	/// <summary>
+	/// 全ての当たり判定を行う
+	/// </summary>
+	void CheckAllCollisions();
 };

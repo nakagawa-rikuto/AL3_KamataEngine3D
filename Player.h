@@ -7,6 +7,7 @@
 #include "imgui.h"
 
 class MapChipField;
+class Enemy;
 
 // 左右
 enum class LRDirection {
@@ -121,6 +122,10 @@ private:
 	//
 	static inline const float kBlank = 1.0f;
 
+private: /* メンバ関数 */
+
+	
+
 public:
 	/// <summary>
 	/// ImGui
@@ -185,6 +190,12 @@ public:
 	void CollisionLanding(const CollisionMapInfo& info, CollisionMapInfo& preInfo);
 
 	/// <summary>
+	/// 衝突判定
+	/// </summary>
+	/// <param name="enemy"></param>
+	void OnCollision(const Enemy* enemy);
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="model"></param>
@@ -212,6 +223,17 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	WorldTransform& GetWorldTransform() { return worldTransform_; }
+
+	/// <summary>
+	/// ゲッター
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
+	/// <summary>
+	/// AABBを取得
+	/// </summary>
+	AABB GetAABB();
 
 	/// <summary>
 	/// セッター

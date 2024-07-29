@@ -6,6 +6,12 @@
 #include <assert.h>
 #include <cmath>
 
+// AABB
+struct AABB {
+	Vector3 min; //!< 最小点
+	Vector3 max; //!< 最大点
+};
+
 // π
 float pi();
 
@@ -41,3 +47,10 @@ Vector3 Leap(const Vector3& start, const Vector3& end, float t);
 
 // 内積の計算
 float Dot(const Vector3& v1, const Vector3& v2);
+
+#pragma region 衝突判定
+
+// AABBとAABBの当たり判定
+bool IsCollision(const AABB& aabb1, const AABB& aabb2);
+
+#pragma endregion 
