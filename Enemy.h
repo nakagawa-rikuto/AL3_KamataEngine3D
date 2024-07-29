@@ -40,16 +40,13 @@ private:
 	static inline const float kWalkMotionAngleStart_ = 0.0f;
 
 	// 最後の角度[度]
-	static inline const float kWalkMotionAngleEnd_ = 360.0f;
+	static inline const float kWalkMotionAngleEnd_ = 50.0f;
 
 	// アニメーションの周期となる時間[秒]
 	static inline const float kWalkMotionTime_ = 1.0f;
 
 	// 経過時間
 	float walkTimer_ = 0.0f;
-
-	// x軸回り角度
-	//float rotateX_;
 
 	float param_;
 

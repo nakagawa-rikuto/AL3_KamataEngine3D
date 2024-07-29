@@ -113,3 +113,10 @@ Vector3 Leap(const Vector3& start, const Vector3& end, float t) {
 		return Vector3(start.x + (end.x - start.x) * t, start.y + (end.y - start.y) * t, start.z + (end.z - start.z) * t);
 	}
 }
+
+// 内積の計算
+float Dot(const Vector3& v1, const Vector3& v2) { 
+
+	float dot = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	return dot;
+}

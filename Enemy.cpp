@@ -42,7 +42,7 @@ void Enemy::Update() {
 	walkTimer_ += 1.0f / 60.0f;
 
 	// 回転アニメーション
-	param_ = std::sin(2 * pi() * walkTimer_ / kWalkMotionTime_);
+	param_ = std::sin((2 * pi()) * (walkTimer_ / kWalkMotionTime_));
 	radian_ = (kWalkMotionAngleStart_ + kWalkMotionAngleEnd_) * (param_ + 1.0f) / 2.0f;
 	worldTransform_.rotation_.x = radian_ * pi() / 180.0f;
 

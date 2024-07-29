@@ -38,3 +38,6 @@ float EaseIn(float t);
 
 // 線形補間関数 Leap
 Vector3 Leap(const Vector3& start, const Vector3& end, float t);
+
+// 内積の計算
+float Dot(const Vector3& v1, const Vector3& v2);
