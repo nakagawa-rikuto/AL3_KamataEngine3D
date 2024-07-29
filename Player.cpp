@@ -6,7 +6,7 @@
 #include "TextureManager.h"
 
 // 衝突判定
-void Player::OnCollision([[mayb_unused]] Collider* other) {
+void Player::OnCollision(Collider* other) {
 
 	// ジャンプリクエスト
 	behaviorRequest_ = Behavior::kJump;

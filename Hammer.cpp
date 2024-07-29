@@ -1,4 +1,6 @@
 #include "Hammer.h"
+#include "CollisionTypeIdDef.h"
+#include "Enemy.h"
 
 // 　回転の取得
 const Vector3& Hammer::GetRotate() const { return worldTransform_.rotation_; }
@@ -19,7 +21,19 @@ Vector3 Hammer::GetCenterPosition() const {
 }
 
 // 衝突判定
-void Hammer::OnCollision([[mayb_unused]] Collider* other) {}
+void Hammer::OnCollision(Collider* other) {
+
+	// 衝突相手の種別IDを取得
+	uint32_t typeID = other->GetTypeID();
+
+	// 衝突相手が敵なら
+	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::kEnemy)) {
+		//Enemy* enemy = static_cast<Enemy*>(other);
+
+		// 敵の位置にエフェクトを発生
+		// エフェクトを発生させる
+	}
+}
 
 // WorldTransformの初期化
 void Hammer::WorldTransformInitialize() { 
@@ -34,6 +48,9 @@ void Hammer::Initialize(Model* model, const WorldTransform* worldTransform) {
 	model_ = model;
 
 	worldTransform_.SetParent(worldTransform);
+
+	// 種別IDの設定
+	Collider::SetTypeID(static_cast<uint32_t>(CollisionTypeIdDef::kPlayerWeapon));
 }
 
 // 更新

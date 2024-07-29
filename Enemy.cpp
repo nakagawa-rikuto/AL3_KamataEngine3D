@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "CollisionTypeIdDef.h"
 
 // 移動処理
 void Enemy::Move() {
@@ -40,6 +41,9 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	// 親子関係の構築
 	worldTransformBody_.SetParent(&worldTransform_);
 	worldTransformWeapon_.SetParent(&worldTransform_);
+
+	// 種別IDの設定
+	Collider::SetTypeID(static_cast<uint32_t>(CollisionTypeIdDef::kEnemy));
 }
 
 // 更新

@@ -46,7 +46,7 @@ public:
 	/// <summary>
 	/// 衝突時に呼ばれる関数
 	/// </summary>
-	virtual void OnCollision([[mayb_unused]]Collider* other) override;
+	virtual void OnCollision(Collider* other) override;
 
 	/// <summary>
 	/// ワールド変換データを取得

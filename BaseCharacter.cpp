@@ -35,7 +35,7 @@ void BaseCharacter::Draw(const ViewProjection& viewProjection) {
 /// <summary>
 /// 衝突時に呼ばれる関数
 /// </summary>
-void BaseCharacter::OnCollision([[mayb_unused]] Collider* other) {}
+void BaseCharacter::OnCollision(Collider* other) {}
 
 /// <summary>
 /// ワールド変換データを取得
