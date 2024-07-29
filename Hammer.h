@@ -40,7 +40,7 @@ public:
 	/// <summary>
 	/// 衝突判定
 	/// </summary>
-	void OnCollision() override;
+	void OnCollision([[mayb_unused]] Collider* other) override;
 
 	/// <summary>
 	/// WorldTransformの初期化

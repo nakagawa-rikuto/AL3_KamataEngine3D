@@ -7,10 +7,19 @@ const Vector3& Hammer::GetRotate() const { return worldTransform_.rotation_; }
 void Hammer::SetRotate(const Vector3& rotation) { worldTransform_.rotation_ = rotation; }
 
 // 中心座標の取得
-Vector3 Hammer::GetCenterPosition() const { return Vector3(); }
+Vector3 Hammer::GetCenterPosition() const { 
+
+	// ローカル座標でのオフセット
+	const Vector3 offset = {0.0f, 10.0f, 0.0f};
+
+	// ワールド座標に変換
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+
+	return worldPos;
+}
 
 // 衝突判定
-void Hammer::OnCollision() {}
+void Hammer::OnCollision([[mayb_unused]] Collider* other) {}
 
 // WorldTransformの初期化
 void Hammer::WorldTransformInitialize() { 

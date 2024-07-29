@@ -9,6 +9,12 @@ void Collider::SetRadius(float& radius) {
 	radius_ = radius; 
 }
 
+// 種別IDを取得
+uint32_t Collider::GetTypeID() const { return typeID_; }
+
+// 種別IDを取得
+void Collider::SetTypeID(uint32_t typeID) { typeID_ = typeID; }
+
 // 初期化
 void Collider::Initialize() { 
 	worldTransform_.Initialize(); 

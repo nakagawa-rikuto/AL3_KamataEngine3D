@@ -6,7 +6,7 @@
 #include "TextureManager.h"
 
 // 衝突判定
-void Player::OnCollision() {
+void Player::OnCollision([[mayb_unused]] Collider* other) {
 
 	// ジャンプリクエスト
 	behaviorRequest_ = Behavior::kJump;
@@ -138,15 +138,15 @@ void Player::BehaviorRootUpdate() {
 			(float)joyState.Gamepad.sThumbLY / SHRT_MAX,
 		};
 
-		// 移動量に速さを反映
-		velocity_ = Normalize(velocity_) * speed;
-
 		// 移動ベクトルをカメラの角度だけ回転する
 		velocity_ = TransformNormal(
 		    velocity_, Multiply(Multiply(
-				MakeRotateXMatrix(viewProjection_->rotation_.x), 
-				MakeRotateYMatrix(-viewProjection_->rotation_.y)), 
-				MakeRotateZMatrix(viewProjection_->rotation_.z)));
+				MakeRotateXMatrix(-viewProjection_->rotation_.x), 
+				MakeRotateYMatrix(viewProjection_->rotation_.y)), 
+				MakeRotateZMatrix(-viewProjection_->rotation_.z)));
+
+		// 移動量に速さを反映
+		velocity_ = Normalize(velocity_) * speed;
 
 		// 移動
 		worldTransform_.translation_ += velocity_;
@@ -340,6 +340,7 @@ void Player::Update() {
 
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.rotate", &worldTransform_.rotation_.x, 0.01f);
+	ImGui::DragFloat3("worldTransformBody.rotate", &worldTransformBody_.rotation_.x, 0.01f);
 	ImGui::DragFloat("weaponAngle", &weaponAngle_, 0.1f);
 
 	if (input_->TriggerKey(DIK_SPACE)) {

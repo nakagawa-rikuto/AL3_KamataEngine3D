@@ -24,6 +24,18 @@ public:
 	void SetRadius(float& radius);
 
 	/// <summary>
+	/// 種別IDを取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetTypeID() const;
+
+	/// <summary>
+	/// 種別IDを取得
+	/// </summary>
+	/// <param name="typeID"></param>
+	void SetTypeID(uint32_t typeID);
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize();
@@ -42,11 +54,14 @@ public: /* 仮想関数 */
 	/// <summary>
 	/// 衝突時に呼ばれる関数
 	/// </summary>
-	virtual void OnCollision() {}
+	virtual void OnCollision([[mybe_unused]]Collider* other) {}
 
 private: /* メンバ変数 */
 	// 衝突半径
 	float radius_ = 1.5f;
+
+	// 種別ID
+	uint32_t typeID_ = 0u;
 
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
