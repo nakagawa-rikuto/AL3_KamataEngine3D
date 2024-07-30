@@ -123,6 +123,9 @@ GameScene::~GameScene() {
 	worldTransformBlocks_.clear();
 }
 
+// Getter
+bool GameScene::IsFinished() { return finished_; }
+
 void GameScene::Initialize() {
 
 	/// *************************************
@@ -206,6 +209,11 @@ void GameScene::Update() {
 	/// *************************************
 	/// 更新
 	/// *************************************
+
+	if (deathParticles_ && deathParticles_->IsFinished()) {
+
+		finished_ = true;
+	}
 
 	// フェーズの変更
 	ChangPhase();

@@ -1,19 +1,22 @@
 #pragma once
 
 #include "Audio.h"
-#include "CameraController.h"
-#include "DeathParticles.h"
-#include "DebugCamera.h"
 #include "DirectXCommon.h"
-#include "Enemy.h"
 #include "Input.h"
-#include "MapChipField.h"
 #include "Model.h"
-#include "Player.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+
+
+#include "CameraController.h"
+#include "DeathParticles.h"
+#include "DebugCamera.h"
+#include "Player.h"
+#include "Enemy.h"
 #include "skydome.h"
+#include "MapChipField.h"
+
 #include <list>
 #include <vector>
 
@@ -36,6 +39,9 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+
+	// 終了フラグ
+	bool finished_ = false;
 
 	// クラス
 	skydome* skyDome_ = nullptr; // SkyDome
@@ -102,6 +108,12 @@ public: // メンバ関数
 	/// デストラクタ
 	/// </summary>
 	~GameScene();
+
+	/// <summary>
+	/// デスフラグのGetter
+	/// </summary>
+	/// <returns></returns>
+	bool IsFinished();
 
 	/// <summary>
 	/// 初期化

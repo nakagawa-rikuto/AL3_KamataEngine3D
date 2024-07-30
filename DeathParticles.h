@@ -21,6 +21,12 @@ class DeathParticles {
 public: 
 
 	/// <summary>
+	/// デスフラグのGetter
+	/// </summary>
+	/// <returns></returns>
+	bool IsFinished();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize(Model* model, ViewProjection* viewProjection, Vector3 position);
