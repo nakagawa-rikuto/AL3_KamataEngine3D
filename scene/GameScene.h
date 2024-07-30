@@ -15,6 +15,7 @@
 #include "Enemy.h"
 #include "CameraController.h"
 #include "MapChipField.h"
+#include "DeathParticles.h"
 
 /// <summary>
 /// ゲームシーン
@@ -33,6 +34,7 @@ private:
 	std::list<Enemy*> enemies_;
 	MapChipField* mapChipField_ = nullptr;         // マップチップフィールド
 	CameraController* cameraController_ = nullptr; // CameraController
+	DeathParticles* deathParticles_ = nullptr;     // パーティクル
 
 	// Playerの座標
 	Vector3 playerPosition_;
@@ -50,6 +52,7 @@ private:
 	Model* modelSkyDome_ = nullptr;
 	Model* modelPlayer_ = nullptr;
 	Model* modelEnemy_ = nullptr;
+	Model* modelParticle_ = nullptr;
 
 	// 3Dモデルデータ
 	Model* model_ = nullptr;

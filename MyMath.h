@@ -36,6 +36,9 @@ Matrix4x4 Mutiply(const Matrix4x4& m1, const Matrix4x4& m2);
 // 3次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 
+// 座標変換
+Vector3 Transform(Vector3 vector, Matrix4x4 matrix);
+
 // EaseOut関数
 float EaseOut(float t);
 

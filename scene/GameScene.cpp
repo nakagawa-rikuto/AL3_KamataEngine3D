@@ -75,6 +75,7 @@ GameScene::~GameScene() {
 	delete modelSkyDome_;
 	delete modelPlayer_;
 	delete modelEnemy_;
+	delete modelParticle_;
 	delete player_;
 	for (Enemy* enemies : enemies_) {
 
@@ -83,6 +84,7 @@ GameScene::~GameScene() {
 	delete skyDome_;
 	delete cameraController_;
 	delete mapChipField_;
+	delete deathParticles_;
 	delete debugCamera_;
 
 	/// *************************************
@@ -118,6 +120,7 @@ void GameScene::Initialize() {
 	modelSkyDome_ = Model::CreateFromOBJ("skydome", true);
 	modelPlayer_ = Model::CreateFromOBJ("Player", true);
 	modelEnemy_ = Model::CreateFromOBJ("Enemy", true);
+	modelParticle_ = Model::CreateFromOBJ("Particle", true);
 
 	/// *************************************
 	/// Initialize
@@ -157,6 +160,10 @@ void GameScene::Initialize() {
 	cameraController_->SetMovableArea(cameraLimitMove_);
 	cameraController_->Reset();
 
+	// 生成テスト
+	deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(modelParticle_, &viewProjection_, playerPosition_);
+
 	// 表示ブロックの生成
 	GenerateBlocks();
 
@@ -191,6 +198,11 @@ void GameScene::Update() {
 
 	// 全ての当たり判定を行う
 	CheckAllCollisions();
+
+	if (deathParticles_) {
+
+		deathParticles_->Update();
+	}
 
 	/// *************************************
 	/// デバッグカメラの生清と解放
@@ -267,6 +279,11 @@ void GameScene::Draw() {
 
 			model_->Draw(*worldTransformBlock, viewProjection_);
 		}
+	}
+
+	if (deathParticles_) {
+
+		deathParticles_->Draw();
 	}
 
 	// 3Dオブジェクト描画後処理
