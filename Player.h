@@ -57,6 +57,9 @@ private:
 	// 速度
 	Vector3 velocity_ = {};
 
+	// デスフラグ
+	bool isDead_ = false;
+
 	// 左右
 	LRDirection lrDirection_ = LRDirection::kRight;
 
@@ -234,6 +237,12 @@ public:
 	/// AABBを取得
 	/// </summary>
 	AABB GetAABB();
+
+	/// <summary>
+	/// デスフラグのGetter
+	/// </summary>
+	/// <returns></returns>
+	bool IsDead() const;
 
 	/// <summary>
 	/// セッター

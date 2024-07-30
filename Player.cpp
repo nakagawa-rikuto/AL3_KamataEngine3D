@@ -17,6 +17,9 @@ AABB Player::GetAABB() {
 	return aabb;
 }
 
+// デスフラグのGetter
+bool Player::IsDead() const { return isDead_; }
+
 void Player::ImGuiDebug(CollisionMapInfo& info, CollisionMapInfo& preInfo) {
 
 #ifdef _DEBUG
@@ -597,8 +600,8 @@ void Player::CollisionLanding(const CollisionMapInfo& info, CollisionMapInfo& pr
 void Player::OnCollision(const Enemy* enemy) { 
 	(void)enemy;
 
-	// ジャンプ開始(仮処理)
-	velocity_.y += 0.5f;
+	//　デスフラグを立てる
+	isDead_ = true;
 }
 
 // 初期化
@@ -684,8 +687,11 @@ void Player::Update() {
 // 描画
 void Player::Draw() {
 
-	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *viewProjection_);
+	if (!isDead_) {
+
+		// 3Dモデルを描画
+		model_->Draw(worldTransform_, *viewProjection_);
+	}
 }
 
 // ワールド座標を取得

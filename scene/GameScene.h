@@ -1,21 +1,21 @@
 #pragma once
 
 #include "Audio.h"
+#include "CameraController.h"
+#include "DeathParticles.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "Enemy.h"
 #include "Input.h"
+#include "MapChipField.h"
 #include "Model.h"
+#include "Player.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "DebugCamera.h"
-#include <vector>
-#include <list>
 #include "skydome.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "CameraController.h"
-#include "MapChipField.h"
-#include "DeathParticles.h"
+#include <list>
+#include <vector>
 
 /// <summary>
 /// ゲームシーン
@@ -23,14 +23,23 @@
 class GameScene {
 
 private:
+	// ゲームのフェーズ（型）
+	enum class Phase {
+		kPlay,  // ゲームプレイ
+		kDeath, // デス演出
+	};
+
+	// ゲームの現在のフェーズ（変数）
+	Phase phase_;
+
 	// メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
 	// クラス
-	skydome* skyDome_ = nullptr;                   // SkyDome
-	Player* player_ = nullptr;                     // Player
+	skydome* skyDome_ = nullptr; // SkyDome
+	Player* player_ = nullptr;   // Player
 	std::list<Enemy*> enemies_;
 	MapChipField* mapChipField_ = nullptr;         // マップチップフィールド
 	CameraController* cameraController_ = nullptr; // CameraController
@@ -76,6 +85,13 @@ private:
 	/// *************************************
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
+private:
+
+	/// <summary>
+	/// フェーズの切り替え
+	/// </summary>
+	void ChangPhase();
+
 public: // メンバ関数
 	/// <summary>
 	/// コンストクラタ
@@ -106,7 +122,7 @@ public: // メンバ関数
 	/// 表示ブロックの生成
 	/// </summary>
 	void GenerateBlocks();
-	
+
 	/// <summary>
 	/// 全ての当たり判定を行う
 	/// </summary>
