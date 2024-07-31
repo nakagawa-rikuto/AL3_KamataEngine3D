@@ -118,6 +118,7 @@ GameScene::~GameScene() {
 	delete mapChipField_;
 	delete deathParticles_;
 	delete debugCamera_;
+	delete fade_;
 
 	/// *************************************
 	/// 解放
