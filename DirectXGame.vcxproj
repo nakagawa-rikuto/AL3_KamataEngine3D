@@ -111,6 +111,7 @@
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="CollisionEffect.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="CollisionTypeIdDef.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="CollisionEffect.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionTypeIdDef.h" />
     <ClInclude Include="Enemy.h" />
