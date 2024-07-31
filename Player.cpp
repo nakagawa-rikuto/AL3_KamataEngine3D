@@ -4,12 +4,15 @@
 #include "Hammer.h"
 #include "LockOn.h"
 #include "TextureManager.h"
+#include "CollisionTypeIdDef.h"
 
 // 衝突判定
 void Player::OnCollision(Collider* other) {
 
-	// ジャンプリクエスト
-	behaviorRequest_ = Behavior::kJump;
+	// 衝突相手の種別IDを取得
+	uint32_t typeID = other->GetTypeID();
+	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::kDefault)) {
+	}
 }
 
 /* ///////////////////////////////////////////

@@ -1,4 +1,5 @@
 #include "Collider.h"
+#include "CollisionTypeIdDef.h"
 
 // 半径の取得
 float Collider::GetRadius() const { return radius_; }
@@ -33,4 +34,12 @@ void Collider::Draw(Model* model, const ViewProjection& viewProjection) {
 
 	// モデルの描画
 	model->Draw(worldTransform_, viewProjection);
+}
+
+void Collider::OnCollision(Collider* other) {
+
+	// 衝突相手の種別IDを取得
+	uint32_t typeID = other->GetTypeID();
+	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::kDefault)) {
+	}
 }

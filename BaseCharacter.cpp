@@ -1,4 +1,5 @@
 #include "BaseCharacter.h"
+#include "CollisionTypeIdDef.h"
 
 /// <summary>
 /// 初期化
@@ -35,7 +36,11 @@ void BaseCharacter::Draw(const ViewProjection& viewProjection) {
 /// <summary>
 /// 衝突時に呼ばれる関数
 /// </summary>
-void BaseCharacter::OnCollision(Collider* other) {}
+void BaseCharacter::OnCollision(Collider* other) {
+	// 衝突相手の種別IDを取得
+	uint32_t typeID = other->GetTypeID();
+	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::kDefault)) {}
+}
 
 /// <summary>
 /// ワールド変換データを取得

@@ -54,7 +54,7 @@ public: /* 仮想関数 */
 	/// <summary>
 	/// 衝突時に呼ばれる関数
 	/// </summary>
-	virtual void OnCollision(Collider* other) {}
+	virtual void OnCollision(Collider* other);
 
 private: /* メンバ変数 */
 	// 衝突半径
