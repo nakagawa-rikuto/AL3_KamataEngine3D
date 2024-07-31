@@ -31,6 +31,16 @@ public: /* メンバ関数 */
 	bool IsFinished() const;
 
 	/// <summary>
+	/// コンストラクト
+	/// </summary>
+	Fade();
+
+	/// <summary>
+	/// デストラクト
+	/// </summary>
+	~Fade();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize();

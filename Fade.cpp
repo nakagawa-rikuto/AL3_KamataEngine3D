@@ -40,6 +40,10 @@ bool Fade::IsFinished() const {
 	return true;
 }
 
+Fade::Fade() {}
+
+Fade::~Fade() { delete sprite_; }
+
 /* //////////////////////////////////////////
                     初期化
 */ //////////////////////////////////////////
