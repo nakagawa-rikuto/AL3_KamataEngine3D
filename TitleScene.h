@@ -8,11 +8,19 @@
 #include "WorldTransform.h"
 #include "imgui.h"
 
+#include "Fade.h"
+
+// シーンのフェーズ
+enum class Phase {
+	kFadeIn,    // フェードイン 
+	kMain,      // メイン部
+	kFadeOut,   // フェードアウト
+};
+
 /// <summary>
 /// タイトルシーン
 /// </summary>
 class TitleScene {
-
 public: /* メンバ関数 */
 	/// <summary>
 	/// コンストクラタ
@@ -52,14 +60,18 @@ private: /* メンバ変数 */
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
+	// 現在のフェーズ
+	Phase phase_ = Phase::kFadeIn;
+
 	// 終了フラグ
 	bool finished_ = false;
 
-	
+	float speed_ = 0.03f;
+
+	Fade* fade_ = nullptr;
 
 	// モデル
 	Model* modelText_ = nullptr;
-	Model* modelPlayer_ = nullptr;
 
 	// worldTransform
 	WorldTransform text_;

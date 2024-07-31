@@ -10,8 +10,8 @@ TitleScene::TitleScene() {}
 */ //////////////////////////////////////////
 TitleScene::~TitleScene() {
 
+	delete fade_;
 	delete modelText_;
-	delete modelPlayer_;
 }
 
 // Getter
@@ -30,16 +30,16 @@ void TitleScene::Initialise() {
 	audio_ = Audio::GetInstance();
 
 	modelText_ = Model::CreateFromOBJ("Text", true);
-	modelPlayer_ = Model::CreateFromOBJ("Player", true);
 
 	viewProjection_.Initialize();
-	viewProjection_.translation_ = {0.0f, 0.0f, -10.0f};
 
 	text_.Initialize();
-	text_.translation_ = {0.0f, 50.0f, 0.0f};
 
 	player_.Initialize();
-	player_.translation_ = {0.0f, -30.0f, 0.0f};
+
+	fade_ = new Fade();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, 1.0f);
 }
 
 /* //////////////////////////////////////////
@@ -50,27 +50,52 @@ void TitleScene::Update() {
 #ifdef _DEBUG
 
 	ImGui::Begin("TitleScene");
-	ImGui::DragFloat3("view", &viewProjection_.translation_.x, 10.0f);
-	ImGui::DragFloat3("text", &text_.translation_.x, 10.0f);
-	ImGui::DragFloat3("player", &player_.translation_.x, 10.0f);
+	ImGui::DragFloat3("view", &viewProjection_.translation_.x, 1.0f);
+	ImGui::DragFloat3("text", &text_.translation_.x, 1.0f);
+	ImGui::DragFloat3("player", &player_.translation_.x, 1.0f);
 	ImGui::End();
 
 #endif // DEBUG
 
-	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+	switch (phase_) {
+	case Phase::kFadeIn:
 
-		finished_ = true;
+		fade_->Update();
+		if (fade_->IsFinished()) {
+
+			phase_ = Phase::kMain;
+		}
+
+		break;
+	case Phase::kMain:
+
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+
+			fade_->Start(Fade::Status::FadeOut, 1.0f);
+			phase_ = Phase::kFadeOut;
+		}
+
+		break;
+	case Phase::kFadeOut:
+
+		fade_->Update();
+		if (fade_->IsFinished()) {
+
+			finished_ = true;
+		}
+
+		break;
 	}
 
-	float speed = 0.1f;
-	text_.translation_.y += speed;
-	if (text_.translation_.y >= 100.0f || text_.translation_.y <= -50.0f) {
-		speed *= -1.0f;
+	text_.translation_.y += speed_;
+	if (text_.translation_.y >= 1.0f || text_.translation_.y <= -1.0f) {
+		speed_ *= -1.0f;
 	}
 
 	viewProjection_.UpdateMatrix();
 	text_.UpdateMatrix();
 	player_.UpdateMatrix();
+
 }
 
 /* //////////////////////////////////////////
@@ -107,13 +132,13 @@ void TitleScene::Draw() {
 	/// 描画
 	/// *************************************
 	modelText_->Draw(text_, viewProjection_);
-	modelText_->Draw(player_, viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
 
 #pragma region 前景スプライト描画
+
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
@@ -121,8 +146,10 @@ void TitleScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
+	// フェードの描画
+	fade_->Draw();
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
-
 #pragma endregion
 }

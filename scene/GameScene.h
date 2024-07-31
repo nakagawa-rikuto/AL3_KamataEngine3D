@@ -8,7 +8,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
-
+#include "Fade.h"
 #include "CameraController.h"
 #include "DeathParticles.h"
 #include "DebugCamera.h"
@@ -28,8 +28,10 @@ class GameScene {
 private:
 	// ゲームのフェーズ（型）
 	enum class Phase {
-		kPlay,  // ゲームプレイ
-		kDeath, // デス演出
+		kFadeIn, // フェードイン
+		kPlay,   // ゲームプレイ
+		kDeath,  // デス演出
+		kFadeOut,// フェードアウト
 	};
 
 	// ゲームの現在のフェーズ（変数）
@@ -44,6 +46,7 @@ private:
 	bool finished_ = false;
 
 	// クラス
+	Fade* fade_ = nullptr;
 	skydome* skyDome_ = nullptr; // SkyDome
 	Player* player_ = nullptr;   // Player
 	std::list<Enemy*> enemies_;

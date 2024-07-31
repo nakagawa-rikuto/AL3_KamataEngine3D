@@ -33,7 +33,7 @@ void GameScene::GenerateBlocks() {
 	}
 }
 
-void GameScene::CheckAllCollisions(){
+void GameScene::CheckAllCollisions() {
 #pragma region 自キャラと敵キャラの当たり判定
 
 	// 判定対象1と2の座標
@@ -52,7 +52,7 @@ void GameScene::CheckAllCollisions(){
 		if (IsCollision(aabb1, aabb2)) {
 			// 自キャラの衝突時コールバックを呼び出す
 			player_->OnCollision(enemy);
-			
+
 			// 敵弾の衝突時コールバックを呼び出す
 			enemy->OnCollision(player_);
 		}
@@ -88,6 +88,13 @@ void GameScene::ChangPhase() {
 
 		break;
 	case Phase::kDeath:
+
+		// パーティクルが終わったらフェーズアウトに移行を角
+		if (deathParticles_ && deathParticles_->IsFinished()) {
+
+			fade_->Start(Fade::Status::FadeOut, 1.0f);
+			phase_ = Phase::kFadeOut;
+		}
 
 		break;
 	}
@@ -198,10 +205,17 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(1280, 720);
 
 	/* //////////////////////////////////////
-					フェーズ
+	                フェード
+	*/ //////////////////////////////////////
+	fade_ = new Fade();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, 1.0f);
+
+	/* //////////////////////////////////////
+	                フェーズ
 	*/ //////////////////////////////////////
 	// ゲームプレイフェーズから開始
-	phase_ = Phase::kPlay;
+	phase_ = Phase::kFadeIn;
 }
 
 void GameScene::Update() {
@@ -210,43 +224,64 @@ void GameScene::Update() {
 	/// 更新
 	/// *************************************
 
-	if (deathParticles_ && deathParticles_->IsFinished()) {
-
-		finished_ = true;
-	}
-
 	// フェーズの変更
 	ChangPhase();
 
-	switch (phase_) { 
-	case Phase::kPlay:
+	switch (phase_) {
+	case Phase::kFadeIn:
+
+		fade_->Update();
+		if (fade_->IsFinished()) {
+
+			phase_ = Phase::kPlay;
+		}
 
 		skyDome_->Update(); // 天球の更新
 		player_->Update();  // 自キャラの更新
 		for (Enemy* enemies : enemies_) { // 敵の更新
 			enemies->Update();
-		}                  
+		}
 		cameraController_->Update(); // カメラコントローラの更新
-		debugCamera_->Update(); // カメラの更新
+		debugCamera_->Update();      // カメラの更新
 
 		// ブロックの更新
-		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { 
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
 					continue;
 				worldTransformBlock->UpdateMatrix();
 			}
 		}
-		
+
+		break;
+	case Phase::kPlay:
+
+		skyDome_->Update();               // 天球の更新
+		player_->Update();                // 自キャラの更新
+		for (Enemy* enemies : enemies_) { // 敵の更新
+			enemies->Update();
+		}
+		cameraController_->Update(); // カメラコントローラの更新
+		debugCamera_->Update();      // カメラの更新
+
+		// ブロックの更新
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				worldTransformBlock->UpdateMatrix();
+			}
+		}
+
 		CheckAllCollisions(); // 全ての当たり判定を行う
 
 		break;
 	case Phase::kDeath:
 
-		skyDome_->Update(); // 天球の更新
+		skyDome_->Update();               // 天球の更新
 		for (Enemy* enemies : enemies_) { // 敵の更新
 			enemies->Update();
-		}            
+		}
 		if (deathParticles_) { // パーティクル
 
 			deathParticles_->Update();
@@ -254,21 +289,30 @@ void GameScene::Update() {
 		debugCamera_->Update(); // カメラの更新
 
 		// ブロックの更新
-		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { 
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
 					continue;
 				worldTransformBlock->UpdateMatrix();
 			}
 		}
+
+		break;
+	case Phase::kFadeOut:
+
+		fade_->Update();
+		if (fade_->IsFinished()) {
+
+			finished_ = true;
+		}
+
 		break;
 	}
 
 #ifdef _DEBUG
-	if (input_->TriggerKey(DIK_SPACE)) {
-		isDebugCameraActive_ = true;
-	}
-
+    if (input_->TriggerKey(DIK_C)) {
+	    isDebugCameraActive_ = true;
+    }
 #endif // DEBUG
 
 	/// *************************************
@@ -351,6 +395,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	 
+	fade_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
