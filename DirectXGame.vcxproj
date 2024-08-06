@@ -113,6 +113,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CollisionEffect.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="CollisionRecord.cpp" />
     <ClCompile Include="CollisionTypeIdDef.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FollowCamera.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionEffect.h" />
     <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="CollisionRecord.h" />
     <ClInclude Include="CollisionTypeIdDef.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="FollowCamera.h" />

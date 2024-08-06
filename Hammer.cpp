@@ -33,12 +33,24 @@ void Hammer::OnCollision(Collider* other) {
 	// 衝突相手が敵なら
 	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::kEnemy)) {
 		Enemy* enemy = static_cast<Enemy*>(other);
+		uint32_t serialNumber = enemy->GetNumber();
+
+		// 接触履歴があれば何もせず抜ける
+		if (serialNumber) {
+			return;
+		}
+
+		// 接触履歴に登録
+		collisionRecord_.AddHistory(serialNumber);
 
 		// 敵の位置にエフェクトを発生
 		// エフェクトを発生させる
 		effect_->Start(enemy);
 	}
 }
+
+// 接触履歴を抹消
+void Hammer::CollisionRecordClear() { collisionRecord_.Clear(); }
 
 // WorldTransformの初期化
 void Hammer::WorldTransformInitialize() { 

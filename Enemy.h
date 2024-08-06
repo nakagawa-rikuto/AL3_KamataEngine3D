@@ -3,6 +3,10 @@
 
 class Enemy : public BaseCharacter {
 public:
+
+	// デフォルトコンストラクタ
+	Enemy();
+
 	/// <summary>
 	/// 移動処理
 	/// </summary>
@@ -13,6 +17,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetCenterPosition() const override;
+
+	/// <summary>
+	/// numberの取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetNumber() const;
 
 	/// <summary>
 	/// 初期化
@@ -31,11 +41,13 @@ public:
 	void Draw(const ViewProjection& viewProjection) override;
 
 private:
+	enum ModelNum { kModelIndexBody, kModelIndexWeapon };
 
-	enum ModelNum {
-		kModelIndexBody,
-		kModelIndexWeapon
-	};
+	// シリアルナンバー
+	uint32_t number_ = 0;
+
+	// 次のシリアルナンバー
+	static uint32_t nextNumber_;
 
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformWeapon_;

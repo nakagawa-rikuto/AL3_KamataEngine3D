@@ -10,6 +10,7 @@
 #include <optional>
 
 #include "Collider.h"
+#include "CollisionRecord.h"
 #include "MyMath.h"
 #include "imgui.h"
 
@@ -50,6 +51,11 @@ public:
 	void OnCollision(Collider* other) override;
 
 	/// <summary>
+	/// 接触履歴を抹消
+	/// </summary>
+	void CollisionRecordClear();
+
+	/// <summary>
 	/// WorldTransformの初期化
 	/// </summary>
 	void WorldTransformInitialize();
@@ -76,6 +82,9 @@ private:
 
 	// エフェクト
 	CollisionEffect* effect_ = nullptr;
+
+	// 接初期記録
+	CollisionRecord collisionRecord_;
 
 	Model* model_ = nullptr;        // モデル
 	WorldTransform worldTransform_; // WorldTransform

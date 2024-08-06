@@ -31,6 +31,7 @@ void Player::BehaviorRootInitialize() { velocity_ = {0.0f, 0.0f, 0.0f}; }
 void Player::BehaviorAttackInitialize() {
 
 	// 状態
+	hammer_->CollisionRecordClear();
 	hammer_->WorldTransformInitialize();
 	velocity_ = {};
 	weaponAngle_ = startAngleWeapon_; // 初期角度

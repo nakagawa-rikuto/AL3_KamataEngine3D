@@ -1,6 +1,17 @@
 #include "Enemy.h"
 #include "CollisionTypeIdDef.h"
 
+uint32_t Enemy::nextNumber_ = 0;
+
+Enemy::Enemy() {
+
+	// シリアルナンバーを振る
+	number_ = nextNumber_;
+
+	// 次の番号を加算
+	++nextNumber_;
+}
+
 // 移動処理
 void Enemy::Move() {
 
@@ -25,6 +36,9 @@ Vector3 Enemy::GetCenterPosition() const {
 	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
 	return worldPos;
 }
+
+// シリアルナンバーの取得
+uint32_t Enemy::GetNumber() const { return number_; }
 
 // 初期化
 void Enemy::Initialize(const std::vector<Model*>& models) {
