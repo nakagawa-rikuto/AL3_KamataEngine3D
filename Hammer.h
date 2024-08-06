@@ -13,6 +13,8 @@
 #include "MyMath.h"
 #include "imgui.h"
 
+class CollisionEffect;
+
 /// <summary>
 /// 武器
 /// </summary>
@@ -36,6 +38,11 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetCenterPosition() const override;
+
+	/// <summary>
+	/// エフェクトのSetter
+	/// </summary>
+	void SetEffect(CollisionEffect* effect);
 
 	/// <summary>
 	/// 衝突判定
@@ -66,6 +73,9 @@ public:
 	void Draw(const ViewProjection &viewProjection);
 
 private:
+
+	// エフェクト
+	CollisionEffect* effect_ = nullptr;
 
 	Model* model_ = nullptr;        // モデル
 	WorldTransform worldTransform_; // WorldTransform

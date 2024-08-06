@@ -19,6 +19,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "SkyDome.h"
+#include "CollisionEffect.h"
 #include "Ground.h"
 #include "FollowCamera.h"
 #include "LockOn.h"
@@ -119,6 +120,12 @@ private: // メンバ変数
 
 	// Enemy
 	std::list<std::unique_ptr<Enemy>> enemies_;
+
+	/* //////////////////////////////////////
+	                 Effect
+	*/ //////////////////////////////////////
+	// Effect
+	 std::unique_ptr<CollisionEffect> effect_;
 
 	/* //////////////////////////////////////
 	                 Object

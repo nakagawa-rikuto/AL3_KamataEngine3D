@@ -243,9 +243,10 @@ void Player::BehaviorAttackUpdate() {
 	hammer_->SetRotate(rotation);
 
 	// 角度を範囲に制限
-	if (weaponAngle_ >= 80.0f) {
+	if (weaponAngle_ >= 70.0f) {
 		weaponAngle_ = endAngleWeapon_;
 		velocity_ = {0.0f, 0.0f, 0.0f};     // 振り下げ完了時に速度をゼロにする
+		hammer_->WorldTransformInitialize();
 		behaviorRequest_ = Behavior::kRoot; // 動作リクエストを変更
 	}
 }
@@ -319,6 +320,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformLeftArm_.translation_ = {-1.8f, 3.0f, 0.0f};
 	worldTransformRightArm_.translation_ = {1.8f, 3.0f, 0.0f};
 
+	// ハンマーの生成
 	hammer_ = std::make_unique<Hammer>();
 	hammer_->Initialize(models_[kModelIndexWeapon], &worldTransformBody_);
 	

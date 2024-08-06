@@ -1,5 +1,6 @@
 #include "Hammer.h"
 #include "CollisionTypeIdDef.h"
+#include "CollisionEffect.h"
 #include "Enemy.h"
 
 // 　回転の取得
@@ -12,13 +13,16 @@ void Hammer::SetRotate(const Vector3& rotation) { worldTransform_.rotation_ = ro
 Vector3 Hammer::GetCenterPosition() const { 
 
 	// ローカル座標でのオフセット
-	const Vector3 offset = {0.0f, 10.0f, 0.0f};
+	const Vector3 offset = {0.0f, 12.5f, 4.0f};
 
 	// ワールド座標に変換
 	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
 
 	return worldPos;
 }
+
+// エフェクトのセット
+void Hammer::SetEffect(CollisionEffect* effect) { effect_ = effect; }
 
 // 衝突判定
 void Hammer::OnCollision(Collider* other) {
@@ -28,18 +32,17 @@ void Hammer::OnCollision(Collider* other) {
 
 	// 衝突相手が敵なら
 	if (typeID == static_cast<uint32_t>(CollisionTypeIdDef::kEnemy)) {
-		//Enemy* enemy = static_cast<Enemy*>(other);
+		Enemy* enemy = static_cast<Enemy*>(other);
 
 		// 敵の位置にエフェクトを発生
 		// エフェクトを発生させる
+		effect_->Start(enemy);
 	}
 }
 
 // WorldTransformの初期化
 void Hammer::WorldTransformInitialize() { 
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f}; 
-
-	Collider::Initialize();
 }
 
 // 初期化

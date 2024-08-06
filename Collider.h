@@ -1,7 +1,7 @@
 #pragma once
-#include "WorldTransform.h"
 #include "Model.h"
 #include "ViewProjection.h"
+#include "WorldTransform.h"
 
 #include "MyMath.h"
 #include "imgui.h"
@@ -11,12 +11,24 @@
 /// </summary>
 class Collider {
 public:
+	/* ////////////////////////////////////////////////////
+	                        Getter
+	*/ ////////////////////////////////////////////////////
 	/// <summary>
 	/// 半径の取得
 	/// </summary>
 	/// <returns></returns>
 	float GetRadius() const;
 
+	/// <summary>
+	/// 種別IDを取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetTypeID() const;
+
+	/* ////////////////////////////////////////////////////
+	                        Setter
+	*/ ////////////////////////////////////////////////////
 	/// <summary>
 	/// 半径を設定
 	/// </summary>
@@ -26,15 +38,10 @@ public:
 	/// <summary>
 	/// 種別IDを取得
 	/// </summary>
-	/// <returns></returns>
-	uint32_t GetTypeID() const;
-
-	/// <summary>
-	/// 種別IDを取得
-	/// </summary>
 	/// <param name="typeID"></param>
 	void SetTypeID(uint32_t typeID);
 
+public: /* 基本的な関数 */
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -58,7 +65,7 @@ public: /* 仮想関数 */
 
 private: /* メンバ変数 */
 	// 衝突半径
-	float radius_ = 1.5f;
+	float radius_ = 2.0f;
 
 	// 種別ID
 	uint32_t typeID_ = 0u;
@@ -67,5 +74,5 @@ private: /* メンバ変数 */
 	WorldTransform worldTransform_;
 
 private: /* ポリモーフィズム */
-	//virtual ~Collider() = default;
+	     // virtual ~Collider() = default;
 };

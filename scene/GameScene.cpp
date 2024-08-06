@@ -7,7 +7,7 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {}
 
 /// <summary>
-/// デバッグカメラの更新
+/// カメラの更新
 /// </summary>
 void GameScene::DebugCameraUpdate() {
 
@@ -36,7 +36,6 @@ void GameScene::DebugCameraUpdate() {
 		// viewProjection_.UpdateMatrix();
 	}
 }
-
 void GameScene::FollowCameraUpdate() {
 
 	// 追従カメラの更新
@@ -151,6 +150,14 @@ void GameScene::Initialize() {
 	}
 
 	/* /////////////////////////
+	          Effect
+	*/ /////////////////////////
+	// Effectの生成
+	effect_ = std::make_unique<CollisionEffect>();
+	effect_->Initialize();
+	player_->SetEffect(effect_.get());
+
+	/* /////////////////////////
 	          LockOn
 	*/ /////////////////////////
 	// ロックオンの生成
@@ -222,6 +229,9 @@ void GameScene::Update() {
 		enemy->Update();
 	}
 
+	// エフェクト
+	effect_->Update();
+
 	// ロックオン更新
 	lockOn_->Update(enemies_, viewProjection_);
 
@@ -288,6 +298,8 @@ void GameScene::Draw() {
 		// 敵キャラの描画
 		enemy->Draw(viewProjection_);
 	}
+
+	effect_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

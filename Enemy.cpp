@@ -49,6 +49,8 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 // 更新
 void Enemy::Update() {
 
+	ImGui::DragFloat3("EnemyWorldTransform", &worldTransformBody_.translation_.x, 0.1f);
+
 	Move();
 
 	// 行列の再計算と転送

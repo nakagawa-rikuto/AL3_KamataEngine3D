@@ -124,6 +124,10 @@ void CollisionManager::Draw(const ViewProjection& viewProjection) {
 	// 全てのコライダーについて
 	for (Collider* collider : colliders_) {
 
+		//// 衝突相手の種別IDを取得
+		//uint32_t typeID = collider->GetTypeID();
+		//if ()
+
 		// 更新
 		collider->Draw(debugModel_.get(), viewProjection);
 	}

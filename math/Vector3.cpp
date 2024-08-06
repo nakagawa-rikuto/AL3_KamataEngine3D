@@ -1,5 +1,14 @@
 #include "Vector3.h"
 
+Vector3& Vector3::operator+=(const float& obj) {
+	// TODO: return ステートメントをここに挿入します
+	this->x += obj;
+	this->y += obj;
+	this->z += obj;
+
+	return *this;
+}
+
 Vector3& Vector3::operator+=(Vector3& obj) {
 
 	this->x += obj.x;

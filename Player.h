@@ -11,6 +11,7 @@
 
 #include "BaseCharacter.h"
 #include "Collider.h"
+#include "CollisionEffect.h"
 #include "Hammer.h"
 #include "MyMath.h"
 #include "imgui.h"
@@ -48,6 +49,11 @@ public:
 	/// </summary>
 	/// <param name="lockOn"></param>
 	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
+
+	/// <summary>
+	/// Effectを取得
+	/// </summary>
+	void SetEffect(CollisionEffect* effect) { hammer_->SetEffect(effect); }
 
 	/// <summary>
 	/// PlayerのWorldTransformを取得
@@ -132,7 +138,7 @@ private: /* メンバ変数 */
 	const float acceleration_ = 0.1f; // 加速度
 	const float deceleration_ = 0.1f; // 減速度
 	const float startAngleWeapon_ = -30.0f;
-	const float endAngleWeapon_ = 100.0f;
+	const float endAngleWeapon_ = 80.0f;
 	const float moveSpeed_ = 0.5f;
 
 	// 状態
