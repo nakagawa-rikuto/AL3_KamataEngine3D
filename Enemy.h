@@ -12,7 +12,6 @@
 class Enemy {
 
 public:
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -29,6 +28,16 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
+
+	/// <summary>
+	/// 接近
+	/// </summary>
+	void Approach();
+
+	/// <summary>
+	/// 離脱
+	/// </summary>
+	void Leace();
 
 private:
 	// 行動フェーズ
@@ -53,4 +62,9 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
+	// メンバ関数ポインタ
+	void (Enemy::*pFunc)();
+
+	// メンバ関数ポインタのテーブル
+	static void (Enemy::*Phase[])();
 };
