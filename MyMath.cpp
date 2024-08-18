@@ -297,12 +297,20 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 // 球面線形補間
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
 
-	float dot = Dot(v1, v2);             // ベクトル間の内積
+	 float dot = Dot(v1, v2);             // ベクトル間の内積
 	dot = std::clamp(dot, -1.0f, 1.0f); // 内積の値をクランプ
 
-	float theta = std::acos(dot) * t; // θ角をtで補間
+	// θはv1とv2の間の角度
+	float theta = std::acos(dot);
+	 float sinTheta = std::sin(theta); // sin(θ) を計算
 
-	Vector3 relativeVec = Normalize(v2 - v1 * dot); // 相対ベクトルを正規化
+	if (sinTheta < 1e-6) {
+		// 角度が非常に小さい場合、Lerpで近似
+		return Lerp(v1, v2, t);
+	}
 
-	return v1 * std::cos(theta) + relativeVec * std::sin(theta);
+	float a = std::sin((1.0f - t) * theta) / sinTheta;
+	float b = std::sin(t * theta) / sinTheta;
+
+	return v1 * a + v2 * b;
 }

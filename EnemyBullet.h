@@ -62,10 +62,13 @@ private:
 	Vector3 velocity_;
 
 	// 補間割合
-	float t = 1.0f;
+	float t = 0.1f;
+
+	// 弾のスピード
+	float speed = 0.8f;
 
 	// 寿命
-	static const int32_t kLifeTime_ = 60 * 5;
+	static const int32_t kLifeTime_ = 50 * 5;
 
 	// デスタイマー
 	int32_t deathTimer_ = kLifeTime_;
