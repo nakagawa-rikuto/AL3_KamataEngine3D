@@ -5,16 +5,19 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "cassert"
-#include "MyMath.h"
-#include "imgui.h"
 
 #include <DebugText.h>
 #include <algorithm>
 #include <numbers>
+
+#include "Collider.h"
+#include "MyMath.h"
+#include "imgui.h"
+
 /// <summary>
 /// 自キャラの弾
 /// </summary>
-class PlayerBullet {
+class PlayerBullet : public Collider{
 public:
 
 	/// <summary>
@@ -25,7 +28,7 @@ public:
 	/// <summary>
 	/// 衝突判定
 	/// </summary>
-	void OnCollision();
+	void OnCollision()override;
 
 	/// <summary>
 	/// 初期化
@@ -57,7 +60,7 @@ public:
 	/// getter
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition()const override;
 
 private:
 

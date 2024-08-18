@@ -8,7 +8,7 @@ void PlayerBullet::OnCollision() {
 	isDead_ = true; 
 }
 
-Vector3 PlayerBullet::GetWorldPosition() {
+Vector3 PlayerBullet::GetWorldPosition() const {
 
 	// ワールド座標を入れる変数
 	Vector3 worldPos;

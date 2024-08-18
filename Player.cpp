@@ -24,7 +24,7 @@ void Player::Rotate() {
 	}
 }
 
-Vector3 Player::GetWorldPosition() { 
+Vector3 Player::GetWorldPosition() const { 
 
 	// ワールド座標を入れる変数
 	Vector3 worldPos;

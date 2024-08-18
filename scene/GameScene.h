@@ -1,19 +1,19 @@
 #pragma once
 
 #include "Audio.h"
+#include "AxisIndicator.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "DebugCamera.h"
-#include "AxisIndicator.h"
 
 #include <cassert>
 
-#include "Player.h"
 #include "Enemy.h"
+#include "Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -85,7 +85,15 @@ private: // メンバ変数
 	DebugCamera* debugCamera_ = nullptr;
 
 	// テクスチャ
-	uint32_t textureHandle_ = 0; 
+	uint32_t textureHandle_ = 0;
 	uint32_t enemyTextureHandle_ = 0;
+
+private:
 	
+	/// <summary>
+	/// コライダー２つの衝突判定と応答
+	/// </summary>
+	/// <param name="colliderA"></param>
+	/// <param name="colliderB"></param>
+	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 };

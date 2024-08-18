@@ -11,6 +11,7 @@
 #include <numbers>
 #include <list>
 
+#include "Collider.h"
 #include "EnemyBullet.h"
 #include "MyMath.h"
 #include "imgui.h"
@@ -21,7 +22,7 @@ class Player;
 /// <summary>
 /// 敵
 /// </summary>
-class Enemy {
+class Enemy : public Collider{
 
 public:
 
@@ -58,7 +59,7 @@ public:
 	/// <summary>
 	/// 衝突判定
 	/// </summary>
-	void OnCollision();
+	void OnCollision()override;
 
 	/// <summary>
 	/// Setter
@@ -70,7 +71,7 @@ public:
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition()const override;
 
 	/// <summary>
 	/// 弾リストを取得

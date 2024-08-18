@@ -1,21 +1,23 @@
 #pragma once
 #include "Input.h"
 #include "Model.h"
-#include "MyMath.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "cassert"
-#include "imgui.h"
 
 #include <DebugText.h>
 #include <algorithm>
 #include <numbers>
 
+#include "Collider.h"
+#include "MyMath.h"
+#include "imgui.h"
+
 /// <summary>
 /// 敵の弾
 /// </summary>
-class EnemyBullet {
+class EnemyBullet : public Collider{
 public:
 	/// <summary>
 	/// デストラクタ
@@ -25,7 +27,7 @@ public:
 	/// <summary>
 	/// 衝突判定
 	/// </summary>
-	void OnCollision();
+	void OnCollision()override;
 
 	/// <summary>
 	/// 初期化
@@ -56,7 +58,7 @@ public:
 	/// getter
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() const override;
 
 private:
 	/* /////////////////////////
