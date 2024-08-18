@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <numbers>
 
+class Player;
+
 /// <summary>
 /// 敵の弾
 /// </summary>
@@ -47,13 +49,20 @@ public:
 	/// <returns></returns>
 	bool IsDead() const { return isDead_; }
 
+	void SetPlayer(Player* player) { player_ = player; }
+
 private:
 	/* /////////////////////////
 	           メンバ変数
 	*/ /////////////////////////
 
+	Player* player_;
+
 	// 速度
 	Vector3 velocity_;
+
+	// 補間割合
+	float t = 1.0f;
 
 	// 寿命
 	static const int32_t kLifeTime_ = 60 * 5;

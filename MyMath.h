@@ -70,3 +70,11 @@ float Length(const Vector3& v1, const Vector3& v2);
 // 正規化
 Vector3 Normalize(const Vector3& v);
 #pragma endregion
+
+#pragma region 線形補間
+// 線形補間
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+// 球面線形補間
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
+#pragma endregion

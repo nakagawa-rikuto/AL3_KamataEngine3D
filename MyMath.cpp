@@ -1,4 +1,5 @@
 #include "MyMath.h"
+#include <algorithm>
 
 // π
 float pi() { return static_cast<float>(M_PI); }
@@ -285,4 +286,23 @@ Vector3 Normalize(const Vector3& v) {
 	} else {
 		return Vector3(v.x / length, v.y / length, v.z / length);
 	}
+}
+
+// 線形補間
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) { 
+
+	return v1 * (1.0f - t) + v2 * t; 
+}
+
+// 球面線形補間
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
+
+	float dot = Dot(v1, v2);             // ベクトル間の内積
+	dot = std::clamp(dot, -1.0f, 1.0f); // 内積の値をクランプ
+
+	float theta = std::acos(dot) * t; // θ角をtで補間
+
+	Vector3 relativeVec = Normalize(v2 - v1 * dot); // 相対ベクトルを正規化
+
+	return v1 * std::cos(theta) + relativeVec * std::sin(theta);
 }

@@ -1,6 +1,7 @@
 #define NOMINMAX
 #include "EnemyBullet.h"
 #include "TextureManager.h"
+#include "Player.h"
 
 EnemyBullet::~EnemyBullet() {}
 
@@ -37,15 +38,34 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 
 void EnemyBullet::Update() {
 
-	worldTransform_.UpdateMatrix();
+	ImGui::DragFloat3("WorldTransform", &worldTransform_.translation_.x, 0.01f);
 
-	// 座標を移動させる
-	worldTransform_.translation_ += velocity_;
+	// 敵弾から自キャラのベクトルを計算
+	Vector3 toPlayer = worldTransform_.translation_ - player_->GetWorldPosition();
+
+	// ベクトルを正規化する
+	//toPlayer = Normalize(toPlayer);
+	//velocity_ = Normalize(velocity_);
+
+	// 球面線形補間により、今の速度と自キャラのベクトルを新たな速度とする。
+	velocity_ = Slerp(velocity_, toPlayer, t) * velocity_.x;
+
+	// 進行方向に見た目の回転を合わせる
+	// Y軸周りの角度(θ)
+	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+
+	// 横軸方向の長さを求める
+	Vector3 velocityZ_ = TransformNormal(velocity_, MakeRotateYMatrix(-worldTransform_.rotation_.y));
+
+	// X軸周りの角度(θ)
+	worldTransform_.rotation_.x = std::atan2(velocityZ_.y, velocityZ_.z);
 
 	// 時間経過でデス
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
 	}
+
+	worldTransform_.UpdateMatrix();
 }
 
 void EnemyBullet::Draw(const ViewProjection& viewProjection) { model_->Draw(worldTransform_, viewProjection, textureHandle_); }
