@@ -6,6 +6,10 @@ Enemy::~Enemy() {
 
 		delete bullet;
 	}
+
+	for (TimedCall* timedCall : timedCalls_) {
+		delete timedCall;
+	}
 }
 
 void Enemy::Fire() {
@@ -23,6 +27,15 @@ void Enemy::Fire() {
 
 	// 弾を登録する
 	bullets_.push_back(newBullet);
+}
+
+void Enemy::FireReset() {
+
+	// 弾を発射する
+	Fire();
+
+	// 発射タイマーをセットする
+	timedCalls_.push_back(new TimedCall(std::bind(&Enemy::FireReset, this), kFireInterval));
 }
 
 void Enemy::PhaseInitialize() {
@@ -60,15 +73,15 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 void Enemy::Update() {
 
-	//// ですフラグの立った弾を削除
-	//// remove_if()はあくまでリストから要素を消すだけ
-	// bullets_.remove_if([](EnemyBullet* bullet) {
-	//	if (bullet->IsDead()) {
-	//		delete bullet;
-	//		return true;
-	//	}
-	//	return false;
-	// });
+	// ですフラグの立った弾を削除
+	// remove_if()はあくまでリストから要素を消すだけ
+	 bullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	 });
 
 	switch (phase_) {
 	case Enemy::Phase::APPROACH:
@@ -80,6 +93,7 @@ void Enemy::Update() {
 		// 規定の位置に到達したら離脱に切り替え
 		if (worldTransform_.translation_.z < 0.0f) {
 			phase_ = Phase::LEACE;
+			timedCalls_.clear();
 		}
 		break;
 	case Enemy::Phase::LEACE:
@@ -103,6 +117,11 @@ void Enemy::Update() {
 	// 弾の更新　
 	for (EnemyBullet* bullet : bullets_) {
 		bullet->Update();
+	}
+	 
+	// 
+	for (TimedCall* timedCall : timedCalls_) {
+		timedCall->Update();
 	}
 
 	// 行列計算

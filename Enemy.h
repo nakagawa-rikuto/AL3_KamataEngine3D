@@ -7,11 +7,13 @@
 #include "cassert"
 
 #include <DebugText.h>
+#include <functional>
 #include <algorithm>
-#include <numbers>
 #include <list>
+#include <numbers>
 
 #include "EnemyBullet.h"
+#include "TimedCall.h"
 #include "MyMath.h"
 #include "imgui.h"
 
@@ -21,7 +23,6 @@
 class Enemy {
 
 public:
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -33,10 +34,16 @@ public:
 	void Fire();
 
 	/// <summary>
+	/// 弾を発射し、タイマーをリセットするコールバック関数
+	/// </summary>
+	void FireReset();
+
+	/// <summary>
 	/// 接近フェーズの初期化
 	/// </summary>
 	void PhaseInitialize();
 
+public: /* 基本的な関数 */
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -68,6 +75,9 @@ private:
 	// Bullets
 	std::list<EnemyBullet*> bullets_;
 
+	// 時限発動のリスト
+	std::list<TimedCall*> timedCalls_;
+
 	// 発射間隔
 	static const int kFireInterval = 60;
 
@@ -85,5 +95,4 @@ private:
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-
 };

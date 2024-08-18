@@ -1,0 +1,28 @@
+#include "TimedCall.h"
+/* ///////////////////////////////////////////////////////
+						コールバック
+*/ ///////////////////////////////////////////////////////
+TimedCall::TimedCall(std::function<void()> callback, uint32_t time) {
+
+	callback_ = callback;
+	time_ = time;
+}
+
+/* ///////////////////////////////////////////////////////
+						　	更新
+*/ ///////////////////////////////////////////////////////
+void TimedCall::Update() {
+
+	if (isFinish_) {
+		return;
+	}
+
+	time_--;
+
+	if (time_ <= 0) {
+		isFinish_ = true;
+
+		// コールバック関数呼び出し
+		callback_();
+	}
+}
