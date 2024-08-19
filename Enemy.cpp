@@ -93,6 +93,12 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 	// フェーズの初期化
 	PhaseInitialize();
+
+	// 衝突属性を設定
+	SetAttribute(kCollisionAttributeEnemy);
+
+	// 衝突対象を自分の属性以外に設定
+	SetMask(kCollisionAttributePlayer);
 }
 
 void Enemy::Update() {

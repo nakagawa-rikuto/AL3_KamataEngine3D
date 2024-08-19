@@ -38,6 +38,12 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 
 	// 初期座標をセット
 	worldTransform_.translation_ = position;
+
+	// 衝突属性を設定
+	SetAttribute(kCollisionAttributeEnemy);
+
+	// 衝突対象を自分の属性以外に設定
+	SetMask(kCollisionAttributePlayer);
 }
 
 void EnemyBullet::Update() {

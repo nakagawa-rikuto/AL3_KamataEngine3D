@@ -1,12 +1,12 @@
 #pragma once
 #include "MyMath.h"
+#include "CollisionConfig.h"
 
 /// <summary>
 /// 衝突判定オブジェクト
 /// </summary>
 class Collider {
-public: /* Getter・Setter */
-
+public: /* Getter */
 	/// <summary>
 	/// Getter
 	/// </summary>
@@ -14,13 +14,38 @@ public: /* Getter・Setter */
 	float GetRadius() { return radius_; }
 
 	/// <summary>
+	/// Getter
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetAttribute() { return collisionAttribute_; }
+
+	/// <summary>
+	/// Getter
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetMask() { return CollisionMask_; }
+
+public: /* Setter */
+
+	/// <summary>
 	/// Setter
 	/// </summary>
 	/// <param name="radius"></param>
 	void SetRadius(float& radius) { radius_ = radius; }
 
-public: /* 仮想関数 */
+	/// <summary>
+	/// Setter
+	/// </summary>
+	/// <param name="collisionAttribute"></param>
+	void SetAttribute(uint32_t collisionAttribute) { collisionAttribute_ = collisionAttribute; }
 
+	/// <summary>
+	/// Setter
+	/// </summary>
+	/// <param name="collisionMask"></param>
+	void SetMask(uint32_t collisionMask) { CollisionMask_ = collisionMask; }
+
+public: /* 仮想関数 */
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
@@ -35,4 +60,10 @@ public: /* 仮想関数 */
 private:
 	// 衝突半径
 	float radius_ = 1.0f;
+
+	// 衝突属性（自分）
+	uint32_t collisionAttribute_ = 0xffffffff;
+
+	// 衝突マスク（相手）
+	uint32_t CollisionMask_ = 0xffffffff;
 };
