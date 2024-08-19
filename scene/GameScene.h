@@ -12,6 +12,7 @@
 
 #include <cassert>
 
+#include "CollisionManager.h"
 #include "Enemy.h"
 #include "Player.h"
 
@@ -46,11 +47,6 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	/// <summary>
-	/// 衝突判定と応答
-	/// </summary>
-	void CheckAllCollisions();
-
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -59,6 +55,9 @@ private: // メンバ変数
 	/// <summary>
 	/// クラス
 	/// </summary>
+
+	// CollisionManager
+	CollisionManager* collisionManager_ = nullptr;
 
 	// Player
 	Player* player_ = nullptr;
@@ -89,11 +88,8 @@ private: // メンバ変数
 	uint32_t enemyTextureHandle_ = 0;
 
 private:
-	
 	/// <summary>
-	/// コライダー２つの衝突判定と応答
+	/// 衝突判定を応答
 	/// </summary>
-	/// <param name="colliderA"></param>
-	/// <param name="colliderB"></param>
-	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
+	void CheckAllCollisions();
 };
