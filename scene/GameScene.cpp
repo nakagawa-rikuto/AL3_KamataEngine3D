@@ -161,6 +161,18 @@ void GameScene::Initialize() {
 
 	// 軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+
+	/* //////////////////////////
+	        曲線描画テスト
+	*/ /////////////////////////
+	controlPoints_ = {
+	    {0,  0,  0},
+        {10, 10, 0},
+        {10, 15, 0},
+        {20, 15, 0},
+        {20, 0,  0},
+        {30, 0,  0},
+	};
 }
 
 void GameScene::Update() {
@@ -271,4 +283,26 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+// 曲線描画テスト
+void GameScene::CatmullRomDrawTest() {
+
+	// 線分で描画する用の頂点リスト
+	std::vector<Vector3> pointsDrawing;
+
+	// 線分の数
+	const size_t segmentCount = 100;
+
+	// 線分の数+1個分の頂点座標を計算
+	for (size_t i = 0; i < segmentCount + 1; i++) {
+		float t = 1.0f / segmentCount * i;
+		Vector3 pos = CatmullRomInterpolation(controlPoints_, t);
+
+		// 描画用頂点リストに追加
+		pointsDrawing.push_back(pos);
+	}
+
+	// 先頭から２点ずつずらしてライン描画
+
 }

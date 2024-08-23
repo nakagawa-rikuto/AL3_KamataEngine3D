@@ -1,6 +1,8 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <vector>
+
 #include "Matrix4x4.h"
 #include "Vector2.h"
 #include "Vector3.h"
@@ -69,4 +71,28 @@ float Length(const Vector3& v1, const Vector3& v2);
 
 // 正規化
 Vector3 Normalize(const Vector3& v);
+#pragma endregion
+
+#pragma region 補間関数
+
+/// <summary>
+/// CatmullRom補間
+/// </summary>
+/// <param name="p0"></param>
+/// <param name="p1"></param>
+/// <param name="p2"></param>
+/// <param name="p3"></param>
+/// <param name="t"></param>
+/// <returns></returns>
+Vector3 CatmullRomInterpolation(
+	const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t);
+
+/// <summary>
+/// CatmullRomスプライン曲線上の座標を得る
+/// </summary>
+/// <param name="points"></param>
+/// <param name="t"></param>
+/// <returns></returns>
+Vector3 CatmullRomInterpolation(const std::vector<Vector3>& points, float t);
+
 #pragma endregion

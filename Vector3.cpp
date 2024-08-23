@@ -55,3 +55,5 @@ Vector3 const Vector3::operator*(const float& obj) const {
 
 	return sc;
 }
+
+Vector3 Vector3::operator-() const { return {-x, -y, -z}; }

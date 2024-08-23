@@ -1,5 +1,8 @@
 #include "MyMath.h"
 
+#include <cassert>
+#include <algorithm>
+
 // π
 float pi() { return static_cast<float>(M_PI); }
 
@@ -285,4 +288,66 @@ Vector3 Normalize(const Vector3& v) {
 	} else {
 		return Vector3(v.x / length, v.y / length, v.z / length);
 	}
+}
+
+// CatmullRom補間
+Vector3 CatmullRomInterpolation(
+	const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) {
+	
+	const float s = 0.5f; // 数式に出てくる1/2のこと
+
+	float t2 = t * t; // tの2乗
+	float t3 = t2 * t; // tの3乗
+
+	Vector3 e3 = -p0 + p1 * 3 - p2 * 3 + p3;
+	Vector3 e2 = p0 * 2 - p1 * 5 + p2 * 4 - p3;
+	Vector3 e1 = -p0 + p2;
+	Vector3 e0 = p1 * 2;
+
+	return (e3 * t3 + e2 * t2 + e1 * t + e0) * s;
+}
+
+// CatmullRom補間関数
+Vector3 CatmullRomInterpolation(const std::vector<Vector3>& points, float t) {
+	assert(points.size() >= 4);
+
+	// 区間数は制御点の数-1
+	size_t division = points.size() - 1;
+
+	// １区間の長さ(全体を1.0とした場合)
+	float areaWidth = 1.0f / division;
+
+	// 区間内の始点を0.0f、終点を1.0ｆとした時の現在位置
+	float t_2 = std::fmod(t, areaWidth) * division;
+
+	// 下眼（0.0ｆ）と上限（1.0ｆ）の範囲に収める
+	t_2 = std::clamp(t_2, 0.0f, 1.0f);
+
+	// 区間番号
+	size_t index = std::min(static_cast<size_t>(t / areaWidth), division - 1);
+
+	// 4点分のインデックス
+	size_t index0 = index - 1;
+	size_t index1 = index;
+	size_t index2 = index + 1;
+	size_t index3 = index + 2;
+
+	// 最初の区間のp0はp1を重複使用する
+	if (index == 0) {
+		index0 = index1;
+	}
+
+	// 最後の区間のp3はp2を重複使用する
+	if (index3 >= points.size()) {
+		index3 = index2;
+	}
+
+	// 4点の座標
+	const Vector3& p0 = points[index0];
+	const Vector3& p1 = points[index1];
+	const Vector3& p2 = points[index2];
+	const Vector3& p3 = points[index3];
+
+	// 4点を指定してCatmull-Rom補間
+	return CatmullRomInterpolation(p0, p1, p2, p3, t_2);
 }
