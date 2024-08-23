@@ -7,6 +7,7 @@
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
+#include "PrimitiveDrawer.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
@@ -106,6 +107,8 @@ private: // メンバ変数
 private:
 	// スプライト曲線制御点（通過点）
 	std::vector<Vector3> controlPoints_;
+
+	PrimitiveDrawer* catmullRom_ = nullptr;
 
 	/// <summary>
 	/// 曲線描画テスト

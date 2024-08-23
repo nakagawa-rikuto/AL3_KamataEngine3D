@@ -173,6 +173,9 @@ void GameScene::Initialize() {
         {20, 0,  0},
         {30, 0,  0},
 	};
+
+	catmullRom_ = PrimitiveDrawer::GetInstance();
+	catmullRom_->SetViewProjection(&viewProjection_);
 }
 
 void GameScene::Update() {
@@ -267,6 +270,8 @@ void GameScene::Draw() {
 	enemy_->Draw(viewProjection_);
 	skyDome_->Draw();
 
+	CatmullRomDrawTest();
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
@@ -303,6 +308,14 @@ void GameScene::CatmullRomDrawTest() {
 		pointsDrawing.push_back(pos);
 	}
 
-	// 先頭から２点ずつずらしてライン描画
+	 // 線の色を指定 (赤色)
+	Vector4 lineColor = {1.0f, 0.0f, 0.0f, 1.0f};
 
+	// 先頭から２点ずつずらしてライン描画
+	for (size_t i = 0; i < pointsDrawing.size() - 1; i++) {
+		Vector3 p1 = pointsDrawing[i];
+		Vector3 p2 = pointsDrawing[i + 1];
+
+		catmullRom_->DrawLine3d(p1, p2, lineColor);
+	}
 }
