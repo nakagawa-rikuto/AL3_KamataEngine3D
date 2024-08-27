@@ -15,7 +15,7 @@ void RailCamera::Initialize(Vector3& worldPosition, Vector3 rotation) {
 // 更新
 void RailCamera::Update() {
 
-	worldTransform_.translation_.z += 0.05f;
+	//worldTransform_.translation_.z += 0.05f;
 	// worldTransform_.rotation_.y += 0.02f;
 
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
@@ -29,6 +29,4 @@ void RailCamera::Update() {
 
 	// 行列の再計算
 	worldTransform_.UpdateMatrix();
-
-	worldTransform_.TransferMatrix();
 }

@@ -58,6 +58,12 @@ public:
 	Vector3 GetWorld3DReticlePosition();
 
 	/// <summary>
+	/// ワールドトランスフォームの取得
+	/// </summary>
+	/// <returns></returns>
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+
+	/// <summary>
 	/// 親となるワールどトランスフォームをセット
 	/// </summary>
 	/// <param name="parent"></param>

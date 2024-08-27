@@ -27,16 +27,18 @@ void Player::Move() {
 		move.y -= kCharacterSpeed;
 	}
 
-	// 押した方向で移動ベクトルを変更(前後)
-	if (Input::GetInstance()->PushKey(DIK_W)) {
-		move.z += kCharacterSpeed;
-	} else if (Input::GetInstance()->PushKey(DIK_S)) {
-		move.z -= kCharacterSpeed;
+	// ジョイスティックの処理
+	XINPUT_STATE joyState;
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		move.x += static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 0.3f;
+		move.y += static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 0.3f;
+	} else if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+		return;
 	}
 
 	// 移動限界
 	const float kMoveLimitX = 20.0f;
-	const float kMoveLimitY = 20.0f;
+	const float kMoveLimitY = 12.0f;
 
 	// 範囲を超えない処理
 	// Clampは－(マイナス)の値を取れない
@@ -208,6 +210,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 position) 
 
 	// 3Dレティクルのワールドトランスフォーム初期化
 	worldTransform3DReticle_.Initialize();
+	worldTransform3DReticle_.translation_ = position;
 
 	// レティクル用テクスチャ取得
 	textureReticle_ = TextureManager::Load("./Resources/Reticle.png");
@@ -232,6 +235,7 @@ void Player::Update(ViewProjection& viewProjection) {
 	        移動入力
 	*/ //////////////////////
 	Move();
+	worldTransform_.translation_.z += 0.05f;
 
 	/* //////////////////////
 	        旋回処理

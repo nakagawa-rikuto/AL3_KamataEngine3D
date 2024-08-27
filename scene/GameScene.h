@@ -163,7 +163,7 @@ private: // メンバ変数
 	RailCamera* railCamera_ = nullptr;
 
 	// Position
-	Vector3 railCameraPos_ = {0.0f, 0.0f, -50.0f};
+	Vector3 railCameraPos_ = {0.0f, 5.0f, 0.0f};
 
 	// Rotation
 	Vector3 railCameraRotation_ = {0.0f, 0.0f, 0.0f};

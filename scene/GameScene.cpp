@@ -379,20 +379,21 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	/* //////////////////////////
-	         レールカメラ
-	*/ /////////////////////////
-	railCamera_ = new RailCamera();
-	railCamera_->Initialize(railCameraPos_, railCameraRotation_);
-	isRailCameraActive_ = true;
-
-	/* //////////////////////////
 	            Player
 	*/ /////////////////////////
 	player_ = new Player();
 	Vector3 playerPosition(0.0f, 0.0f, 30.0f);
-	player_->SetParent(&railCamera_->GetWorldTransform());
+	//player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->Initialize(model_, textureHandle_, playerPosition);
 	player_->SetGameScene(this);
+
+	/* //////////////////////////
+	         レールカメラ
+	*/ /////////////////////////
+	railCamera_ = new RailCamera();
+	railCamera_->SetParent(&player_->GetWorldTransform());
+	railCamera_->Initialize(railCameraPos_, railCameraRotation_);
+	isRailCameraActive_ = true;
 
 	/* //////////////////////////
 	            Enemy

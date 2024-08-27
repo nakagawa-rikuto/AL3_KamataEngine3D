@@ -44,6 +44,12 @@ public:
 	/// <returns></returns>
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
+	/// <summary>
+	/// 親となるワールどトランスフォームをセット
+	/// </summary>
+	/// <param name="parent"></param>
+	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
+
 private:
 
 	/* ///////////////////////////////////
