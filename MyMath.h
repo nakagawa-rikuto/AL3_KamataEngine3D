@@ -78,4 +78,10 @@ float Length(const Vector3& v1, const Vector3& v2);
 
 // 正規化
 Vector3 Normalize(const Vector3& v);
+
+// 補間
+float Lerp();
+
+// 最短角度補間
+float LerpShortAngle(float a, float b, float t);
 #pragma endregion 

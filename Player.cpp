@@ -13,6 +13,12 @@ void Player::Move() {
 	// ジョイスティックが有効なら
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 
+		// しきい値の設定
+		const float threshold = 0.7f;
+
+		// 移動フラグ
+		bool isMoving = false;
+
 		// 速さ
 		const float speed = 0.3f;
 
@@ -23,25 +29,29 @@ void Player::Move() {
 			static_cast<float>(joyState.Gamepad.sThumbLY)
 		};
 
-		// 移動量に速さを反映
-		move = Normalize(move) * speed;
+		// 押し込みが遊び範囲を超えている場合
+		if (Length(move) > threshold) {
+			isMoving = true;
+		}
 
-		// 移動ベクトルをカメラの角度だけ回転する
-		move = TransformNormal(move, 
-			Multiply(Multiply(
-				MakeRotateXMatrix(viewProjection_->rotation_.x), 
-				MakeRotateYMatrix(-viewProjection_->rotation_.y)), 
-				MakeRotateZMatrix(viewProjection_->rotation_.z)
-			));
+		if (isMoving) {
 
-		// 移動
-		worldTransform_.translation_ += move;
+			// 移動量に速さを反映
+			move = Normalize(move) * speed;
 
-		// 移動方向に見た目を合わせる
-		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
-		Vector3 moveZ = TransformNormal(move, MakeRotateYMatrix(worldTransform_.rotation_.y));
+			// 移動ベクトルをカメラの角度だけ回転する
+			move = TransformNormal(
+			    move, Multiply(Multiply(MakeRotateXMatrix(viewProjection_->rotation_.x), MakeRotateYMatrix(-viewProjection_->rotation_.y)), MakeRotateZMatrix(viewProjection_->rotation_.z)));
 
-		worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
+			// 移動
+			worldTransform_.translation_ += move;
+
+			// 移動方向に見た目を合わせる
+			worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+			Vector3 moveZ = TransformNormal(move, MakeRotateYMatrix(worldTransform_.rotation_.y));
+
+			worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
+		}
 	}
 }
 
