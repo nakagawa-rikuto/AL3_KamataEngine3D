@@ -10,6 +10,12 @@ void Player::Move() {
 	// ジョイスティック
 	XINPUT_STATE joyState;
 
+	// 目標角度
+	float angle = 0.0f;
+
+	// 補間レート
+	float lerp = 0.1f;
+
 	// ジョイスティックが有効なら
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 
@@ -51,8 +57,14 @@ void Player::Move() {
 			Vector3 moveZ = TransformNormal(move, MakeRotateYMatrix(worldTransform_.rotation_.y));
 
 			worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
+
+			// 目標角度
+			angle = std::atan2(move.x, move.z);
 		}
 	}
+
+	// 最短角度補間
+	worldTransform_.rotation_.y = LerpShortAngle(worldTransform_.rotation_.y, angle, lerp);
 }
 
 void Player::Initialize(Model* model, ViewProjection* viewProjection) {

@@ -375,12 +375,15 @@ Vector3 Normalize(const Vector3& v) {
 
 float LerpShortAngle(float a, float b, float t) { 
 
-	// 角度差分を求める
+	  // 角度差分を求める
 	float diff = b - a;
 
 	// 角度を「-2PI, +2PI」に補正
+	while (diff > pi())
+		diff -= 2.0f * pi();
+	while (diff < -pi())
+		diff += 2.0f * pi();
 
-	// 角度を[-PI, +PI]に補正
-
-	
+	// 補間された角度を返す
+	return a + t * diff;
 }
