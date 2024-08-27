@@ -25,12 +25,22 @@ public:
 	void Draw(const ViewProjection& viewProjection) override;
 
 private:
+	enum ModelNum { kModelIndexBody, kModelIndexWeapon };
 
-	enum ModelNum {
-		kModelIndexBody,
-		kModelIndexWeapon
-	};
-
+	// ワールドたランスフォーム
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformWeapon_;
+
+private:
+
+	// 浮遊ギミックの媒体変数
+	float floatingParameter_ = 0.0f;
+
+	// 腕ギミックの媒体変数
+	float armParameter_ = 0.0f;
+
+	/// <summary>
+	/// アニメーション
+	/// </summary>
+	void Animation();
 };
