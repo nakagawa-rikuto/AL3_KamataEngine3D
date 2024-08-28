@@ -18,14 +18,13 @@
 /// </summary>
 class Player : public BaseCharacter {
 public:
-
 	/// <summary>
 	/// 移動
 	/// </summary>
 	void Move();
 
 	/* ///////////////////////////////////////////////
-						初期化
+	                    初期化
 	*/ ///////////////////////////////////////////////
 	/// <summary>
 	/// 浮遊魏キックの初期化
@@ -46,6 +45,11 @@ public:
 	/// 攻撃行動の初期化
 	/// </summary>
 	void BehaviorAttackInitialize();
+
+	/// <summary>
+	/// ダッシュ行動の初期化
+	/// </summary>
+	void BehaviorDashInitialize();
 
 	/* ///////////////////////////////////////////////
 	                    更新
@@ -70,6 +74,11 @@ public:
 	/// </summary>
 	void BehaviorAttackUpdate();
 
+	/// <summary>
+	/// ダッシュ行動の更新
+	/// </summary>
+	void BehaviorDashUpdate();
+
 	/* ///////////////////////////////////////////////
 	                 セッター・ゲッター
 	*/ ///////////////////////////////////////////////
@@ -85,7 +94,6 @@ public:
 	/// <returns></returns>
 	WorldTransform& GetWorldTransform() { return worldTransform_; }
 
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -96,7 +104,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update()override;
+	void Update() override;
 
 	/// <summary>
 	/// 描画
@@ -104,21 +112,14 @@ public:
 	void Draw(const ViewProjection& viewProjection) override;
 
 private:
-
 	// PlayerModel
-	enum ModelNum { 
-		kModelIndexBody,
-		kModelIndexFace,
-		kModelIndexCore,
-		kModelIndexL_Arm,
-		kModelIndexR_Arm,
-		kModelIndexWeapon
-	};
+	enum ModelNum { kModelIndexBody, kModelIndexFace, kModelIndexCore, kModelIndexL_Arm, kModelIndexR_Arm, kModelIndexWeapon };
 
 	// 振る舞い
 	enum class Behavior {
 		kRoot,   // 通常状態
 		kAttack, // 攻撃中
+		kDash,
 	};
 
 	// 振る舞い
@@ -134,6 +135,8 @@ private:
 	// 腕ギミックの媒体変数
 	float armParameter_ = 0.0f;
 
+	Vector3 velocity_;
+
 	// ワールド変換データ
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformFace_;
@@ -142,6 +145,16 @@ private:
 	WorldTransform worldTransformRightArm_;
 	WorldTransform worldTransformWeapon_;
 
-	//ビュープロジェクション
+	// ビュープロジェクション
 	const ViewProjection* viewProjection_ = nullptr;
+
+	// ダッシュ用ワーク
+	struct WorkDash {
+		// ダッシュ用の媒体変数
+		uint32_t dashParameter_ = 0;
+	};
+
+	WorkDash workDash_;
+
+	const float destinationAngleY_ = 1.0f;
 };

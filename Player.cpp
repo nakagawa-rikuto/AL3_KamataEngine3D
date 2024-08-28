@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "TextureManager.h"
 
-// 
+//
 void Player::Move() {
 
 	// ジョイスティック
@@ -15,47 +15,45 @@ void Player::Move() {
 		const float speed = 0.3f;
 
 		// 移動量
-		Vector3 move = {
-			static_cast<float>(joyState.Gamepad.sThumbLX), 
-			0.0f, 
-			static_cast<float>(joyState.Gamepad.sThumbLY)
-		};
+		velocity_ = {static_cast<float>(joyState.Gamepad.sThumbLX), 0.0f, static_cast<float>(joyState.Gamepad.sThumbLY)};
 
 		// 移動量に速さを反映
-		move = Normalize(move) * speed;
+		velocity_ = Normalize(velocity_) * speed;
 
 		// 移動ベクトルをカメラの角度だけ回転する
-		move = TransformNormal(move, 
-			Multiply(Multiply(
-				MakeRotateXMatrix(viewProjection_->rotation_.x), 
-				MakeRotateYMatrix(-viewProjection_->rotation_.y)), 
-				MakeRotateZMatrix(viewProjection_->rotation_.z)
-			));
+		velocity_ = TransformNormal(
+		    velocity_, Multiply(Multiply(MakeRotateXMatrix(viewProjection_->rotation_.x), MakeRotateYMatrix(-viewProjection_->rotation_.y)), MakeRotateZMatrix(viewProjection_->rotation_.z)));
 
 		// 移動
-		worldTransform_.translation_ += move;
+		worldTransform_.translation_ += velocity_;
 
 		// 移動方向に見た目を合わせる
-		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
-		Vector3 moveZ = TransformNormal(move, MakeRotateYMatrix(worldTransform_.rotation_.y));
+		worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+		Vector3 moveZ = TransformNormal(velocity_, MakeRotateYMatrix(worldTransform_.rotation_.y));
 
 		worldTransform_.rotation_.x = std::atan2(-moveZ.y, moveZ.z);
 	}
 }
 
-// 
-void Player::InitializeFloatingGimmick() {floatingParameter_ = 0.0f; }
+//
+void Player::InitializeFloatingGimmick() { floatingParameter_ = 0.0f; }
 
-// 
+//
 void Player::InitializeArmGimmick() { armParameter_ = 0.0f; }
 
-// 
+//
 void Player::BehaviorRootInitialize() {}
 
-// 
+//
 void Player::BehaviorAttackInitialize() {}
 
-// 
+//
+void Player::BehaviorDashInitialize() {
+	workDash_.dashParameter_ = 0;
+	worldTransform_.rotation_.y = destinationAngleY_;
+}
+
+//
 void Player::UpdateFloatingGimmick() {
 
 	// 浮遊移動のサイクル<frame>
@@ -77,7 +75,7 @@ void Player::UpdateFloatingGimmick() {
 	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitude;
 }
 
-// 
+//
 void Player::UpdateArmGimmick() {
 
 	// 振り上げのサイクル<frame>
@@ -121,6 +119,19 @@ void Player::BehaviorRootUpdate() {
 		changeTimer_ = 150.0f;
 	}
 
+	// ジョイスティック
+	XINPUT_STATE joyState;
+
+	// ジョイスティックが有効なら
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
+
+			// ダッシュリクエスト
+			behaviorRequest_ = Behavior::kDash;
+		}
+	}
+
 	Move();
 
 	UpdateFloatingGimmick();
@@ -141,7 +152,7 @@ void Player::BehaviorRootUpdate() {
 void Player::BehaviorAttackUpdate() {
 
 	if (changeTimer_ <= 0) {
-	
+
 		behaviorRequest_ = Behavior::kRoot;
 		changeTimer_ = 300.0f;
 	}
@@ -185,7 +196,7 @@ void Player::BehaviorAttackUpdate() {
 	worldTransformRightArm_.rotation_.x = mappedAngleArm * (pi() / 180.0f); // 度からラジアンに変換
 
 	// アイテムの回転
-	worldTransformWeapon_.rotation_.x = mappedAngleWeapon * (pi() / 180.0f);  // 度からラジアンに変換
+	worldTransformWeapon_.rotation_.x = mappedAngleWeapon * (pi() / 180.0f); // 度からラジアンに変換
 
 	// 行列の再計算と転送
 	BaseCharacter::Update();
@@ -195,6 +206,23 @@ void Player::BehaviorAttackUpdate() {
 	worldTransformLeftArm_.UpdateMatrix();
 	worldTransformRightArm_.UpdateMatrix();
 	worldTransformWeapon_.UpdateMatrix();
+}
+
+void Player::BehaviorDashUpdate() {
+
+	Vector3 dashSpeed = {3.0f, 0.0f, 3.0f};
+	Vector3 dashVelocity = velocity_ * dashSpeed;
+
+	// 移動
+	worldTransform_.translation_ += dashVelocity;
+
+	// ダッシュの時間＜frame＞
+	const uint32_t behaviorDahsTime = 100;
+
+	// 既定の時間経過で通常行動に戻る
+	if (++workDash_.dashParameter_ >= behaviorDahsTime) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
 }
 
 // 初期化
@@ -217,6 +245,8 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformLeftArm_.translation_ = {-1.8f, 3.0f, 0.0f};
 	worldTransformRightArm_.translation_ = {1.8f, 3.0f, 0.0f};
 
+	velocity_ = {0.0f, 0.0f, 0.0f};
+
 	// 浮遊の初期化
 	InitializeFloatingGimmick();
 
@@ -225,8 +255,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 }
 
 // 更新
-void Player::Update() { 
-
+void Player::Update() {
 
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.rotate", &worldTransform_.rotation_.x, 0.01f);
@@ -236,8 +265,6 @@ void Player::Update() {
 
 	// カウントの減少
 	changeTimer_--;
-
-	
 
 	/* /////////////////
 	  Behavior遷移の実装
@@ -257,11 +284,15 @@ void Player::Update() {
 
 			BehaviorAttackInitialize();
 			break;
+		case Player::Behavior::kDash:
+
+			BehaviorDashInitialize();
+			break;
 		}
 
 		// 振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;
-	}	
+	}
 
 	// 各振る舞い毎の更新
 	switch (behavior_) {
@@ -272,6 +303,10 @@ void Player::Update() {
 	case Player::Behavior::kAttack:
 
 		BehaviorAttackUpdate();
+		break;
+	case Player::Behavior::kDash:
+
+		BehaviorDashUpdate();
 		break;
 	}
 }
@@ -286,7 +321,7 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[kModelIndexL_Arm]->Draw(worldTransformLeftArm_, viewProjection);
 	models_[kModelIndexR_Arm]->Draw(worldTransformRightArm_, viewProjection);
 	if (behavior_ == Behavior::kAttack) {
-	
+
 		models_[kModelIndexWeapon]->Draw(worldTransformWeapon_, viewProjection);
 	}
 }
