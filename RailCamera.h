@@ -23,6 +23,11 @@ class RailCamera {
 public:
 
 	/// <summary>
+	/// 回転処理
+	/// </summary>
+	void Rotate();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize(Vector3& worldPosition, Vector3 rotation);

@@ -1,5 +1,10 @@
 #include "RailCamera.h"
 
+void RailCamera::Rotate() {
+
+
+}
+
 // 初期化
 void RailCamera::Initialize(Vector3& worldPosition, Vector3 rotation) {
 

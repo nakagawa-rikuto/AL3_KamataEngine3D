@@ -27,15 +27,6 @@ void Player::Move() {
 		move.y -= kCharacterSpeed;
 	}
 
-	// ジョイスティックの処理
-	XINPUT_STATE joyState;
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		move.x += static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 0.3f;
-		move.y += static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 0.3f;
-	} else if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
-		return;
-	}
-
 	// 移動限界
 	const float kMoveLimitX = 20.0f;
 	const float kMoveLimitY = 12.0f;
@@ -53,6 +44,9 @@ void Player::Move() {
 
 void Player::Rotate() {
 
+	// カメラの移動ベクトル
+	Vector3 move = {0, 0, 0};
+
 	// 回転速さ[ラジアン/ frame]
 	const float kRotSpeed = 0.02f;
 
@@ -64,6 +58,20 @@ void Player::Rotate() {
 
 		worldTransform_.rotation_.y += kRotSpeed;
 	}
+
+	// ジョイスティックの処理
+	XINPUT_STATE joyState;
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		move.x -= static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 0.01f;
+		move.y += static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 0.01f;
+	} else if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+		return;
+	}
+
+	worldTransform_.rotation_.x += move.x;
+	worldTransform_.rotation_.y += move.y;
+
+	ImGui::DragFloat3("move", &move.x, 0.01f);
 }
 
 void Player::Reticle(ViewProjection& viewProjection) {
@@ -74,12 +82,22 @@ void Player::Reticle(ViewProjection& viewProjection) {
 	// スプライトの現在座標を取得
 	Vector2 spritePosition = sprite2DReticle_->GetPosition();
 
+	// レティクル座標の移動ベクトル
+	Vector2 move = {0, 0};
+
 	XINPUT_STATE joyState;
 
 	// ゲームパッド状態を維持取得
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		spritePosition.x += static_cast<float>(joyState.Gamepad.sThumbRX) / SHRT_MAX * 5.0f;
-		spritePosition.y -= static_cast<float>(joyState.Gamepad.sThumbRY) / SHRT_MAX * 5.0f;
+		move.x += static_cast<float>(joyState.Gamepad.sThumbRX) / SHRT_MAX * 5.0f;
+		move.y -= static_cast<float>(joyState.Gamepad.sThumbRY) / SHRT_MAX * 5.0f;
+
+		/*spritePosition.x = std::max(spritePosition.x, 1280.0f);
+		spritePosition.x = std::min(spritePosition.x, 0.0f);
+		spritePosition.y = std::max(spritePosition.y, 720.0f);
+		spritePosition.y = std::min(spritePosition.y, 0.0f);*/
+
+		spritePosition += move;
 
 		// スプライトの座標変更を反映
 		sprite2DReticle_->SetPosition(spritePosition);
@@ -179,7 +197,7 @@ void Player::Attack() {
 	Vector3 velocity(0, 0, kBulletSpeed);
 
 	// 速度ベクトルを自機の向きに合わせて回転する
-	// velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 	// 自機から照準オブジェクトのベクトル
 	velocity = worldTransform3DReticle_.translation_ - worldTransform_.translation_;
@@ -210,7 +228,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 position) 
 
 	// 3Dレティクルのワールドトランスフォーム初期化
 	worldTransform3DReticle_.Initialize();
-	worldTransform3DReticle_.translation_ = position;
+	worldTransform3DReticle_.parent_ = &worldTransform_;
+	worldTransform3DReticle_.translation_ = {640.0f, 360.0f, 0.0f};
 
 	// レティクル用テクスチャ取得
 	textureReticle_ = TextureManager::Load("./Resources/Reticle.png");
@@ -228,6 +247,10 @@ void Player::Update(ViewProjection& viewProjection) {
 	ImGui::DragFloat3("worldTransform.rotation", &worldTransform_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.scale", &worldTransform_.scale_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
+
+	ImGui::DragFloat3("worldTransform3D.rotation", &worldTransform3DReticle_.rotation_.x, 0.01f);
+	ImGui::DragFloat3("worldTransform3D.scale", &worldTransform3DReticle_.scale_.x, 0.01f);
+	ImGui::DragFloat3("worldTransform3D.translation", &worldTransform3DReticle_.translation_.x, 0.01f);
 	ImGui::End();
 #endif // DEBUG
 
@@ -240,7 +263,7 @@ void Player::Update(ViewProjection& viewProjection) {
 	/* //////////////////////
 	        旋回処理
 	*/ //////////////////////
-	//Rotate();
+	Rotate();
 
 	/* //////////////////////
 	        レティクル
