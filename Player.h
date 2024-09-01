@@ -13,7 +13,6 @@
 
 #include "MyMath.h"
 #include "PlayerBullet.h"
-#include "imgui.h"
 
 // GameSceneの前方宣言
 class GameScene;
@@ -83,7 +82,7 @@ public: /* 基本の関数 */
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update(ViewProjection& viewProjection);
+	void Update();
 
 	/// <summary>
 	/// 描画
@@ -101,6 +100,7 @@ private:
 
 	// モデル
 	Model* model_ = nullptr;
+	Model* bulletModel_ = nullptr;
 
 	// 2Dレティクル用スプライト
 	Sprite* sprite2DReticle_ = nullptr;
@@ -140,5 +140,10 @@ private:
 	/// Reticle
 	/// </summary>
 	/// <param name="viewProjection"></param>
-	void Reticle(ViewProjection& viewProjection);
+	void Reticle();
+
+	/// <summary>
+	/// 
+	/// </summary>
+	Vector3 GetForwardVector(const Vector3& rotation);
 };

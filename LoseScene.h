@@ -8,7 +8,6 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "imgui.h"
 
 #include <DebugText.h>
 
@@ -90,6 +89,6 @@ private: /* メンバ変数 */
 	// viewProjection
 	ViewProjection viewProjection_;
 
-	// テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
+	Sprite* sprite_ = nullptr;
+	uint32_t textureHandle_ = 0;
 };

@@ -213,6 +213,7 @@ private: // メンバ変数
 	                Model
 	*/ ///////////////////////////////////
 	Model* model_ = nullptr;
+	Model* enemyModel_ = nullptr;
 	Model* skyDomeModel_ = nullptr;
 
 	/* ///////////////////////////////////

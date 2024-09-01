@@ -1,4 +1,5 @@
 #include "TitleScene.h"
+#include "TextureManager.h"
 
 /* //////////////////////////////////////////
                     コンストラクト
@@ -29,7 +30,10 @@ void TitleScene::Initialise() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	textureHandle_ = TextureManager::Load("./Resources/TitleSceen/Title.png");
+
 	modelText_ = Model::CreateFromOBJ("Text", true);
+	sprite_ = Sprite::Create(textureHandle_, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f});
 
 	viewProjection_.Initialize();
 
@@ -113,6 +117,8 @@ void TitleScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+	 
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

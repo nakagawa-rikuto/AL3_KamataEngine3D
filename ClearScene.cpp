@@ -1,4 +1,6 @@
 #include "ClearScene.h"
+#include "TextureManager.h"
+
 /* //////////////////////////////////////////
                     コンストラクト
 */ //////////////////////////////////////////
@@ -28,12 +30,15 @@ void ClearScene::Initialise() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	textureHandle_ = TextureManager::Load("./Resources/ClearScene/Clear.png");
+	sprite_ = Sprite::Create(textureHandle_, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f});
+
 	modelText_ = Model::CreateFromOBJ("Text", true);
 
 	viewProjection_.Initialize();
 
 	text_.Initialize();
-	text_.translation_ = {0.0f, -9.0f, 0.0f};
+	text_.translation_ = {0.0f, -12.0f, 0.0f};
 
 	player_.Initialize();
 
@@ -88,7 +93,7 @@ void ClearScene::Update() {
 	}
 
 	text_.translation_.y += speed_;
-	if (text_.translation_.y >= -8.0f || text_.translation_.y <= -10.0f) {
+	if (text_.translation_.y >= -11.0f || text_.translation_.y <= -13.0f) {
 		speed_ *= -1.0f;
 	}
 
@@ -112,6 +117,7 @@ void ClearScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

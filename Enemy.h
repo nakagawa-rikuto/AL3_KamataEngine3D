@@ -5,7 +5,6 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "cassert"
-#include "imgui.h"
 
 #include <DebugText.h>
 #include <algorithm>

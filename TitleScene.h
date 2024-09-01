@@ -8,7 +8,6 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include "AxisIndicator.h"
-#include "imgui.h"
 
 #include <DebugText.h>
 
@@ -85,4 +84,7 @@ private: /* メンバ変数 */
 
 	// viewProjection
 	ViewProjection viewProjection_;
+
+	Sprite* sprite_ = nullptr;
+	uint32_t textureHandle_ = 0;
 };

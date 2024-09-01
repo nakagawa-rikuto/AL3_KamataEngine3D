@@ -79,7 +79,7 @@ void GameScene::PlayerBulletDraw(ViewProjection& viewProjection) {
 */ ///////////////////////////////////
 void GameScene::EnemyInitialize(Enemy* enemy, Vector3 position) {
 
-	enemy->Initialize(model_, enemyTextureHandle_, position);
+	enemy->Initialize(enemyModel_, enemyTextureHandle_, position);
 	enemy->SetPlayer(player_);
 	enemy->SetGameScene(this);
 }
@@ -278,6 +278,7 @@ void GameScene::Initialize() {
 	      3Dモデルの読み込み
 	*/ /////////////////////////
 	model_ = Model::CreateFromOBJ("Player", true);
+	enemyModel_ = Model::CreateFromOBJ("Enemy", true);
 	skyDomeModel_ = Model::CreateFromOBJ("SkyDome", true);
 
 	/* //////////////////////////
@@ -309,7 +310,7 @@ void GameScene::Initialize() {
 
 	for (Enemy* enemy : enemy_) {
 
-		enemy->Initialize(model_, enemyTextureHandle_, {20.0f, 20.0f, 100.0f});
+		enemy->Initialize(enemyModel_, enemyTextureHandle_, {20.0f, 20.0f, 100.0f});
 		enemy->SetPlayer(player_);
 		enemy->SetGameScene(this);
 	}
@@ -361,7 +362,7 @@ void GameScene::Update() {
 		/* //////////////////////////
 		      Player・PlayerBullet
 		*/ /////////////////////////
-		player_->Update(viewProjection_);
+		player_->Update();
 
 		PlayerBulletUpdate();
 
@@ -425,7 +426,7 @@ void GameScene::Update() {
 		/* //////////////////////////
 		      Player・PlayerBullet
 		*/ /////////////////////////
-		player_->Update(viewProjection_);
+		player_->Update();
 
 		PlayerBulletUpdate();
 

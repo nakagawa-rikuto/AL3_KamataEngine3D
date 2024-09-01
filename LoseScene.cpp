@@ -34,6 +34,7 @@ void LoseScene::Initialise() {
 	modelText_ = Model::CreateFromOBJ("Text", true);
 
 	textureHandle_ = TextureManager::Load("./Resources/LoseScene/LoseSprite.png");
+	sprite_ = Sprite::Create(textureHandle_, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f});
 
 	viewProjection_.Initialize();
 
@@ -54,11 +55,11 @@ void LoseScene::Update() {
 
 #ifdef _DEBUG
 
-	/*ImGui::Begin("LoseScene");
+	ImGui::Begin("LoseScene");
 	ImGui::DragFloat3("view", &viewProjection_.translation_.x, 1.0f);
 	ImGui::DragFloat3("text", &text_.translation_.x, 1.0f);
 	ImGui::DragFloat3("player", &player_.translation_.x, 1.0f);
-	ImGui::End();*/
+	ImGui::End();
 
 #endif // DEBUG
 
@@ -117,6 +118,7 @@ void LoseScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

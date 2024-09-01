@@ -1,5 +1,13 @@
 #include "Vector3.h"
 
+Vector3& Vector3::operator+=(float obj) {
+	this->x += obj;
+	this->y += obj;
+	this->z += obj;
+
+	return *this;
+}
+
 Vector3& Vector3::operator+=(Vector3& obj) {
 
 	this->x += obj.x;
@@ -17,6 +25,15 @@ Vector3 const Vector3::operator+(const Vector3& obj) const {
 	sc.z = this->z + obj.z;
 
 	return sc;
+}
+
+Vector3& Vector3::operator-=(float obj) {
+	
+	this->x -= obj;
+	this->y -= obj;
+	this->z -= obj;
+
+	return *this;
 }
 
 Vector3& Vector3::operator-=(Vector3& obj) {

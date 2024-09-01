@@ -114,5 +114,5 @@ void Enemy::Update() {
 void Enemy::Draw(ViewProjection& viewProjection) {
 
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection);
 }
