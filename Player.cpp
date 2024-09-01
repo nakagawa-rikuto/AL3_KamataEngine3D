@@ -78,7 +78,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 position) 
 void Player::Update(ViewProjection& viewProjection) {
 
 #ifdef _DEBUG
-	ImGui::Begin("Info");
+	/*ImGui::Begin("Info");
 	ImGui::DragFloat3("worldTransform.rotation", &worldTransform_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.scale", &worldTransform_.scale_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.translation", &worldTransform_.translation_.x, 0.01f);
@@ -86,7 +86,7 @@ void Player::Update(ViewProjection& viewProjection) {
 	ImGui::DragFloat3("worldTransform3D.rotation", &worldTransform3DReticle_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform3D.scale", &worldTransform3DReticle_.scale_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform3D.translation", &worldTransform3DReticle_.translation_.x, 0.01f);
-	ImGui::End();
+	ImGui::End();*/
 #endif // DEBUG
 
 	/* //////////////////////
@@ -117,7 +117,7 @@ void Player::Update(ViewProjection& viewProjection) {
 */ //////////////////////////////////////////////////
 void Player::Draw(ViewProjection& viewProjection) {
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 /* //////////////////////////////////////////////////
@@ -199,8 +199,6 @@ void Player::Rotate() {
 
 	worldTransform_.rotation_.x += move.x;
 	worldTransform_.rotation_.y += move.y;
-
-	ImGui::DragFloat3("move", &move.x, 0.01f);
 }
 
 /* //////////////////////////////////////////////////
@@ -281,13 +279,13 @@ void Player::Reticle(ViewProjection& viewProjection) {
 	
 
 #ifdef _DEBUG
-	ImGui::Begin("Reticle");
+	/*ImGui::Begin("Reticle");
 	ImGui::Text("2DReticle : (%f, %f)", spritePosition.x, spritePosition.y);
 	ImGui::Text("Near(%+.2f, %+.2f, %+.2f)", posNear.x, posNear.y, posNear.z);
 	ImGui::Text("Far(%+.2f, %+.2f, %+.2f)", posFar.x, posFar.y, posFar.z);
 	ImGui::Text("MouseDirection(%+.2f, %+.2f, %+.2f)", mouseDirection.x, mouseDirection.y, mouseDirection.z);
 	ImGui::Text("3DReticle : (%+.2f, %+.2f, %+.2f)", worldTransform3DReticle_.translation_.x, worldTransform3DReticle_.translation_.y, worldTransform3DReticle_.translation_.z);
-	ImGui::End();
+	ImGui::End();*/
 #endif // DEBUG
 }
 

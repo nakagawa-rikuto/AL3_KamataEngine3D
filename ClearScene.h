@@ -1,13 +1,13 @@
 #pragma once
 #include "Audio.h"
+#include "AxisIndicator.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "DebugCamera.h"
-#include "AxisIndicator.h"
 #include "imgui.h"
 
 #include <DebugText.h>
@@ -15,21 +15,23 @@
 #include "Fade.h"
 #include "MyMath.h"
 
-/// <summary>
-/// タイトルシーン
-/// </summary>
-class TitleScene {
 
-	public: /* メンバ関数 */
+
+/// <summary>
+/// クリアシーン
+/// </summary>
+class ClearScene {
+
+public: /* メンバ関数 */
 	/// <summary>
 	/// コンストクラタ
 	/// </summary>
-	TitleScene();
+	ClearScene();
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~TitleScene();
+	~ClearScene();
 
 	/// <summary>
 	/// デスフラグのGetter
@@ -64,7 +66,6 @@ private: /* メンバ変数 */
 		kMain,    // メイン部
 		kFadeOut, // フェードアウト
 	};
-
 
 	// 現在のフェーズ
 	Phase phase_ = Phase::kFadeIn;

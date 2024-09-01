@@ -1,13 +1,13 @@
 #pragma once
 #include "Audio.h"
+#include "AxisIndicator.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "DebugCamera.h"
-#include "AxisIndicator.h"
 #include "imgui.h"
 
 #include <DebugText.h>
@@ -15,21 +15,22 @@
 #include "Fade.h"
 #include "MyMath.h"
 
-/// <summary>
-/// タイトルシーン
-/// </summary>
-class TitleScene {
 
-	public: /* メンバ関数 */
+/// <summary>
+/// 負けシーン
+/// </summary>
+class LoseScene {
+
+public: /* メンバ関数 */
 	/// <summary>
 	/// コンストクラタ
 	/// </summary>
-	TitleScene();
+	LoseScene();
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~TitleScene();
+	~LoseScene();
 
 	/// <summary>
 	/// デスフラグのGetter
@@ -79,10 +80,16 @@ private: /* メンバ変数 */
 	// モデル
 	Model* modelText_ = nullptr;
 
+	// スプライト
+	Sprite* spriteText_ = nullptr;
+
 	// worldTransform
 	WorldTransform text_;
 	WorldTransform player_;
 
 	// viewProjection
 	ViewProjection viewProjection_;
+
+	// テクスチャハンドル
+	uint32_t textureHandle_ = 0u;
 };

@@ -166,7 +166,7 @@ void GameScene::Clear() {
 
 void GameScene::Lose() {
 	Vector3 loseScale = player_->GetScale();
-	if (loseScale.x < 10.0f || loseScale.y < 10.0f || loseScale.z < 10.0f) {
+	if (loseScale.x > 10.0f || loseScale.y > 10.0f || loseScale.z > 10.0f) {
 		phase_ = Phase::kLose;
 	}
 }
@@ -178,18 +178,6 @@ void GameScene::ChangPhase() {
 
 		Clear();
 		Lose();
-
-		break;
-	case GameScene::Phase::kLose:
-
-		fade_->Start(Fade::Status::FadeOut, 1.0f);
-		phase_ = Phase::kFeadOut;
-
-		break;
-	case GameScene::Phase::kClear:
-
-		fade_->Start(Fade::Status::FadeOut, 1.0f);
-		phase_ = Phase::kFeadOut;
 
 		break;
 	}
@@ -289,7 +277,7 @@ void GameScene::Initialize() {
 	/* //////////////////////////
 	      3Dモデルの読み込み
 	*/ /////////////////////////
-	model_ = Model::Create();
+	model_ = Model::CreateFromOBJ("Player", true);
 	skyDomeModel_ = Model::CreateFromOBJ("SkyDome", true);
 
 	/* //////////////////////////
@@ -347,21 +335,15 @@ void GameScene::Initialize() {
 
 	// ゲームプレイフェーズから開始
 	phase_ = Phase::kFeadIn;
-
-	/* //////////////////////////
-	         軸方向表示の使用
-	*/ /////////////////////////
-	// 軸方向表示の表示を有効にする
-	AxisIndicator::GetInstance()->SetVisible(true);
-
-	// 軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
-	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 }
 
 /// <summary>
 /// 更新
 /// </summary>
 void GameScene::Update() {
+
+	// フェーズの変更
+	ChangPhase();
 
 	switch (phase_) {
 	case GameScene::Phase::kFeadIn:
@@ -555,6 +537,11 @@ void GameScene::Update() {
 			viewProjection_.UpdateMatrix();
 		}
 #pragma endregion
+		fade_->Update();
+		if (fade_->IsFinished()) {
+
+			isFinished_ = true;
+		}
 		break;
 	case GameScene::Phase::kClear:
 #pragma region KClear
@@ -607,15 +594,11 @@ void GameScene::Update() {
 			viewProjection_.UpdateMatrix();
 		}
 #pragma endregion
-		break;
-	case GameScene::Phase::kFeadOut:
-#pragma region KFeadOut
 		fade_->Update();
 		if (fade_->IsFinished()) {
 
 			isFinished_ = true;
 		}
-#pragma endregion
 		break;
 	}
 }
@@ -679,9 +662,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
-	// 2Dスプライトのびょうが
-	// player_->DrawUI();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

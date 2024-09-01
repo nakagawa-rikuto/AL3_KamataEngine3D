@@ -1,26 +1,26 @@
 #pragma once
 
 #include "Audio.h"
+#include "AxisIndicator.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "DebugCamera.h"
-#include "AxisIndicator.h"
 
 #include <cassert>
 #include <sstream>
 
-#include "Fade.h"
-#include "Player.h"
-#include "PlayerBullet.h"
 #include "Enemy.h"
 #include "EnemyBullet.h"
-#include "SkyDome.h"
-#include "RailCamera.h"
+#include "Fade.h"
 #include "MyMath.h"
+#include "Player.h"
+#include "PlayerBullet.h"
+#include "RailCamera.h"
+#include "SkyDome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -28,7 +28,6 @@
 class GameScene {
 
 public: // メンバ関数
-
 	/* ///////////////////////////////////
 	         Player・PlayerBullet
 	*/ ///////////////////////////////////
@@ -61,12 +60,12 @@ public: // メンバ関数
 	/// <summary>
 	/// 敵発生データの読み込み
 	/// </summary>
-	//void LoadEnemyPopData();
+	// void LoadEnemyPopData();
 
 	/// <summary>
 	/// 敵発生コマンドの更新
 	/// </summary>
-	//void UpdateEnemyPopCommands();
+	// void UpdateEnemyPopCommands();
 
 	/// <summary>
 	/// 敵の発生場所
@@ -175,7 +174,6 @@ private: // メンバ変数
 		kPlay,
 		kLose,
 		kClear,
-		kFeadOut,
 	};
 
 	// ゲームの現在のフェーズ（変数）
@@ -231,8 +229,13 @@ private: // メンバ変数
 	               TexTure
 	*/ ///////////////////////////////////
 	// Player
-	uint32_t textureHandle_ = 0; 
+	uint32_t textureHandle_ = 0;
 	// Enemy
 	uint32_t enemyTextureHandle_ = 0;
-	
+
+public:
+
+	Phase isCheckPhase() { return phase_; }
+	Phase GetClearPhase() { return Phase::kClear; }
+	Phase GetLosePhase() { return Phase::kLose; }
 };

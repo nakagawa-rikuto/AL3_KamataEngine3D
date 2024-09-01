@@ -1,26 +1,25 @@
-#include "TitleScene.h"
-
+#include "ClearScene.h"
 /* //////////////////////////////////////////
                     コンストラクト
 */ //////////////////////////////////////////
-TitleScene::TitleScene() {}
+ClearScene::ClearScene() {}
 
 /* //////////////////////////////////////////
                     デストラクト
 */ //////////////////////////////////////////
-TitleScene::~TitleScene() {
+ClearScene::~ClearScene() {
 
 	delete fade_;
 	delete modelText_;
 }
 
 // Getter
-bool TitleScene::IsFinished() { return finished_; }
+bool ClearScene::IsFinished() { return finished_; }
 
 /* //////////////////////////////////////////
                     初期化
 */ //////////////////////////////////////////
-void TitleScene::Initialise() {
+void ClearScene::Initialise() {
 
 	/// *************************************
 	/// 初期化
@@ -46,11 +45,11 @@ void TitleScene::Initialise() {
 /* //////////////////////////////////////////
                     更新
 */ //////////////////////////////////////////
-void TitleScene::Update() {
+void ClearScene::Update() {
 
 #ifdef _DEBUG
 
-	ImGui::Begin("TitleScene");
+	ImGui::Begin("ClearScene");
 	ImGui::DragFloat3("view", &viewProjection_.translation_.x, 1.0f);
 	ImGui::DragFloat3("text", &text_.translation_.x, 1.0f);
 	ImGui::DragFloat3("player", &player_.translation_.x, 1.0f);
@@ -101,7 +100,7 @@ void TitleScene::Update() {
 /* //////////////////////////////////////////
                     描画
 */ //////////////////////////////////////////
-void TitleScene::Draw() {
+void ClearScene::Draw() {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();

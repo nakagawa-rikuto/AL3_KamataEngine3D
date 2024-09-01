@@ -25,7 +25,6 @@ void Enemy::OnCollision() { isDead_ = true; }
 void Enemy::OnCollision2() { 
 
 	phase_ = Phase::Collsiion;
-	//ImGui::DragFloat("Collision", &isTimer_, 1.0f);
 }
 
 Vector3 Enemy::GetWorldPosition() {

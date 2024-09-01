@@ -91,11 +91,6 @@ public: /* 基本の関数 */
 	/// <param name="viewProjection"></param>
 	void Draw(ViewProjection& viewProjection);
 
-	/// <summary>
-	/// UI描画
-	/// </summary>
-	void DrawUI();
-
 private:
 	/* ///////////////////////////////////////
 	                 メンバ変数

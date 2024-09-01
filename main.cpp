@@ -6,9 +6,157 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 
+#include "ClearScene.h"
 #include "GameScene.h"
+#include "LoseScene.h"
 #include "TitleScene.h"
 
+TitleScene* titleScene = nullptr;
+GameScene* gameScene = nullptr;
+ClearScene* clearScene = nullptr;
+LoseScene* loseScene = nullptr;
+
+// シーン（型）
+enum class Scene {
+
+	kUnknown = 0,
+	kTitle,
+	kGame,
+	kClera,
+	kLose,
+};
+
+// 現在のシーン（型）
+Scene scene = Scene::kUnknown;
+
+/// <summary>
+/// シーンの切り替え処理
+/// </summary>
+void ChangScene() {
+
+	switch (scene) {
+	case Scene::kTitle:
+
+		if (titleScene->IsFinished()) {
+			// シーン変更
+			scene = Scene::kGame;
+
+			// 旧シーン
+			delete titleScene;
+			titleScene = nullptr;
+
+			// 新シーンの生成と初期化
+			gameScene = new GameScene;
+			gameScene->Initialize();
+		}
+		break;
+	case Scene::kGame:
+
+		if (gameScene->isFinished()) {
+			if (gameScene->isCheckPhase() == gameScene->GetClearPhase()) {
+				// シーン変更
+				scene = Scene::kClera;
+
+				// 旧シーン
+				delete gameScene;
+				gameScene = nullptr;
+
+				// 新シーンの生成と初期化
+				clearScene = new ClearScene;
+				clearScene->Initialise();
+
+			} else if (gameScene->isCheckPhase() == gameScene->GetLosePhase()) {
+			
+				// シーン変更
+				scene = Scene::kLose;
+
+				// 旧シーン
+				delete gameScene;
+				gameScene = nullptr;
+
+				// 新シーンの生成と初期化
+				loseScene = new LoseScene;
+				loseScene->Initialise();
+			}
+		}
+
+		break;
+	case Scene::kLose:
+
+		if (loseScene->IsFinished()) {
+			// シーン変更
+			scene = Scene::kTitle;
+
+			// 旧シーン
+			delete loseScene;
+			loseScene = nullptr;
+
+			// 新シーンの生成と初期化
+			titleScene = new TitleScene;
+			titleScene->Initialise();
+		}
+
+		break;
+	case Scene::kClera:
+
+		if (clearScene->IsFinished()) {
+			// シーン変更
+			scene = Scene::kTitle;
+
+			// 旧シーン
+			delete clearScene;
+			clearScene = nullptr;
+
+			// 新シーンの生成と初期化
+			titleScene = new TitleScene;
+			titleScene->Initialise();
+		}
+
+		break;
+	}
+}
+
+/// <summary>
+/// シーンの更新
+/// </summary>
+void UpdateScene() {
+
+	switch (scene) {
+	case Scene::kTitle:
+		titleScene->Update();
+		break;
+	case Scene::kGame:
+		gameScene->Update();
+		break;
+	case Scene::kClera:
+		clearScene->Update();
+		break;
+	case Scene::kLose:
+		loseScene->Update();
+		break;
+	}
+}
+
+/// <summary>
+/// シーンの描画
+/// </summary>
+void DrawScene() {
+
+	switch (scene) {
+	case Scene::kTitle:
+		titleScene->Draw();
+		break;
+	case Scene::kGame:
+		gameScene->Draw();
+		break;
+	case Scene::kClera:
+		clearScene->Draw();
+		break;
+	case Scene::kLose:
+		loseScene->Draw();
+		break;
+	}
+}
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -19,7 +167,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Audio* audio = nullptr;
 	AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
-	GameScene* gameScene = nullptr;
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
@@ -60,9 +207,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	primitiveDrawer->Initialize();
 #pragma endregion
 
-	// ゲームシーンの初期化
-	gameScene = new GameScene();
-	gameScene->Initialize();
+	// 最初のシーンの初期化
+	scene = Scene::kTitle;
+
+	// タイトルシーンの初期化
+	titleScene = new TitleScene();
+	titleScene->Initialise();
 
 	// メインループ
 	while (true) {
@@ -75,8 +225,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		imguiManager->Begin();
 		// 入力関連の毎フレーム処理
 		input->Update();
-		// ゲームシーンの毎フレーム処理
-		gameScene->Update();
+		// シーン切り替え
+		ChangScene();
+		// 現在シーン更新
+		UpdateScene();
 		// 軸表示の更新
 		axisIndicator->Update();
 		// ImGui受付終了
@@ -84,8 +236,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// 描画開始
 		dxCommon->PreDraw();
-		// ゲームシーンの描画
-		gameScene->Draw();
+		// 現在シーンの描画
+		DrawScene();
 		// 軸表示の描画
 		axisIndicator->Draw();
 		// プリミティブ描画のリセット
@@ -97,6 +249,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	// 各種解放
+	delete titleScene;
 	delete gameScene;
 	// 3Dモデル解放
 	Model::StaticFinalize();

@@ -1,26 +1,28 @@
-#include "TitleScene.h"
+#include "LoseScene.h"
+#include "TextureManager.h"
 
 /* //////////////////////////////////////////
                     コンストラクト
 */ //////////////////////////////////////////
-TitleScene::TitleScene() {}
+LoseScene::LoseScene() {}
 
 /* //////////////////////////////////////////
                     デストラクト
 */ //////////////////////////////////////////
-TitleScene::~TitleScene() {
+LoseScene::~LoseScene() {
 
 	delete fade_;
 	delete modelText_;
+	delete spriteText_;
 }
 
 // Getter
-bool TitleScene::IsFinished() { return finished_; }
+bool LoseScene::IsFinished() { return finished_; }
 
 /* //////////////////////////////////////////
                     初期化
 */ //////////////////////////////////////////
-void TitleScene::Initialise() {
+void LoseScene::Initialise() {
 
 	/// *************************************
 	/// 初期化
@@ -30,6 +32,8 @@ void TitleScene::Initialise() {
 	audio_ = Audio::GetInstance();
 
 	modelText_ = Model::CreateFromOBJ("Text", true);
+
+	textureHandle_ = TextureManager::Load("./Resources/LoseScene/LoseSprite.png");
 
 	viewProjection_.Initialize();
 
@@ -46,15 +50,15 @@ void TitleScene::Initialise() {
 /* //////////////////////////////////////////
                     更新
 */ //////////////////////////////////////////
-void TitleScene::Update() {
+void LoseScene::Update() {
 
 #ifdef _DEBUG
 
-	ImGui::Begin("TitleScene");
+	/*ImGui::Begin("LoseScene");
 	ImGui::DragFloat3("view", &viewProjection_.translation_.x, 1.0f);
 	ImGui::DragFloat3("text", &text_.translation_.x, 1.0f);
 	ImGui::DragFloat3("player", &player_.translation_.x, 1.0f);
-	ImGui::End();
+	ImGui::End();*/
 
 #endif // DEBUG
 
@@ -101,7 +105,7 @@ void TitleScene::Update() {
 /* //////////////////////////////////////////
                     描画
 */ //////////////////////////////////////////
-void TitleScene::Draw() {
+void LoseScene::Draw() {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
