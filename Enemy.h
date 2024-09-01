@@ -11,7 +11,6 @@
 #include <numbers>
 #include <list>
 
-#include "EnemyBullet.h"
 #include "MyMath.h"
 #include "imgui.h"
 
@@ -29,10 +28,10 @@ class Enemy {
 public:
 
 	/* ///////////////////////////////
-	              フェーズ
+				フェーズ
 	*/ ///////////////////////////////
 	/// <summary>
-	/// 接近フェーズの初期化
+	/// フェーズの初期化
 	/// </summary>
 	void PhaseInitialize();
 
@@ -42,23 +41,10 @@ public:
 	void ApproachPhase();
 
 	/// <summary>
-	/// 離脱フェーズ
+	/// 衝突フェーズ
 	/// </summary>
-	void LeasePhase();
+	void CollisionPhase();
 
-	/* ///////////////////////////////
-	              弾
-	*/ ///////////////////////////////
-	
-	/// <summary>
-	/// カウントタイマー
-	/// </summary>
-	void CountTimer();
-
-	/// <summary>
-	/// 弾の発射
-	/// </summary>
-	void Fire();
 
 	/* ///////////////////////////////
 	               当たり判定
@@ -67,6 +53,11 @@ public:
 	/// 衝突判定
 	/// </summary>
 	void OnCollision();
+
+	/// <summary>
+	/// 衝突判定2
+	/// </summary>
+	void OnCollision2();
 
 	/// <summary>
 	/// 死亡情報
@@ -99,6 +90,11 @@ public:
 	Vector3 GetWorldPosition();
 
 	/// <summary>
+	/// 移動処理
+	/// </summary>
+	void Move();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="model"></param>
@@ -116,16 +112,17 @@ public:
 	void Draw(ViewProjection& viewProjection);
 
 private:
+
 	// 行動フェーズ
 	enum class Phase {
 		APPROACH, // 接近する
-		LEACE,    // 離脱する
+		Collsiion,    // 離脱する
 	};
+
 
 	/*
 	   メンバ変数
 	*/
-
 	// Player
 	Player* player_ = nullptr;
 
@@ -134,14 +131,6 @@ private:
 
 	// デスフラグ
 	bool isDead_ = false;
-
-	// 発射間隔
-	static const int kFireInterval = 60;
-	// 発射タイマー
-	int32_t fireTimer = 0;
-
-	// フェーズ
-	Phase phase_;
 
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
@@ -152,4 +141,11 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
+	// フェーズ
+	Phase phase_;
+
+	// 速度
+	const float speed_ = 0.3f;
+
+	float isTimer_;
 };

@@ -8,11 +8,11 @@
 
 #include <DebugText.h>
 #include <algorithm>
-#include <numbers>
 #include <list>
+#include <numbers>
 
-#include "PlayerBullet.h"
 #include "MyMath.h"
+#include "PlayerBullet.h"
 #include "imgui.h"
 
 // GameSceneの前方宣言
@@ -23,28 +23,12 @@ class GameScene;
 /// </summary>
 class Player {
 public:
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	~Player();
 
-	/// <summary>
-	/// 移動
-	/// </summary>
-	void Move();
-
-	/// <summary>
-	/// 旋回(回転)
-	/// </summary>
-	void Rotate();
-
-	/// <summary>
-	/// Reticle
-	/// </summary>
-	/// <param name="viewProjection"></param>
-	void Reticle(ViewProjection& viewProjection);
-
+public: /* Getter */
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
@@ -64,6 +48,13 @@ public:
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
 	/// <summary>
+	/// スケールの取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetScale() { return worldTransform_.scale_; }
+
+public: /* Setter */
+	/// <summary>
 	/// 親となるワールどトランスフォームをセット
 	/// </summary>
 	/// <param name="parent"></param>
@@ -75,11 +66,13 @@ public:
 	/// <param name="gameScene"></param>
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
+public: /* 衝突判定 */
 	/// <summary>
 	/// 衝突判定
 	/// </summary>
 	void OnCollision();
 
+public: /* 基本の関数 */
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -104,7 +97,6 @@ public:
 	void DrawUI();
 
 private:
-
 	/* ///////////////////////////////////////
 	                 メンバ変数
 	*/ ///////////////////////////////////////
@@ -138,4 +130,20 @@ private:
 	/// 攻撃処理
 	/// </summary>
 	void Attack();
+
+	/// <summary>
+	/// 移動
+	/// </summary>
+	void Move();
+
+	/// <summary>
+	/// 旋回(回転)
+	/// </summary>
+	void Rotate();
+
+	/// <summary>
+	/// Reticle
+	/// </summary>
+	/// <param name="viewProjection"></param>
+	void Reticle(ViewProjection& viewProjection);
 };

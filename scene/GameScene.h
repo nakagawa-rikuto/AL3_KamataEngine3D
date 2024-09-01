@@ -13,6 +13,7 @@
 #include <cassert>
 #include <sstream>
 
+#include "Fade.h"
 #include "Player.h"
 #include "PlayerBullet.h"
 #include "Enemy.h"
@@ -60,12 +61,17 @@ public: // メンバ関数
 	/// <summary>
 	/// 敵発生データの読み込み
 	/// </summary>
-	void LoadEnemyPopData();
+	//void LoadEnemyPopData();
 
 	/// <summary>
 	/// 敵発生コマンドの更新
 	/// </summary>
-	void UpdateEnemyPopCommands();
+	//void UpdateEnemyPopCommands();
+
+	/// <summary>
+	/// 敵の発生場所
+	/// </summary>
+	void EnemyPop();
 
 	/// <summary>
 	/// 敵の更新
@@ -73,22 +79,30 @@ public: // メンバ関数
 	/// <param name="enemy"></param>
 	void EnemyUpdate();
 
-	/// <summary>
-	/// 敵弾を追加する
-	/// </summary>
-	/// <param name="enemyBullet"></param>
-	void AddEnemyBullet(EnemyBullet* enemyBullet);
+	/* ///////////////////////////////////
+	              Scene移動
+	*/ ///////////////////////////////////
 
 	/// <summary>
-	/// 敵弾の更新
+	/// クリア
 	/// </summary>
-	void EnemyBulletUpdate();
+	void Clear();
 
 	/// <summary>
-	/// 敵弾の描画
+	/// 負け
 	/// </summary>
-	/// <param name="viewProjection"></param>
-	void EnemyBulletDraw(ViewProjection& viewProjection);
+	void Lose();
+
+	/// <summary>
+	/// フェーズ切り替え
+	/// </summary>
+	void ChangPhase();
+
+	/// <summary>
+	/// 終了フラグのGetter
+	/// </summary>
+	/// <returns></returns>
+	bool isFinished() { return isFinished_; }
 
 	/* ///////////////////////////////////
 	              GameScene
@@ -148,9 +162,27 @@ private: // メンバ変数
 	bool isEnemyWait_ = false;
 
 	// 敵の待機タイマー
-	int32_t enemyWaitTimer_ = 0;
+	int32_t enemyWaitTimer_ = 60;
 
-	std::list<EnemyBullet*> enemyBullets_;
+	const int32_t kMaxEnemy_ = 50;
+
+	/* ///////////////////////////////////
+	                シーン移動
+	*/ ///////////////////////////////////
+
+	enum class Phase {
+		kFeadIn,
+		kPlay,
+		kLose,
+		kClear,
+		kFeadOut,
+	};
+
+	// ゲームの現在のフェーズ（変数）
+	Phase phase_;
+	Fade* fade_ = nullptr;
+
+	bool isFinished_ = false;
 
 	/* ///////////////////////////////////
 	                SkyDome
