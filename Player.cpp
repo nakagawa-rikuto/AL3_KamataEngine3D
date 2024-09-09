@@ -138,17 +138,17 @@ void Player::Move() {
 	// おしたほうこうで移動ベクトルを変更(上下)
 	if (Input::GetInstance()->PushKey(DIK_W)) {
 		move.z += kCharacterSpeed;
-		worldTransform_.scale_ -= 0.000001f;
+		worldTransform_.scale_ -= 0.0001f;
 	} else if (Input::GetInstance()->PushKey(DIK_S)) {
 		move.z -= kCharacterSpeed;
-		worldTransform_.scale_ -= 0.000001f;
+		worldTransform_.scale_ -= 0.0001f;
 	}
 
 	// ゲームパッド状態を維持取得
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		move.z += static_cast<float>(joyState.Gamepad.sThumbRY) / SHRT_MAX * 0.8f;
 		//move.y -= static_cast<float>(joyState.Gamepad.sThumbRY) / SHRT_MAX * 0.8f;
-		worldTransform_.scale_ += static_cast<float>(joyState.Gamepad.sThumbRY) / SHRT_MAX * 0.001f;
+		//worldTransform_.scale_ += static_cast<float>(joyState.Gamepad.sThumbRY) / SHRT_MAX * 0.001f;
 		//worldTransform_.scale_ -= static_cast<float>(joyState.Gamepad.sThumbRY) / SHRT_MAX * 0.001f;
 	}
 
@@ -231,7 +231,7 @@ void Player::Reticle() {
 			    攻撃処理
 			*/ //////////////////////
 			Attack();
-			worldTransform_.scale_ -= 0.000001f;
+			worldTransform_.scale_ -= 0.0005f;
 		}
 	} 
 
@@ -241,7 +241,7 @@ void Player::Reticle() {
 		    攻撃処理
 		*/ //////////////////////
 		Attack();
-		worldTransform_.scale_ -= 0.000001f;
+		worldTransform_.scale_ -= 0.0001f;
 	}
 
 #ifdef _DEBUG

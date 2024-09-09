@@ -54,11 +54,11 @@ void ClearScene::Update() {
 
 #ifdef _DEBUG
 
-	ImGui::Begin("ClearScene");
+	/*ImGui::Begin("ClearScene");
 	ImGui::DragFloat3("view", &viewProjection_.translation_.x, 1.0f);
 	ImGui::DragFloat3("text", &text_.translation_.x, 1.0f);
 	ImGui::DragFloat3("player", &player_.translation_.x, 1.0f);
-	ImGui::End();
+	ImGui::End();*/
 
 #endif // DEBUG
 

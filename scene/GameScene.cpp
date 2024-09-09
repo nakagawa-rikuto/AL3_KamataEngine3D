@@ -159,7 +159,7 @@ void GameScene::EnemyUpdate() {
 */ ///////////////////////////////////
 void GameScene::Clear() {
 	Vector3 clearScale = player_->GetScale();
-	if (clearScale.x < 0.05f || clearScale.y < 0.05f || clearScale.z < 0.05f) {
+	if (clearScale.x < 0.5f || clearScale.y < 0.5f || clearScale.z < 0.5f) {
 		phase_ = Phase::kClear;
 	}
 }

@@ -86,12 +86,12 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, Vector3 position) {
 void Enemy::Update() {
 
 #ifdef _DEBUG
-	ImGui::Begin("EnemyInfo");
+	/*ImGui::Begin("EnemyInfo");
 	ImGui::DragFloat3("translation", &worldTransform_.translation_.x, 0.01f);
 	if (phase_ == Phase::Collsiion) {
 		ImGui::DragFloat("Collision", &isTimer_, 1.0f);
 	}
-	ImGui::End();
+	ImGui::End();*/
 #endif // _DEBUG
 
 	switch (phase_) {
