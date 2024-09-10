@@ -8,12 +8,27 @@ struct Vector3 final {
 	float y;
 	float z;
 
-	Vector3& operator+=(float obj);
-	Vector3& operator+=(Vector3& obj);
-	Vector3 const operator+(const Vector3& obj) const;
-	Vector3& operator-=(float obj);
-	Vector3& operator-=(Vector3& obj);
-	Vector3 const operator-(const Vector3& obj) const;
-	Vector3& operator*=(float& obj);
-	Vector3 const operator*(const float& obj) const;
+	/// ===加法=== ///
+	Vector3 operator+(const Vector3& v);
+	Vector3& operator+=(const Vector3& v);
+	Vector3 operator+(const float& v);
+	Vector3& operator+=(const float& v);
+
+	/// ===減法=== ///
+	Vector3 operator-(const Vector3& v);
+	Vector3& operator-=(const Vector3& v);
+	Vector3 operator-(const float& v);
+	Vector3& operator-=(const float& v);
+
+	/// ===積=== ///
+	Vector3 operator*(const Vector3& v);
+	Vector3& operator*=(const Vector3& v);
+	Vector3 operator*(const float& v);
+	Vector3& operator*=(const float& v);
+
+	/// ===除法=== ///
+	Vector3 operator/(const Vector3& v);
+	Vector3& operator/=(const Vector3& v);
+	Vector3 operator/(const float& v);
+	Vector3& operator/=(const float& v);
 };
