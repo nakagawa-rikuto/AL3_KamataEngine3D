@@ -13,7 +13,6 @@
 
 #include "EnemyBullet.h"
 #include "MyMath.h"
-#include "imgui.h"
 
 // 自機クラスの前方宣言
 class Player;

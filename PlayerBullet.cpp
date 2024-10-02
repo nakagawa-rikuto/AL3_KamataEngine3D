@@ -2,6 +2,9 @@
 #include "PlayerBullet.h"
 #include "TextureManager.h"
 
+#include "ImGui.h"
+
+
 PlayerBullet::~PlayerBullet() {}
 
 void PlayerBullet::OnCollision() {

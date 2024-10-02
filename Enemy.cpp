@@ -1,6 +1,8 @@
 #include "Enemy.h"
-#include "Player.h"
 #include "GameScene.h"
+#include "Player.h"
+
+ #include "ImGui.h"
 
 void Enemy::PhaseInitialize() {
 
@@ -66,9 +68,7 @@ void Enemy::CountTimer() {
 	}
 }
 
-void Enemy::OnCollision() {
-	isDead_ = true;
-}
+void Enemy::OnCollision() { isDead_ = true; }
 
 Vector3 Enemy::GetWorldPosition() {
 
@@ -102,15 +102,17 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, Vector3 position) {
 
 void Enemy::Update() {
 
+#ifdef _DEBUG
 	ImGui::Begin("EnemyInfo");
 	ImGui::DragFloat3("translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::End();
+#endif // DEBUG
 
 	switch (phase_) {
 	case Enemy::Phase::APPROACH:
 
 		// 接近処理
-		//ApproachPhase();
+		// ApproachPhase();
 
 		// 規定の位置に到達したら離脱に切り替え
 		if (worldTransform_.translation_.x < -10.0f) {
@@ -120,7 +122,7 @@ void Enemy::Update() {
 	case Enemy::Phase::LEACE:
 
 		// 後退処理
-		//LeasePhase();
+		// LeasePhase();
 
 		// 規定の距離に到達したら接近に切り替え
 		if (worldTransform_.translation_.x > 30.0f) {

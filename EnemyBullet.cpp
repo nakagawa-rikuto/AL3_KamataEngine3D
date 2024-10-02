@@ -2,6 +2,8 @@
 #include "EnemyBullet.h"
 #include "TextureManager.h"
 
+#include "ImGui.h"
+
 EnemyBullet::~EnemyBullet() {}
 
 void EnemyBullet::OnCollision() { 

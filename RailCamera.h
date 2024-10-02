@@ -12,7 +12,6 @@
 #include <list>
 
 #include "MyMath.h"
-#include "imgui.h"
 
 
 /// <summary>

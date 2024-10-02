@@ -3,6 +3,8 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 
+#include "ImGui.h"
+
 Player::~Player() { delete sprite2DReticle_; }
 
 void Player::Move() {
