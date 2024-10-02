@@ -340,7 +340,7 @@ void GameScene::Initialize() {
 	*/ /////////////////////////
 	// テクスチャの読み込み
 	textureHandle_ = TextureManager::Load("./Resources/mario.png");
-	enemyTextureHandle_ = TextureManager::Load("./Resources/uvChecker.png");
+	enemyTextureHandle_ = TextureManager::Load("./Resources/sample.png");
 
 	/* //////////////////////////
 	      3Dモデルの読み込み
@@ -377,7 +377,7 @@ void GameScene::Initialize() {
 
 	for (Enemy* enemy : enemy_) {
 
-		enemy->Initialize(model_, textureHandle_, {0.0f, 0.0f, 0.0f});
+		enemy->Initialize(model_, enemyTextureHandle_, {0.0f, 0.0f, 0.0f});
 		enemy->SetPlayer(player_);
 		enemy->SetGameScene(this);
 	}

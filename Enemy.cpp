@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "GameScene.h"
 
+//#include "imgui.h"
+
 void Enemy::PhaseInitialize() {
 
 	// 初期フェーズの設定
@@ -100,10 +102,14 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, Vector3 position) {
 
 void Enemy::Update() {
 
+	#ifdef _DEBUG
+
 	ImGui::Begin("EnemyInfo");
 	ImGui::DragFloat3("translation", &worldTransform_.translation_.x, 0.01f);
 	ImGui::End();
 
+	#endif // DEBUG
+	
 	switch (phase_) {
 	case Enemy::Phase::APPROACH:
 

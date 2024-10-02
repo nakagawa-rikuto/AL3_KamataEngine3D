@@ -13,7 +13,6 @@
 
 #include "PlayerBullet.h"
 #include "MyMath.h"
-#include "imgui.h"
 
 // GameSceneの前方宣言
 class GameScene;

@@ -6,7 +6,6 @@
 #include "WorldTransform.h"
 #include "cassert"
 #include "MyMath.h"
-#include "imgui.h"
 
 #include <DebugText.h>
 #include <algorithm>

@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "GameScene.h"
 
+//#include "imgui.h"
+
 void Player::Move() {
 
 	// キャラクターの移動ベクトル
@@ -113,7 +115,6 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 position) 
 void Player::Update() {
 
 #ifdef _DEBUG
-
 	ImGui::Begin("Info");
 	ImGui::DragFloat3("worldTransform.rotation", &worldTransform_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("worldTransform.scale", &worldTransform_.scale_.x, 0.01f);
