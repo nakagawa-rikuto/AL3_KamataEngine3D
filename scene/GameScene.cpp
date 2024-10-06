@@ -121,7 +121,7 @@ void GameScene::EnemyBulletDraw(ViewProjection& viewProjection) {
 
 void GameScene::EnemyInitialize(Enemy* enemy, Vector3 position) {
 
-	enemy->Initialize(model_, textureHandle_, position);
+	enemy->Initialize(model_, enemyTextureHandle_, position);
 	enemy->SetPlayer(player_);
 	enemy->SetGameScene(this);
 }
